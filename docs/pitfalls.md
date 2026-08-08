@@ -311,6 +311,8 @@ macOS 侧用 `tao`（窗口）+ `wry`（WKWebView）+ `objc2`（NSWindow/NSColor
   从嵌入的 `DIST`（`include_dir!`）提供资源，加载 `inklet://index.html`。
 - `serve_dist` 用 `http::Response<Cow<'static, [u8]>>`，需 `http` crate。
 - 注意 vite 生产构建 `base: "./"` 使资源路径解析到 `inklet://assets/...`。
+- 重构后资源服务统一到 `app/assets.rs::resolve_asset`（跨平台共用），
+  Linux `serve_file` 与 macOS `serve_dist` 都调用它，消除重复。
 
 ### 38. 多语言：Control 内联 HTML 语言同步
 - Control 窗口是原生内联 HTML（非 React），读不到前端 i18n。

@@ -10,9 +10,9 @@
 ## 构建与运行
 
 ```bash
-# 开发（HMR）：终端1 vite，终端2 原生
+# 开发（HMR）：pnpm dev 并行启动 vite (:1420) + 原生（--dev）
 pnpm dev
-cd src-tauri && cargo run -- --dev
+# 单独启动：pnpm dev:web 只跑前端；cd src-tauri && cargo run -- --dev 只跑原生
 
 # 生产自包含二进制（前端嵌入）
 make build-release            # = pnpm build + cargo build --release
@@ -21,6 +21,11 @@ make build-release            # = pnpm build + cargo build --release
 # macOS 分发包（.app bundle，不出现在 Dock）
 make app-bundle               # 产物 dist/Inklet.app
 ```
+
+原生代码模块（`src-tauri/src/`）：
+- `app.rs` 入口分派 + 共享工具；`app/assets.rs` 跨平台资源服务；`app/linux.rs` / `app/macos.rs` 平台实现
+- `desktop/surface.rs` DesktopSurface 抽象；`desktop/wayland.rs` / `desktop/macos.rs` 平台实现
+- `ipc.rs` 命令分发（parse/dispatch/reply 跨平台共用）
 
 数据：Linux 在 `~/.local/share/inklet/`；macOS 在 `~/Library/Application Support/inklet/`。
 应用日志默认写终端（后台跑时重定向到 `/tmp/dc-app.log` 等）。
@@ -42,11 +47,15 @@ make app-bundle               # 产物 dist/Inklet.app
 pnpm 11 屏蔽依赖的 postinstall（如 esbuild）。不要跑交互式 `pnpm approve-builds`。
 正确做法：改 `pnpm-workspace.yaml` 的 `allowBuilds`，然后 `pnpm rebuild esbuild`。
 
-### 3. 后台进程要用 `nohup ... &`
-用 Bash 工具启动长驻进程（vite、应用）时，`nohup cmd > log 2>&1 &` 保证不随工具调用结束被杀。vite 卡死不响应时：按端口（1420）找 PID 强杀后重启。
+### 3. 长驻进程用 `pnpm dev`（concurrently）或 `nohup ... &`
+开发用 `pnpm dev` 并行托管 vite + 原生（Ctrl-C 一起退出）；单独跑原生用
+`cd src-tauri && cargo run -- --dev`。用 Bash 工具后台跑 release 二进制时，
+`nohup cmd > log 2>&1 &` 保证不随工具调用结束被杀。vite 卡死不响应时：
+按端口（1420）找 PID 强杀后重启。
 
 ### 4. 改前端代码后若 webview 没热更新，重启应用
-vite HMR 与 webview 的 WebSocket 可能断连。前端改动没生效时：`pkill -x inklet` 后重启原生（它会重新加载 vite 页面）。
+vite HMR 与 webview 的 WebSocket 可能断连。前端改动没生效时：`pkill -x inklet`
+后重启 `pnpm dev`（原生会重新加载 vite 页面）。
 
 ### 5. 编辑模式相关
 - 编辑模式是整屏输入 + 键盘 Exclusive；passive 是 input region 只留右缘热区。

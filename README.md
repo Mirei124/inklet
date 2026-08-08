@@ -34,8 +34,8 @@ sudo pacman -S gtk-layer-shell  # Wayland layer-shell 覆盖层
 
 ```bash
 pnpm install
-pnpm dev                          # 终端 1：vite dev server (:1420)
-cd src-tauri && cargo run -- --dev # 终端 2：原生应用
+pnpm dev     # 并行启动 vite dev server (:1420) + 原生应用（--dev）
+# 如需单独启动：pnpm dev:web 只跑前端；cd src-tauri && cargo run -- --dev 只跑原生
 ```
 
 ## 生产模式（自包含二进制）
@@ -66,30 +66,34 @@ make app-bundle    # 产物 dist/Inklet.app
 src/            React 前端
   App.tsx        状态机 Passive ⇄ Editing
   Canvas.tsx     Excalidraw 透明画布
-  EditHandle.tsx 右缘编辑入口（点击展开/拖拽移动）
+  EditHandle.tsx 右缘编辑入口（点击展开/拖拽移动，macOS 用原生 Control 窗口）
   Toolbar.tsx    Done 按钮
   state/scene.ts scene 防抖保存
-  bridge.ts      IPC 客户端（webkit message handler）
+  bridge.ts      IPC 客户端（webkit / wry 消息通道）
   i18n.ts        多语言
 src-tauri/      Rust 原生
-  src/app.rs       窗口 + webview + dc:// 自定义协议装配
-  src/ipc.rs       命令分发
+  src/app.rs       入口分派 + 共享工具（日志/dev/settings 恢复）
+  src/app/assets.rs 跨平台 dist 资源服务（dc:// 与 inklet:// 共用）
+  src/app/linux.rs  gtk-layer-shell + WebKitGTK 实现
+  src/app/macos.rs  tao + wry (WKWebView) 实现
+  src/ipc.rs       命令分发（parse/dispatch/reply 跨平台共用）
   src/commands.rs  scene/settings 命令
-  src/desktop/     DesktopSurface 抽象 + Wayland 实现（input region FFI）
+  src/desktop/     DesktopSurface 抽象 + wayland.rs / macos.rs 实现
   src/storage/     原子 JSON 存储
 ```
 
 ## 踩坑记录
 
-见 [docs/pitfalls.md](docs/pitfalls.md)：wry 仅 X11、wayland 请求 inline 不导出、input region 需 commit 生效、webkit DPR、vite 剥离 Excalidraw SCSS 等。
+见 [docs/pitfalls.md](docs/pitfalls.md)：Wayland 侧（wry 仅 X11、input region 需 commit 生效、webkit DPR 等）与 macOS 侧（tao fullscreen 重置 level、物理/逻辑像素混用、Control IPC reply 丢失、activation policy 被覆盖等）。
 
 ## 致谢
 
 - [Excalidraw](https://excalidraw.com/)（[MIT](https://github.com/excalidraw/excalidraw/blob/master/LICENSE)）—— 绘图引擎与编辑器 UI，本项目直接嵌入使用
 - [Tauri](https://tauri.app/)（MIT/Apache-2.0）—— 工程脚手架基于 `create-tauri-app` 生成（运行时改用 WebKitGTK 直连 layer-shell）
 - [Vite](https://vitejs.dev/) / [React](https://react.dev/) / [TypeScript](https://www.typescriptlang.org/) —— 前端构建与框架
-- [WebKitGTK](https://webkitgtk.org/)（LGPL）—— 底层 WebView 渲染
+- [WebKitGTK](https://webkitgtk.org/)（LGPL）—— Linux 底层 WebView 渲染
 - [gtk-layer-shell](https://github.com/wmww/gtk-layer-shell)（MIT）—— Wayland layer-shell 覆盖层
+- [tao](https://github.com/tauri-apps/tao) / [wry](https://github.com/tauri-apps/wry) / [objc2](https://github.com/madsmtm/objc2) —— macOS 窗口与 WebView
 - 以及所有被依赖的开源项目 🙏
 
 ## License
