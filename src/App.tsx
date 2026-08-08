@@ -93,23 +93,12 @@ export default function App() {
   // 调试：列出 passive 模式下仍可见的 Excalidraw UI 元素
   useEffect(() => {
     const t = setTimeout(() => {
-      const topMenu = document.querySelector(".canvas-root.mode-passive .App-menu_top");
-      const topMenuAny = document.querySelector(".App-menu_top");
-      const rule = Array.from(document.styleSheets)
-        .flatMap((s) => {
-          try {
-            return Array.from(s.cssRules);
-          } catch {
-            return [];
-          }
-        })
-        .filter((r) => r.cssText.includes("mode-passive") && r.cssText.includes("display: none"))
-        .map((r) => r.cssText.slice(0, 80))
-        .join(" || ");
+      const handle = document.querySelector(".edit-handle");
+      const bar = handle ? getComputedStyle(handle, "::before") : null;
       logDebug(
-        `DIAG-UI: modePassiveTop=${topMenu ? getComputedStyle(topMenu).display : "absent"} ` +
-          `anyTop=${topMenuAny ? getComputedStyle(topMenuAny).display : "absent"} ` +
-          `matchedRules=${rule || "(none)"}`,
+        `DIAG-UI: handle=${!!handle} ` +
+          `handleRect=${handle ? JSON.stringify(handle.getBoundingClientRect()) : "?"} ` +
+          `barDisplay=${bar ? bar.display : "?"} barOpacity=${bar ? bar.opacity : "?"}`,
       );
     }, 3000);
     return () => clearTimeout(t);

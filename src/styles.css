@@ -57,7 +57,8 @@ body {
 }
 
 /* 右缘编辑入口：CSS 相对定位固定在右缘中央，与原生侧 passive 热区对齐。
-   hover 展开两个药丸：Edit / 图层切换 */
+   折叠状态只显示单个窄条（::before）；hover 时展开为两个药丸：
+   Edit / 图层切换。 */
 .edit-handle {
   position: absolute;
   right: 0;
@@ -68,22 +69,38 @@ body {
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  padding: 4px;
+  padding: 12px 8px;
+  min-width: 130px;
 }
 
+/* 折叠态：单个窄条 */
+.edit-handle::before {
+  content: "";
+  width: 8px;
+  height: 34px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 17px;
+  transition: opacity 0.15s ease;
+}
+.edit-handle:hover::before {
+  opacity: 0;
+}
+
+/* 两个药丸：默认收起，hover 展开 */
 .edit-handle-item {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 34px;
-  max-width: 8px;
-  padding: 0 2px;
+  max-width: 0;
+  padding: 0;
+  opacity: 0;
   overflow: hidden;
   white-space: nowrap;
   border: none;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: transparent;
+  background: rgba(37, 99, 235, 0.92);
+  color: #fff;
   font-size: 13px;
   font-weight: 500;
   border-radius: 17px;
@@ -92,25 +109,23 @@ body {
   transition:
     max-width 0.15s ease,
     padding 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease;
+    opacity 0.15s ease;
 }
 
 .edit-handle:hover .edit-handle-item,
 .edit-handle-item:hover {
   max-width: 130px;
   padding: 0 14px;
-  background: rgba(37, 99, 235, 0.92);
-  color: #fff;
+  opacity: 1;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
 
-/* 编辑模式顶部居中 Done 按钮（避开 Excalidraw 右上角自有按钮） */
+/* 编辑模式 Done 按钮：右缘中央（与 passive 的编辑入口同一位置） */
 .toolbar {
   position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 200;
 }
 
