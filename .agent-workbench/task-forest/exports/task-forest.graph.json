@@ -908,7 +908,7 @@
     }
   },
   "event_id": null,
-  "generated_at": "2026-08-08T08:42:27.929375Z",
+  "generated_at": "2026-08-08T10:33:40.593455Z",
   "nodes": {
     "TF-0001": {
       "acceptance_criteria": [
@@ -945,7 +945,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087184Z",
       "deprecated_at": null,
-      "derived_progress": 35.0,
+      "derived_progress": 80.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -959,7 +959,7 @@
       ],
       "primary_parent": null,
       "priority": 3,
-      "progress": 35.0,
+      "progress": 80.0,
       "progress_source": "manual",
       "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
       "remaining_minutes_max": null,
@@ -979,7 +979,7 @@
       ],
       "summary": "始终显示在桌面上的透明 Excalidraw 画布，默认鼠标穿透，仅边缘编辑按钮可交互；点击进入编辑模式，完成后恢复穿透，scene 自动持久化到本地 JSON。",
       "title": "桌面画板 MVP：透明 Excalidraw 画布 + 边缘编辑入口 + 鼠标穿透",
-      "updated_at": "2026-08-08T08:42:27.688542Z"
+      "updated_at": "2026-08-08T10:33:40.303566Z"
     },
     "TF-0002": {
       "acceptance_criteria": [
@@ -1388,7 +1388,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087424Z",
       "deprecated_at": null,
-      "derived_progress": 60.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1400,18 +1400,18 @@
       "non_goals": [],
       "primary_parent": "TF-0001",
       "priority": 3,
-      "progress": 60.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "在接入真实平台 surface 之前验证交互状态机",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "in_progress",
+      "status": "done",
       "success_metrics": [],
       "summary": "用普通窗口先验证整个状态机：Passive ↔ Hover ↔ Editing，前后端命令协议。",
       "title": "Phase 2：Passive / Hover / Editing 状态机（普通窗口模拟）",
-      "updated_at": "2026-08-08T08:42:27.155133Z"
+      "updated_at": "2026-08-08T10:33:37.139846Z"
     },
     "TF-0011": {
       "acceptance_criteria": [
@@ -1434,7 +1434,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087443Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1446,18 +1446,18 @@
       "non_goals": [],
       "primary_parent": "TF-0010",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "右缘中央半透明小 Handle（约 4~8×32~48px），hover 展开为 Edit 按钮，离开自动恢复，简单 opacity/width transition。",
       "title": "EditHandle 组件（右边缘 Handle + hover 展开 Edit）",
-      "updated_at": "2026-08-08T05:07:39.087451Z"
+      "updated_at": "2026-08-08T10:33:37.377949Z"
     },
     "TF-0012": {
       "acceptance_criteria": [
@@ -1479,7 +1479,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087458Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1491,18 +1491,18 @@
       "non_goals": [],
       "primary_parent": "TF-0010",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "定义明确 command 协议；backend 成功切换后才更新 UI 状态。",
       "title": "前后端 IPC：enter_edit_mode / exit_edit_mode",
-      "updated_at": "2026-08-08T05:07:39.087466Z"
+      "updated_at": "2026-08-08T10:33:37.623209Z"
     },
     "TF-0013": {
       "acceptance_criteria": [
@@ -1525,7 +1525,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087473Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1537,18 +1537,18 @@
       "non_goals": [],
       "primary_parent": "TF-0010",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "优先复用 Excalidraw 自带工具，补充自定义 Done 按钮；不重新实现选择/resize/arrow routing/undo。",
       "title": "Editing 工具栏（Pen/Rect/Arrow/Text/Delete/Undo/Redo/Done）",
-      "updated_at": "2026-08-08T05:07:39.087482Z"
+      "updated_at": "2026-08-08T10:33:37.875468Z"
     },
     "TF-0014": {
       "acceptance_criteria": [
@@ -1577,7 +1577,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087490Z",
       "deprecated_at": null,
-      "derived_progress": 40.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1589,18 +1589,18 @@
       "non_goals": [],
       "primary_parent": "TF-0001",
       "priority": 3,
-      "progress": 40.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "在真实 wlroots compositor（Wayfire）上实现鼠标穿透与编辑切换",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "in_progress",
+      "status": "done",
       "success_metrics": [],
       "summary": "实现 layer-shell 全屏透明覆盖层 + input region 控制（passive=handle rect，editing=fullscreen）+ 键盘交互性。",
       "title": "Phase 4：Wayland DesktopSurface（wlroots）",
-      "updated_at": "2026-08-08T08:42:27.442314Z"
+      "updated_at": "2026-08-08T10:33:38.129488Z"
     },
     "TF-0015": {
       "acceptance_criteria": [
@@ -1622,7 +1622,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087505Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1634,18 +1634,18 @@
       "non_goals": [],
       "primary_parent": "TF-0014",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "定义 DesktopSurface trait（enter_passive / enter_editing / screen_size 等），React 只发 enter_editing / enter_passive，不感知 wl_surface/wl_region。",
       "title": "DesktopSurface trait 抽象与模式命令接线",
-      "updated_at": "2026-08-08T05:07:39.087513Z"
+      "updated_at": "2026-08-08T10:33:38.382920Z"
     },
     "TF-0016": {
       "acceptance_criteria": [
@@ -1668,7 +1668,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087519Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1680,18 +1680,18 @@
       "non_goals": [],
       "primary_parent": "TF-0014",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "创建 overlay 层、锚定四边充满输出的透明 GTK 窗口，托管 WebView；按模式设置 wl_surface 键盘交互性。",
       "title": "gtk-layer-shell 全屏透明覆盖层 + 键盘交互性控制",
-      "updated_at": "2026-08-08T05:07:39.087528Z"
+      "updated_at": "2026-08-08T10:33:38.644495Z"
     },
     "TF-0017": {
       "acceptance_criteria": [
@@ -1713,7 +1713,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087534Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1725,18 +1725,18 @@
       "non_goals": [],
       "primary_parent": "TF-0014",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "通过 gdk wl_surface 原始 FFI 调用 wl_surface_set_input_region：passive 设为 handle rect，editing 设为全屏。",
       "title": "input region 控制（passive=handle rect / editing=fullscreen）",
-      "updated_at": "2026-08-08T05:07:39.087546Z"
+      "updated_at": "2026-08-08T10:33:38.911488Z"
     },
     "TF-0018": {
       "acceptance_criteria": [
@@ -1757,7 +1757,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087552Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1769,18 +1769,18 @@
       "non_goals": [],
       "primary_parent": "TF-0014",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "在目标开发机 Wayfire 上逐条跑 Test1-6，重点验证 Test4（退出编辑后鼠标穿透到笔迹下的应用）。",
       "title": "Wayfire 环境验收测试（Test 1–6）",
-      "updated_at": "2026-08-08T05:07:39.087561Z"
+      "updated_at": "2026-08-08T10:33:39.177416Z"
     },
     "TF-0019": {
       "acceptance_criteria": [
@@ -1807,7 +1807,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087567Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 50.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1819,18 +1819,18 @@
       "non_goals": [],
       "primary_parent": "TF-0001",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 50.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "in_progress",
       "success_metrics": [],
       "summary": "tracing 日志、关键平台调用失败处理、损坏 scene 容错、启动行为与打包打磨。",
       "title": "Phase 5：日志、容错与打包",
-      "updated_at": "2026-08-08T05:07:39.087576Z"
+      "updated_at": "2026-08-08T10:33:40.011862Z"
     },
     "TF-0020": {
       "acceptance_criteria": [
@@ -1852,7 +1852,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087582Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1864,18 +1864,18 @@
       "non_goals": [],
       "primary_parent": "TF-0019",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "记录 start/scene loaded/scene saved/enter passive/enter editing/初始化失败等事件。",
       "title": "tracing 日志 + 关键平台调用失败处理",
-      "updated_at": "2026-08-08T05:07:39.087591Z"
+      "updated_at": "2026-08-08T10:33:39.449921Z"
     },
     "TF-0021": {
       "acceptance_criteria": [
@@ -1897,7 +1897,7 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087599Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 100.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
@@ -1909,18 +1909,18 @@
       "non_goals": [],
       "primary_parent": "TF-0019",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 100.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "done",
       "success_metrics": [],
       "summary": "scene.json 损坏时打日志、用空 scene 启动、尽量保留原损坏文件；原子写入保证中断不损坏。",
       "title": "损坏 scene.json 容错与 crash recovery",
-      "updated_at": "2026-08-08T05:07:39.087610Z"
+      "updated_at": "2026-08-08T10:33:39.728229Z"
     },
     "TF-0022": {
       "acceptance_criteria": [
@@ -2122,22 +2122,11 @@
   },
   "status_queues": {
     "actionable_todos": [
-      "TF-0010",
-      "TF-0011",
-      "TF-0012",
-      "TF-0013",
-      "TF-0015",
-      "TF-0016",
-      "TF-0018",
-      "TF-0020",
-      "TF-0021",
-      "TF-0022",
-      "TF-0024",
-      "TF-0025",
-      "TF-0014",
-      "TF-0017",
       "TF-0019",
-      "TF-0023"
+      "TF-0022",
+      "TF-0023",
+      "TF-0024",
+      "TF-0025"
     ],
     "blocked": [],
     "by_status": {
@@ -2152,25 +2141,25 @@
         "TF-0006",
         "TF-0007",
         "TF-0008",
-        "TF-0009"
-      ],
-      "in_progress": [
-        "TF-0001",
+        "TF-0009",
         "TF-0010",
-        "TF-0014"
-      ],
-      "proposed": [],
-      "ready": [
         "TF-0011",
         "TF-0012",
         "TF-0013",
+        "TF-0014",
         "TF-0015",
         "TF-0016",
         "TF-0017",
         "TF-0018",
-        "TF-0019",
         "TF-0020",
-        "TF-0021",
+        "TF-0021"
+      ],
+      "in_progress": [
+        "TF-0001",
+        "TF-0019"
+      ],
+      "proposed": [],
+      "ready": [
         "TF-0022",
         "TF-0023",
         "TF-0024",
@@ -2183,34 +2172,13 @@
     ],
     "open": [
       "TF-0001",
-      "TF-0010",
-      "TF-0011",
-      "TF-0012",
-      "TF-0013",
-      "TF-0014",
-      "TF-0015",
-      "TF-0016",
-      "TF-0017",
-      "TF-0018",
       "TF-0019",
-      "TF-0020",
-      "TF-0021",
       "TF-0022",
       "TF-0023",
       "TF-0024",
       "TF-0025"
     ],
     "ready": [
-      "TF-0011",
-      "TF-0012",
-      "TF-0013",
-      "TF-0015",
-      "TF-0016",
-      "TF-0017",
-      "TF-0018",
-      "TF-0019",
-      "TF-0020",
-      "TF-0021",
       "TF-0022",
       "TF-0023",
       "TF-0024",
@@ -2220,10 +2188,10 @@
   },
   "summary": {
     "blocked_count": 0,
-    "done_count": 8,
+    "done_count": 19,
     "edge_count": 36,
     "node_count": 25,
-    "open_count": 17,
+    "open_count": 6,
     "review_needed_count": 0
   },
   "tree_edges": [
