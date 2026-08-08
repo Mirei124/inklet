@@ -1096,5 +1096,46 @@
     "summary": "gtk-layer-shell 未直接暴露 input region；需在 gdk 同一条 wayland 连接上用 wl_compositor_create_region + wl_surface_set_input_region 的原始 FFI，与 gtk 链接的 libwayland 版本需一致，否则可能崩溃或无效。",
     "title": "input region 需在 gdk 连接上用 libwayland FFI 实现，存在链接/版本风险",
     "updated_at": "2026-08-08T05:07:39.087674Z"
+  },
+  "TF-0026": {
+    "acceptance_criteria": [
+      "双平台重复代码合并，仅保留必须的平台差异；app.rs 职责拆分清晰；全量编译测试通过"
+    ],
+    "alignment": {
+      "fit": "unknown",
+      "fit_confidence": 0.0,
+      "user_goal": "",
+      "validation_plan": [],
+      "why_not_enough": "",
+      "why_this_task": ""
+    },
+    "alignment_records": [],
+    "assumptions": [],
+    "confidence": 0.6,
+    "context_tags": [],
+    "created_at": "2026-08-08T18:13:17.706646Z",
+    "deprecated_at": null,
+    "desired_outcomes": [],
+    "deviations": [],
+    "difficulty": "unknown",
+    "estimated_total_minutes": null,
+    "evidence": [],
+    "execution_hints": [],
+    "id": "TF-0026",
+    "kind": "task",
+    "non_goals": [],
+    "priority": 3,
+    "progress": 100.0,
+    "progress_source": "manual",
+    "purpose": "",
+    "remaining_minutes_max": null,
+    "remaining_minutes_min": null,
+    "requirements": [],
+    "source_sessions": [],
+    "status": "done",
+    "success_metrics": [],
+    "summary": "pnpm dev 前后端并行（concurrently）；IPC parse_message 平台无关；资源服务统一 resolve_asset；settings 恢复抽共享函数；app.rs 拆分 app/{assets,linux,macos}.rs；dev_url 共享。全量验证通过（cargo test/clippy、前端 test/typecheck、release 启动）。",
+    "title": "跨平台代码重构：合并重复、模块拆分",
+    "updated_at": "2026-08-08T18:13:17.706658Z"
   }
 }
