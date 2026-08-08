@@ -234,3 +234,86 @@
 - **webkit inspector**：`WEBKIT_INSPECTOR_SERVER=127.0.0.1:9222` + 代码里
   `settings.set_enable_developer_extras(true)`（需要 `SettingsExt` trait）。
   注意它是 WebSocket 协议，`curl /json` 拿不到内容。
+
+---
+
+## 六、macOS（tao + wry + objc2）
+
+macOS 侧用 `tao`（窗口）+ `wry`（WKWebView）+ `objc2`（NSWindow/NSColor 等 AppKit 控制）。
+前端 bridge.ts 的 IPC 传输（`window.webkit.messageHandlers.ipc`）在 macOS 上不变。
+
+### 28. tao `with_fullscreen` 会重置 NSWindow level 且切到独立 Space
+- **现象**：用 `with_fullscreen(Borderless)` 创建 Canvas，CGWindowList 显示
+  layer=0（普通层），且启动时 macOS 自动切到另一个全屏桌面。
+- **原因**：tao 的 native fullscreen 会重置窗口 level，并把窗口放进独立全屏 Space。
+- **方案**：不用 `with_fullscreen`。borderless 窗口 + 手动 `setFrame` 铺屏 +
+  高 `setLevel`（overlay=21 / background=-1）+ collectionBehavior 含
+  `MoveToActiveSpace | FullScreenNone`（跟随当前桌面、不进全屏 Space）。
+
+### 29. `NSWindow setBackgroundColor(None)` 不是透明
+- **现象**：窗口背景不透明白色，整个桌面被盖住。
+- **原因**：传 `nil` 不清空背景（默认是不透明的 `windowBackgroundColor`）。
+- **方案**：必须用 `NSColor::clearColor()`：
+  `setBackgroundColor(Some(&NSColor::clearColor()))`。配合 `setOpaque(false)`。
+
+### 30. tao 物理像素与逻辑坐标混用导致窗口错位
+- **现象**：Control 窗口跑到屏幕右下角而不是 handleY 位置。
+- **原因**：`Window::inner_size()` 返回**物理像素**，而 `set_outer_position(LogicalPosition)`、
+  Control 尺寸常量用的是**逻辑坐标**（points/CSS 像素）。混算导致错位。
+- **方案**：`MacSurface.size` 统一存逻辑尺寸（`inner_size / scale_factor`），
+  `update_size`（tao Resized 给物理）也除 scale。reposition 全用逻辑坐标。
+
+### 31. Control 窗口触发的模式切换 reply 无人接收
+- **现象**：点 Control 的 Edit 进入编辑，原生 `ignoresMouseEvents` 关了，
+  但前端 Canvas 仍显示 passive（空白、无工具栏）。autoedit（前端自己 invoke）却正常。
+- **原因**：Control HTML 用裸 `window.ipc.postMessage`，**不走前端 bridge.ts 的
+  invoke/pending 机制**，原生 reply 的 `window.__dc_ipc_reply` 在前端 pending 里
+  找不到对应 id，被丢弃 → React mode 状态没更新。
+- **方案**：原生模式切换后主动推送：`enter_passive/enter_editing` 里
+  `eval("window.__dc_sync_mode && window.__dc_sync_mode('passive'/'editing')")`，
+  前端 App.tsx 注册 `window.__dc_sync_mode` 同步 `setMode`。
+
+### 32. Canvas 顶部工具栏被 macOS 菜单栏遮挡
+- **现象**：编辑模式 Excalidraw 顶部工具栏被系统菜单栏盖住。
+- **原因**：Canvas `setFrame` 到全屏（含菜单栏区域），但菜单栏 layer 24 > Canvas 21，
+  无法靠 level 盖过。
+- **方案**：用 `NSScreen::mainScreen().visibleFrame()`（避开菜单栏 + Dock）
+  代替 `frame()`，Canvas 从菜单栏下方开始，工具栏可见、菜单栏保持可用。
+
+### 33. tao 覆盖 activation policy，Dock 图标隐藏不生效
+- **现象**：设置了 `NSApplicationActivationPolicy::Accessory`，Dock 仍显示 Inklet。
+- **原因**：tao 在 `WindowBuilder::build` 和 `event_loop.run()` 启动时会把 NSApp
+  激活策略重置为 **Regular**，提前设置（甚至窗口建好后）都会被覆盖。
+- **方案**：在**事件循环首次回调**里设置 Accessory（此时 NSApp 已完全启动，
+  不会再被重置）。`lsappinfo` / NSRunningApplication 验证 policy=1（Accessory）。
+
+### 34. 裸二进制没有 Info.plist，LSUIElement 不生效
+- **现象**：命令行跑 `./inklet`（非 .app bundle），LSUIElement=true 不生效，
+  Dock 显示图标。
+- **原因**：LSUIElement 只对通过 LaunchServices 启动的 **.app bundle** 生效。
+- **方案**：运行时设置 `NSApplicationActivationPolicy::Accessory`（见 #33），
+  与 bundle 方式无关。`.app` 打包用 `make app-bundle`（含 Info.plist）。
+
+### 35. release 构建前端 PTR 调试日志刷屏
+- **现象**：release 二进制日志里每条鼠标操作都打 `PTR down/up`（Info 级）。
+- **原因**：App.tsx 的指针事件监听（定位输入区域用）没有按构建模式区分。
+- **方案**：用 `import.meta.env.DEV` 门控（vite build 时自动 false）；
+  Rust 侧 `init_tracing` release 默认日志级别降为 `warn`（`RUST_LOG` 仍可覆盖）。
+
+### 36. `event_loop.run()` 返回 never 类型
+- **现象**：`event_loop.run(...)` 之后写 `Ok(())` 报 unreachable code 警告。
+- **原因**：tao `EventLoop::run` 签名返回 `!`（永不返回）。
+- **方案**：函数尾部用 `#[allow(unreachable_code)]` 保留 `Ok(())`（返回类型仍是
+  `Result`，`!` 可 coerced）。
+
+### 37. macOS 自定义协议加载前端：`include_dir` 嵌入 dist
+- Linux 用 `dc://` scheme + webkit2gtk；macOS 用 wry `with_custom_protocol("inklet")`
+  从嵌入的 `DIST`（`include_dir!`）提供资源，加载 `inklet://index.html`。
+- `serve_dist` 用 `http::Response<Cow<'static, [u8]>>`，需 `http` crate。
+- 注意 vite 生产构建 `base: "./"` 使资源路径解析到 `inklet://assets/...`。
+
+### 38. 多语言：Control 内联 HTML 语言同步
+- Control 窗口是原生内联 HTML（非 React），读不到前端 i18n。
+- 方案：原生从 settings.json 读 `lang` 注入 `setLang('zh'/'en')`；
+  `set_lang` IPC 后 `surface.set_control_lang(lang)` 同步按钮文案。
+- 语言字典与前端 `src/i18n.ts` 保持一致。

@@ -1,6 +1,9 @@
 # Inklet — 项目指南
 
-桌面透明画板（wlroots Wayland）。技术栈：React + Excalidraw（前端）、Rust + gtk-layer-shell + WebKitGTK（原生）、自建 IPC。MVP 全部验收测试已在 Wayfire 通过。
+桌面透明画板。技术栈：React + Excalidraw（前端）、Rust 原生（自建 IPC）。双平台：
+
+- **Linux（wlroots Wayland）**：gtk-layer-shell + WebKitGTK，MVP 验收已在 Wayfire 通过
+- **macOS**：tao + wry (WKWebView) + objc2，Canvas + Control 双窗口，验收已通过
 
 详细踩坑记录见 [docs/pitfalls.md](docs/pitfalls.md)；任务追踪用 task-forest（`.agent-workbench/task-forest`）。
 
@@ -14,9 +17,13 @@ cd src-tauri && cargo run -- --dev
 # 生产自包含二进制（前端嵌入）
 make build-release            # = pnpm build + cargo build --release
 ./src-tauri/target/release/inklet
+
+# macOS 分发包（.app bundle，不出现在 Dock）
+make app-bundle               # 产物 dist/Inklet.app
 ```
 
-数据：scene 与 settings 在 `~/.local/share/inklet/`。应用日志默认写终端（后台跑时重定向到 `/tmp/dc-app.log` 等）。
+数据：Linux 在 `~/.local/share/inklet/`；macOS 在 `~/Library/Application Support/inklet/`。
+应用日志默认写终端（后台跑时重定向到 `/tmp/dc-app.log` 等）。
 
 ## 操作注意事项（反复踩坑，务必先读）
 

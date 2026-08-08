@@ -2,22 +2,32 @@
 
 桌面透明画板：始终显示在桌面上的 Excalidraw 画布，默认鼠标穿透，只保留右缘编辑入口；点击进入编辑模式绘制，完成后恢复穿透，scene 自动持久化到本地 JSON。
 
-目标平台：Linux Wayland（wlroots 系，如 Wayfire / Hyprland / Sway），macOS 后续。
+目标平台：Linux Wayland（wlroots 系，如 Wayfire / Hyprland / Sway）+ macOS。
 
 ## 功能
 
-- 透明全屏覆盖层（gtk-layer-shell + WebKitGTK），默认鼠标穿透（`wl_surface_set_input_region`）
+- 透明全屏覆盖层，默认鼠标穿透（Linux：`wl_surface_set_input_region`；macOS：`ignoresMouseEvents`）
 - 右缘编辑入口：点击展开「编辑 / 图层切换」，可拖拽移动位置（y 持久化）
 - 图层切换：overlay（所有窗口之上）⇄ background（壁纸之上/所有窗口之下）
 - 编辑模式：完整 Excalidraw 工具（笔/矩形/箭头/文字/撤销/重做/删除）
 - 500ms 防抖自动保存 scene.json（原子写 tmp→rename），异常退出不损坏
 - 多语言：en / zh（settings.json 持久化，默认按系统区域）
 
-## 前置依赖（Arch）
+## 平台实现
+
+| 平台 | 窗口/WebView | 穿透机制 |
+|------|-------------|---------|
+| Linux Wayland | gtk-layer-shell + WebKitGTK | wl_surface input region |
+| macOS | tao + wry (WKWebView) + objc2 | NSWindow ignoresMouseEvents（Canvas）+ Control 浮窗承载编辑入口 |
+
+## 前置依赖
 
 ```bash
+# Linux (Arch)
 sudo pacman -S gtk-layer-shell  # Wayland layer-shell 覆盖层
 # 还需要：gtk3 / webkit2gtk-4.1 / wayland（通常已随桌面环境安装）
+
+# macOS：Xcode Command Line Tools 即可（WebKit/AppKit 系统自带）
 ```
 
 ## 开发模式（HMR）
@@ -40,12 +50,15 @@ make build-release
 ```bash
 # 直接运行自包含二进制
 ./src-tauri/target/release/inklet
+
+# macOS 分发包（.app bundle，不出现在 Dock，可双击启动）
+make app-bundle    # 产物 dist/Inklet.app
 ```
 
 ## 数据文件
 
-- scene：`~/.local/share/inklet/scene.json`（Excalidraw 元素原样保存）
-- settings：`~/.local/share/inklet/settings.json`（layer / handleY / lang）
+- Linux：`~/.local/share/inklet/`（scene.json / settings.json）
+- macOS：`~/Library/Application Support/inklet/`
 
 ## 项目结构
 
