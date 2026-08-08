@@ -1,0 +1,2985 @@
+{
+  "created_at": "2026-08-08T05:07:39.103767Z",
+  "graph": {
+    "cross_edges": [
+      "TFE-0005",
+      "TFE-0006",
+      "TFE-0008",
+      "TFE-0012",
+      "TFE-0013",
+      "TFE-0015",
+      "TFE-0020",
+      "TFE-0025",
+      "TFE-0026",
+      "TFE-0027",
+      "TFE-0029",
+      "TFE-0034",
+      "TFE-0036"
+    ],
+    "edge_index": {
+      "TF-0001": {
+        "blocking_edges": [],
+        "cross_edges": [],
+        "incoming": [
+          "TFE-0001",
+          "TFE-0007",
+          "TFE-0014",
+          "TFE-0019",
+          "TFE-0028",
+          "TFE-0033"
+        ],
+        "outgoing": [],
+        "tree_child_edges": [
+          "TFE-0001",
+          "TFE-0007",
+          "TFE-0014",
+          "TFE-0019",
+          "TFE-0028",
+          "TFE-0033"
+        ],
+        "tree_parent_edge": null
+      },
+      "TF-0002": {
+        "blocking_edges": [
+          "TFE-0001"
+        ],
+        "cross_edges": [
+          "TFE-0008"
+        ],
+        "incoming": [
+          "TFE-0002",
+          "TFE-0003",
+          "TFE-0004",
+          "TFE-0008"
+        ],
+        "outgoing": [
+          "TFE-0001"
+        ],
+        "tree_child_edges": [
+          "TFE-0002",
+          "TFE-0003",
+          "TFE-0004"
+        ],
+        "tree_parent_edge": "TFE-0001"
+      },
+      "TF-0003": {
+        "blocking_edges": [
+          "TFE-0002"
+        ],
+        "cross_edges": [
+          "TFE-0005",
+          "TFE-0006",
+          "TFE-0025"
+        ],
+        "incoming": [
+          "TFE-0005",
+          "TFE-0006",
+          "TFE-0025"
+        ],
+        "outgoing": [
+          "TFE-0002"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0002"
+      },
+      "TF-0004": {
+        "blocking_edges": [
+          "TFE-0003",
+          "TFE-0005"
+        ],
+        "cross_edges": [
+          "TFE-0005"
+        ],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0003",
+          "TFE-0005"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0003"
+      },
+      "TF-0005": {
+        "blocking_edges": [
+          "TFE-0004",
+          "TFE-0006"
+        ],
+        "cross_edges": [
+          "TFE-0006"
+        ],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0004",
+          "TFE-0006"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0004"
+      },
+      "TF-0006": {
+        "blocking_edges": [
+          "TFE-0007",
+          "TFE-0008"
+        ],
+        "cross_edges": [
+          "TFE-0008",
+          "TFE-0015"
+        ],
+        "incoming": [
+          "TFE-0009",
+          "TFE-0010",
+          "TFE-0011",
+          "TFE-0015"
+        ],
+        "outgoing": [
+          "TFE-0007",
+          "TFE-0008"
+        ],
+        "tree_child_edges": [
+          "TFE-0009",
+          "TFE-0010",
+          "TFE-0011"
+        ],
+        "tree_parent_edge": "TFE-0007"
+      },
+      "TF-0007": {
+        "blocking_edges": [
+          "TFE-0009"
+        ],
+        "cross_edges": [
+          "TFE-0012"
+        ],
+        "incoming": [
+          "TFE-0012"
+        ],
+        "outgoing": [
+          "TFE-0009"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0009"
+      },
+      "TF-0008": {
+        "blocking_edges": [
+          "TFE-0010",
+          "TFE-0012"
+        ],
+        "cross_edges": [
+          "TFE-0012",
+          "TFE-0013"
+        ],
+        "incoming": [
+          "TFE-0013"
+        ],
+        "outgoing": [
+          "TFE-0010",
+          "TFE-0012"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0010"
+      },
+      "TF-0009": {
+        "blocking_edges": [
+          "TFE-0011",
+          "TFE-0013"
+        ],
+        "cross_edges": [
+          "TFE-0013"
+        ],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0011",
+          "TFE-0013"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0011"
+      },
+      "TF-0010": {
+        "blocking_edges": [
+          "TFE-0014",
+          "TFE-0015"
+        ],
+        "cross_edges": [
+          "TFE-0015",
+          "TFE-0020",
+          "TFE-0034"
+        ],
+        "incoming": [
+          "TFE-0016",
+          "TFE-0017",
+          "TFE-0018",
+          "TFE-0020",
+          "TFE-0034"
+        ],
+        "outgoing": [
+          "TFE-0014",
+          "TFE-0015"
+        ],
+        "tree_child_edges": [
+          "TFE-0016",
+          "TFE-0017",
+          "TFE-0018"
+        ],
+        "tree_parent_edge": "TFE-0014"
+      },
+      "TF-0011": {
+        "blocking_edges": [
+          "TFE-0016"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0016"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0016"
+      },
+      "TF-0012": {
+        "blocking_edges": [
+          "TFE-0017"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0017"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0017"
+      },
+      "TF-0013": {
+        "blocking_edges": [
+          "TFE-0018"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0018"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0018"
+      },
+      "TF-0014": {
+        "blocking_edges": [
+          "TFE-0019",
+          "TFE-0020"
+        ],
+        "cross_edges": [
+          "TFE-0020",
+          "TFE-0029",
+          "TFE-0036"
+        ],
+        "incoming": [
+          "TFE-0021",
+          "TFE-0022",
+          "TFE-0023",
+          "TFE-0024",
+          "TFE-0029",
+          "TFE-0036"
+        ],
+        "outgoing": [
+          "TFE-0019",
+          "TFE-0020"
+        ],
+        "tree_child_edges": [
+          "TFE-0021",
+          "TFE-0022",
+          "TFE-0023",
+          "TFE-0024"
+        ],
+        "tree_parent_edge": "TFE-0019"
+      },
+      "TF-0015": {
+        "blocking_edges": [
+          "TFE-0021",
+          "TFE-0025"
+        ],
+        "cross_edges": [
+          "TFE-0025"
+        ],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0021",
+          "TFE-0025"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0021"
+      },
+      "TF-0016": {
+        "blocking_edges": [
+          "TFE-0022"
+        ],
+        "cross_edges": [
+          "TFE-0026"
+        ],
+        "incoming": [
+          "TFE-0026"
+        ],
+        "outgoing": [
+          "TFE-0022"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0022"
+      },
+      "TF-0017": {
+        "blocking_edges": [
+          "TFE-0023",
+          "TFE-0026"
+        ],
+        "cross_edges": [
+          "TFE-0026",
+          "TFE-0027"
+        ],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0023",
+          "TFE-0026",
+          "TFE-0027"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0023"
+      },
+      "TF-0018": {
+        "blocking_edges": [
+          "TFE-0024"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0024"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0024"
+      },
+      "TF-0019": {
+        "blocking_edges": [
+          "TFE-0028",
+          "TFE-0029"
+        ],
+        "cross_edges": [
+          "TFE-0029"
+        ],
+        "incoming": [
+          "TFE-0030",
+          "TFE-0031",
+          "TFE-0032"
+        ],
+        "outgoing": [
+          "TFE-0028",
+          "TFE-0029"
+        ],
+        "tree_child_edges": [
+          "TFE-0030",
+          "TFE-0031",
+          "TFE-0032"
+        ],
+        "tree_parent_edge": "TFE-0028"
+      },
+      "TF-0020": {
+        "blocking_edges": [
+          "TFE-0030"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0030"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0030"
+      },
+      "TF-0021": {
+        "blocking_edges": [
+          "TFE-0031"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0031"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0031"
+      },
+      "TF-0022": {
+        "blocking_edges": [
+          "TFE-0032"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0032"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0032"
+      },
+      "TF-0023": {
+        "blocking_edges": [
+          "TFE-0033",
+          "TFE-0034"
+        ],
+        "cross_edges": [
+          "TFE-0034"
+        ],
+        "incoming": [
+          "TFE-0035"
+        ],
+        "outgoing": [
+          "TFE-0033",
+          "TFE-0034"
+        ],
+        "tree_child_edges": [
+          "TFE-0035"
+        ],
+        "tree_parent_edge": "TFE-0033"
+      },
+      "TF-0024": {
+        "blocking_edges": [
+          "TFE-0035"
+        ],
+        "cross_edges": [],
+        "incoming": [],
+        "outgoing": [
+          "TFE-0035"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": "TFE-0035"
+      },
+      "TF-0025": {
+        "blocking_edges": [],
+        "cross_edges": [
+          "TFE-0027",
+          "TFE-0036"
+        ],
+        "incoming": [
+          "TFE-0027"
+        ],
+        "outgoing": [
+          "TFE-0036"
+        ],
+        "tree_child_edges": [],
+        "tree_parent_edge": null
+      }
+    },
+    "edge_type_counts": {
+      "child_of": 23,
+      "clarifies": 0,
+      "contributes_to": 0,
+      "depends_on": 11,
+      "derived_from": 0,
+      "duplicates": 0,
+      "related_to": 2,
+      "supersedes": 0
+    },
+    "edge_type_legend": {
+      "child_of": "子任务关系：起点任务是目标任务的子任务，构成默认树/森林",
+      "clarifies": "澄清边，起点任务澄清目标任务的要求或问题",
+      "contributes_to": "多目标贡献边，不改变主父节点",
+      "depends_on": "执行依赖边，起点任务必须等待目标任务完成",
+      "derived_from": "来源边，起点任务从目标任务拆解或派生",
+      "duplicates": "重复语义边，通常应合并或废止其中一个节点",
+      "related_to": "弱相关边，不影响 ready 或进度判断",
+      "supersedes": "替代边，from 替代 to"
+    },
+    "edges": {
+      "TFE-0001": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.087685Z",
+        "created_from_session": null,
+        "from": "TF-0002",
+        "id": "TFE-0001",
+        "reason": "脚手架是全局 MVP 的实现子任务",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.087693Z"
+      },
+      "TFE-0002": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.087918Z",
+        "created_from_session": null,
+        "from": "TF-0003",
+        "id": "TFE-0002",
+        "reason": "WebView 方案决策属于脚手架阶段",
+        "to": "TF-0002",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.087927Z"
+      },
+      "TFE-0003": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.087959Z",
+        "created_from_session": null,
+        "from": "TF-0004",
+        "id": "TFE-0003",
+        "reason": "前端脚手架",
+        "to": "TF-0002",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.087966Z"
+      },
+      "TFE-0004": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.087995Z",
+        "created_from_session": null,
+        "from": "TF-0005",
+        "id": "TFE-0004",
+        "reason": "原生侧脚手架",
+        "to": "TF-0002",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088001Z"
+      },
+      "TFE-0005": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088035Z",
+        "created_from_session": null,
+        "from": "TF-0004",
+        "id": "TFE-0005",
+        "reason": "前端需依赖最终 webview 方案的 dev server 接入方式",
+        "to": "TF-0003",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088041Z"
+      },
+      "TFE-0006": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088073Z",
+        "created_from_session": null,
+        "from": "TF-0005",
+        "id": "TFE-0006",
+        "reason": "原生侧窗口/IPC 实现依赖方案决策",
+        "to": "TF-0003",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088079Z"
+      },
+      "TFE-0007": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088112Z",
+        "created_from_session": null,
+        "from": "TF-0006",
+        "id": "TFE-0007",
+        "reason": "Phase1 是全局 MVP 的子阶段",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088118Z"
+      },
+      "TFE-0008": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088150Z",
+        "created_from_session": null,
+        "from": "TF-0006",
+        "id": "TFE-0008",
+        "reason": "画布与持久化依赖脚手架",
+        "to": "TF-0002",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088155Z"
+      },
+      "TFE-0009": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088190Z",
+        "created_from_session": null,
+        "from": "TF-0007",
+        "id": "TFE-0009",
+        "reason": "画布嵌入",
+        "to": "TF-0006",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088196Z"
+      },
+      "TFE-0010": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088232Z",
+        "created_from_session": null,
+        "from": "TF-0008",
+        "id": "TFE-0010",
+        "reason": "scene 状态与防抖保存",
+        "to": "TF-0006",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088238Z"
+      },
+      "TFE-0011": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088299Z",
+        "created_from_session": null,
+        "from": "TF-0009",
+        "id": "TFE-0011",
+        "reason": "原子持久化",
+        "to": "TF-0006",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088306Z"
+      },
+      "TFE-0012": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088351Z",
+        "created_from_session": null,
+        "from": "TF-0008",
+        "id": "TFE-0012",
+        "reason": "状态管理依赖画布渲染",
+        "to": "TF-0007",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088358Z"
+      },
+      "TFE-0013": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088397Z",
+        "created_from_session": null,
+        "from": "TF-0009",
+        "id": "TFE-0013",
+        "reason": "原子保存依赖防抖后的保存请求",
+        "to": "TF-0008",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088404Z"
+      },
+      "TFE-0014": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088447Z",
+        "created_from_session": null,
+        "from": "TF-0010",
+        "id": "TFE-0014",
+        "reason": "Phase2 是全局 MVP 的子阶段",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088454Z"
+      },
+      "TFE-0015": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088498Z",
+        "created_from_session": null,
+        "from": "TF-0010",
+        "id": "TFE-0015",
+        "reason": "状态机依赖画布与持久化先跑通",
+        "to": "TF-0006",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088504Z"
+      },
+      "TFE-0016": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088547Z",
+        "created_from_session": null,
+        "from": "TF-0011",
+        "id": "TFE-0016",
+        "reason": "编辑入口组件",
+        "to": "TF-0010",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088555Z"
+      },
+      "TFE-0017": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088599Z",
+        "created_from_session": null,
+        "from": "TF-0012",
+        "id": "TFE-0017",
+        "reason": "前后端命令协议",
+        "to": "TF-0010",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088605Z"
+      },
+      "TFE-0018": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088659Z",
+        "created_from_session": null,
+        "from": "TF-0013",
+        "id": "TFE-0018",
+        "reason": "编辑工具栏",
+        "to": "TF-0010",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088667Z"
+      },
+      "TFE-0019": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088716Z",
+        "created_from_session": null,
+        "from": "TF-0014",
+        "id": "TFE-0019",
+        "reason": "Wayland surface 是全局 MVP 的核心子阶段",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088722Z"
+      },
+      "TFE-0020": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088768Z",
+        "created_from_session": null,
+        "from": "TF-0014",
+        "id": "TFE-0020",
+        "reason": "真实 surface 依赖状态机先验证",
+        "to": "TF-0010",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.088774Z"
+      },
+      "TFE-0021": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088822Z",
+        "created_from_session": null,
+        "from": "TF-0015",
+        "id": "TFE-0021",
+        "reason": "平台抽象接口",
+        "to": "TF-0014",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088828Z"
+      },
+      "TFE-0022": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088876Z",
+        "created_from_session": null,
+        "from": "TF-0016",
+        "id": "TFE-0022",
+        "reason": "覆盖层窗口",
+        "to": "TF-0014",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088882Z"
+      },
+      "TFE-0023": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.088938Z",
+        "created_from_session": null,
+        "from": "TF-0017",
+        "id": "TFE-0023",
+        "reason": "输入区域控制",
+        "to": "TF-0014",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.088948Z"
+      },
+      "TFE-0024": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089010Z",
+        "created_from_session": null,
+        "from": "TF-0018",
+        "id": "TFE-0024",
+        "reason": "验收测试",
+        "to": "TF-0014",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089019Z"
+      },
+      "TFE-0025": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089090Z",
+        "created_from_session": null,
+        "from": "TF-0015",
+        "id": "TFE-0025",
+        "reason": "trait 设计依赖最终 stack 决策",
+        "to": "TF-0003",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.089100Z"
+      },
+      "TFE-0026": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089161Z",
+        "created_from_session": null,
+        "from": "TF-0017",
+        "id": "TFE-0026",
+        "reason": "input region 作用于已创建的 layer-shell surface",
+        "to": "TF-0016",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.089168Z"
+      },
+      "TFE-0027": {
+        "blocking": false,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089225Z",
+        "created_from_session": null,
+        "from": "TF-0017",
+        "id": "TFE-0027",
+        "reason": "实现承载该技术风险",
+        "to": "TF-0025",
+        "type": "related_to",
+        "updated_at": "2026-08-08T05:07:39.089231Z"
+      },
+      "TFE-0028": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089299Z",
+        "created_from_session": null,
+        "from": "TF-0019",
+        "id": "TFE-0028",
+        "reason": "Phase5 是全局 MVP 的子阶段",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089305Z"
+      },
+      "TFE-0029": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089367Z",
+        "created_from_session": null,
+        "from": "TF-0019",
+        "id": "TFE-0029",
+        "reason": "日志/容错/打包在平台跑通后打磨",
+        "to": "TF-0014",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.089373Z"
+      },
+      "TFE-0030": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089431Z",
+        "created_from_session": null,
+        "from": "TF-0020",
+        "id": "TFE-0030",
+        "reason": "日志子系统",
+        "to": "TF-0019",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089437Z"
+      },
+      "TFE-0031": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089497Z",
+        "created_from_session": null,
+        "from": "TF-0021",
+        "id": "TFE-0031",
+        "reason": "容错与恢复",
+        "to": "TF-0019",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089503Z"
+      },
+      "TFE-0032": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089567Z",
+        "created_from_session": null,
+        "from": "TF-0022",
+        "id": "TFE-0032",
+        "reason": "打包与启动",
+        "to": "TF-0019",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089573Z"
+      },
+      "TFE-0033": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089634Z",
+        "created_from_session": null,
+        "from": "TF-0023",
+        "id": "TFE-0033",
+        "reason": "macOS 扩展（后续）",
+        "to": "TF-0001",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089644Z"
+      },
+      "TFE-0034": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089708Z",
+        "created_from_session": null,
+        "from": "TF-0023",
+        "id": "TFE-0034",
+        "reason": "macOS 实现复用已验证的状态机",
+        "to": "TF-0010",
+        "type": "depends_on",
+        "updated_at": "2026-08-08T05:07:39.089715Z"
+      },
+      "TFE-0035": {
+        "blocking": true,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089778Z",
+        "created_from_session": null,
+        "from": "TF-0024",
+        "id": "TFE-0035",
+        "reason": "macOS 双窗口实现",
+        "to": "TF-0023",
+        "type": "child_of",
+        "updated_at": "2026-08-08T05:07:39.089785Z"
+      },
+      "TFE-0036": {
+        "blocking": false,
+        "confidence": 0.6,
+        "created_at": "2026-08-08T05:07:39.089857Z",
+        "created_from_session": null,
+        "from": "TF-0025",
+        "id": "TFE-0036",
+        "reason": "该风险直接影响 Wayland 阶段的验收",
+        "to": "TF-0014",
+        "type": "related_to",
+        "updated_at": "2026-08-08T05:07:39.089864Z"
+      }
+    },
+    "event_id": "tfevt_78335851a94d49849f4a",
+    "generated_at": "2026-08-08T05:07:39.103682Z",
+    "nodes": {
+      "TF-0001": {
+        "acceptance_criteria": [
+          "Test1 启动：桌面正常、笔迹恢复、鼠标可点击桌面、边缘可见微弱 Handle",
+          "Test2 Hover：Handle 展开为 Edit 按钮，不捕获整画布",
+          "Test3 进入编辑：可画 freehand / rect / arrow / text",
+          "Test4 退出编辑：绘图仍可见、Canvas 不再捕获鼠标、可点击笔迹下的应用（最重要）",
+          "Test5 持久化：重启后笔迹恢复",
+          "Test6 异常退出：强制结束恢复最近保存内容，scene 文件不损坏"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [
+          "目标开发机运行 Wayfire（wlroots 系），支持 layer-shell",
+          "默认使用 pnpm 管理前端依赖",
+          "第一阶段只实现一个 canvas、一个显示器、一个本地 scene"
+        ],
+        "children": [
+          "TF-0002",
+          "TF-0006",
+          "TF-0010",
+          "TF-0014",
+          "TF-0019",
+          "TF-0023"
+        ],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087184Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0001",
+        "kind": "global_task",
+        "non_goals": [
+          "协作/云同步/账号/多画板/SQLite/X11/Windows/GNOME 适配/截图/OCR/AI（MVP 均不实现）"
+        ],
+        "primary_parent": null,
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [
+          "wlroots Wayland 优先跑通，macOS 后续再考虑",
+          "平台逻辑与 React UI 解耦（DesktopSurface 抽象）",
+          "Passive 模式不能通过隐藏窗口实现（笔迹仍需显示）",
+          "Wayland Passive 模式通过 wl_surface input region 控制输入",
+          "scene 数据尽量原样保存 Excalidraw elements，不自行转换格式"
+        ],
+        "source_sessions": [],
+        "status": "in_progress",
+        "success_metrics": [
+          "Test1-6 全部通过",
+          "一次 free draw stroke 只触发少量保存（500ms 防抖）"
+        ],
+        "summary": "始终显示在桌面上的透明 Excalidraw 画布，默认鼠标穿透，仅边缘编辑按钮可交互；点击进入编辑模式，完成后恢复穿透，scene 自动持久化到本地 JSON。",
+        "title": "桌面画板 MVP：透明 Excalidraw 画布 + 边缘编辑入口 + 鼠标穿透",
+        "updated_at": "2026-08-08T05:07:39.087228Z"
+      },
+      "TF-0002": {
+        "acceptance_criteria": [
+          "决策 TF-0003 已确认",
+          "前端可渲染透明背景 Excalidraw",
+          "Rust 原生侧可编译并打开覆盖窗口"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0003",
+          "TF-0004",
+          "TF-0005"
+        ],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087244Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0002",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "为后续所有阶段提供可运行的工程基础",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "in_progress",
+        "success_metrics": [],
+        "summary": "确定 Wayland 覆盖层 WebView 方案，搭建前端与 Rust 原生侧脚手架。",
+        "title": "工程脚手架与 WebView 渲染路径",
+        "updated_at": "2026-08-08T05:07:39.087287Z"
+      },
+      "TF-0003": {
+        "acceptance_criteria": [
+          "方案满足：全屏透明覆盖层 + input region 可控 + React/Excalidraw 可渲染 + IPC 可用"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.8,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087300Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0003",
+        "kind": "decision",
+        "non_goals": [],
+        "primary_parent": "TF-0002",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "确定能否继续满足核心验收（Wayland 鼠标穿透）",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [
+          "Wayland passive 模式必须通过 wl_surface_set_input_region 控制输入，不能用 X11 input shape 或隐藏窗口代替"
+        ],
+        "source_sessions": [],
+        "status": "proposed",
+        "success_metrics": [
+          "在 Wayfire 上完成 Test2/Test4（穿透）验收"
+        ],
+        "summary": "Tauri v2 标准窗口在 Linux 上创建的是普通 XDG toplevel，无法创建 gtk-layer-shell 覆盖层，也无法设置 wl_surface input region，导致 Wayland passive 穿透无法实现。需确认替代方案。",
+        "title": "Wayland 覆盖层 WebView 方案：Tauri v2 vs wry + gtk-layer-shell",
+        "updated_at": "2026-08-08T05:07:39.087313Z"
+      },
+      "TF-0004": {
+        "acceptance_criteria": [
+          "pnpm dev 可启动 vite",
+          "Excalidraw 组件可渲染到页面"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087321Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0004",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0002",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [
+          "默认使用 pnpm 安装依赖",
+          "TypeScript 严格模式"
+        ],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "初始化前端工程，引入 @excalidraw/excalidraw，接入 vite dev server。",
+        "title": "前端脚手架：Vite + React + TS + Excalidraw",
+        "updated_at": "2026-08-08T05:07:39.087331Z"
+      },
+      "TF-0005": {
+        "acceptance_criteria": [
+          "cargo build 通过",
+          "能打开一个透明覆盖窗口",
+          "tracing 输出关键事件"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087339Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0005",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0002",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "初始化 Rust crate，接入 webview（wry / tauri 视决策而定）、gtk-layer-shell、tracing 日志、原子 JSON 存储模块。",
+        "title": "Rust 原生侧脚手架：webview + gtk-layer-shell + tracing + 存储模块",
+        "updated_at": "2026-08-08T05:07:39.087349Z"
+      },
+      "TF-0006": {
+        "acceptance_criteria": [
+          "画布透明背景",
+          "绘图可用",
+          "scene.json 原子保存",
+          "重启恢复笔迹"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0007",
+          "TF-0008",
+          "TF-0009"
+        ],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087359Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0006",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "先验证核心绘图与持久化链路，不涉及平台细节",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "在普通透明窗口中跑通 React + Excalidraw：绘图、scene save、scene restore。",
+        "title": "Phase 1：前端画布与 scene 持久化跑通",
+        "updated_at": "2026-08-08T05:07:39.087371Z"
+      },
+      "TF-0007": {
+        "acceptance_criteria": [
+          "背景透明",
+          "默认 UI 不遮挡桌面",
+          "viewMode / 编辑模式可切换"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087378Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0007",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0006",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "把 Excalidraw 表现为透明背景的无限画布；通过配置（UIOptions / viewMode）隐藏不需要的菜单，不修改其核心逻辑。",
+        "title": "透明背景 Excalidraw 画布嵌入（隐藏默认 UI）",
+        "updated_at": "2026-08-08T05:07:39.087387Z"
+      },
+      "TF-0008": {
+        "acceptance_criteria": [
+          "修改后 500ms 防抖保存",
+          "单条笔迹不产生每次 pointermove 的写入"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087394Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0008",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0006",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "维护 elements/appState，任何修改标记 dirty，500ms 防抖后触发保存；一次 free draw stroke 只触发少量保存。",
+        "title": "scene 状态管理与 500ms 防抖自动保存",
+        "updated_at": "2026-08-08T05:07:39.087403Z"
+      },
+      "TF-0009": {
+        "acceptance_criteria": [
+          "原子写入：先 tmp 后 rename",
+          "scene.json 不存在时创建空 scene",
+          "JSON 损坏不崩溃、保留原文件"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087409Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0009",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0006",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "数据目录 ~/.local/share/desktop-canvas/；先写 scene.json.tmp 再 rename；启动时加载，损坏则打日志并用空 scene 启动且不覆盖原文件。",
+        "title": "scene.json 原子写入与启动恢复（tmp→flush→rename）",
+        "updated_at": "2026-08-08T05:07:39.087418Z"
+      },
+      "TF-0010": {
+        "acceptance_criteria": [
+          "三状态切换正确",
+          "Handle hover 展开 Edit 按钮",
+          "Enter/Exit 命令以 backend 成功为准再更新 UI"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0011",
+          "TF-0012",
+          "TF-0013"
+        ],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087424Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0010",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "在接入真实平台 surface 之前验证交互状态机",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "用普通窗口先验证整个状态机：Passive ↔ Hover ↔ Editing，前后端命令协议。",
+        "title": "Phase 2：Passive / Hover / Editing 状态机（普通窗口模拟）",
+        "updated_at": "2026-08-08T05:07:39.087436Z"
+      },
+      "TF-0011": {
+        "acceptance_criteria": [
+          "Passive 显示微弱 Handle",
+          "Hover 显示 Edit 按钮",
+          "不改变整画布穿透状态"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087443Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0011",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0010",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "右缘中央半透明小 Handle（约 4~8×32~48px），hover 展开为 Edit 按钮，离开自动恢复，简单 opacity/width transition。",
+        "title": "EditHandle 组件（右边缘 Handle + hover 展开 Edit）",
+        "updated_at": "2026-08-08T05:07:39.087451Z"
+      },
+      "TF-0012": {
+        "acceptance_criteria": [
+          "invoke('enter_edit_mode') 成功后才 setMode('editing')",
+          "退出时先 saveScene 再 exit"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087458Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0012",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0010",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "定义明确 command 协议；backend 成功切换后才更新 UI 状态。",
+        "title": "前后端 IPC：enter_edit_mode / exit_edit_mode",
+        "updated_at": "2026-08-08T05:07:39.087466Z"
+      },
+      "TF-0013": {
+        "acceptance_criteria": [
+          "可画 freehand/rect/arrow/text",
+          "可删除/撤销/重做",
+          "有明确的 Done 出口"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087473Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0013",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0010",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "优先复用 Excalidraw 自带工具，补充自定义 Done 按钮；不重新实现选择/resize/arrow routing/undo。",
+        "title": "Editing 工具栏（Pen/Rect/Arrow/Text/Delete/Undo/Redo/Done）",
+        "updated_at": "2026-08-08T05:07:39.087482Z"
+      },
+      "TF-0014": {
+        "acceptance_criteria": [
+          "gtk-layer-shell 全屏透明覆盖层",
+          "passive：input region 仅 handle rect",
+          "editing：input region 全屏",
+          "键盘交互性 passive 关闭 / editing 打开"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0015",
+          "TF-0016",
+          "TF-0017",
+          "TF-0018"
+        ],
+        "confidence": 0.75,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087490Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0014",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "在真实 wlroots compositor（Wayfire）上实现鼠标穿透与编辑切换",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "实现 layer-shell 全屏透明覆盖层 + input region 控制（passive=handle rect，editing=fullscreen）+ 键盘交互性。",
+        "title": "Phase 4：Wayland DesktopSurface（wlroots）",
+        "updated_at": "2026-08-08T05:07:39.087499Z"
+      },
+      "TF-0015": {
+        "acceptance_criteria": [
+          "平台逻辑不散落于 React",
+          "命令层与具体平台实现解耦"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087505Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0015",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0014",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "定义 DesktopSurface trait（enter_passive / enter_editing / screen_size 等），React 只发 enter_editing / enter_passive，不感知 wl_surface/wl_region。",
+        "title": "DesktopSurface trait 抽象与模式命令接线",
+        "updated_at": "2026-08-08T05:07:39.087513Z"
+      },
+      "TF-0016": {
+        "acceptance_criteria": [
+          "窗口覆盖目标屏幕且透明",
+          "不显示普通窗口装饰",
+          "editing 模式可输入文字（键盘可交互）"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.75,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087519Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0016",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0014",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "创建 overlay 层、锚定四边充满输出的透明 GTK 窗口，托管 WebView；按模式设置 wl_surface 键盘交互性。",
+        "title": "gtk-layer-shell 全屏透明覆盖层 + 键盘交互性控制",
+        "updated_at": "2026-08-08T05:07:39.087528Z"
+      },
+      "TF-0017": {
+        "acceptance_criteria": [
+          "passive 时点击画布空白处落到桌面/下层应用",
+          "editing 时全画布接收指针输入"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.7,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087534Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0017",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0014",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "通过 gdk wl_surface 原始 FFI 调用 wl_surface_set_input_region：passive 设为 handle rect，editing 设为全屏。",
+        "title": "input region 控制（passive=handle rect / editing=fullscreen）",
+        "updated_at": "2026-08-08T05:07:39.087546Z"
+      },
+      "TF-0018": {
+        "acceptance_criteria": [
+          "Test1-6 全部通过"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.7,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087552Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0018",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0014",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "在目标开发机 Wayfire 上逐条跑 Test1-6，重点验证 Test4（退出编辑后鼠标穿透到笔迹下的应用）。",
+        "title": "Wayfire 环境验收测试（Test 1–6）",
+        "updated_at": "2026-08-08T05:07:39.087561Z"
+      },
+      "TF-0019": {
+        "acceptance_criteria": [
+          "关键事件均有日志",
+          "关键平台调用失败不静默忽略",
+          "scene 解析失败不阻止启动"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0020",
+          "TF-0021",
+          "TF-0022"
+        ],
+        "confidence": 0.85,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087567Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0019",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "tracing 日志、关键平台调用失败处理、损坏 scene 容错、启动行为与打包打磨。",
+        "title": "Phase 5：日志、容错与打包",
+        "updated_at": "2026-08-08T05:07:39.087576Z"
+      },
+      "TF-0020": {
+        "acceptance_criteria": [
+          "启动、加载、保存、模式切换均有日志",
+          "Wayland 初始化失败有明确错误日志"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087582Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0020",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0019",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "记录 start/scene loaded/scene saved/enter passive/enter editing/初始化失败等事件。",
+        "title": "tracing 日志 + 关键平台调用失败处理",
+        "updated_at": "2026-08-08T05:07:39.087591Z"
+      },
+      "TF-0021": {
+        "acceptance_criteria": [
+          "异常退出后重启可恢复最近保存",
+          "scene 文件未因中断写入损坏"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.9,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087599Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0021",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0019",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "scene.json 损坏时打日志、用空 scene 启动、尽量保留原损坏文件；原子写入保证中断不损坏。",
+        "title": "损坏 scene.json 容错与 crash recovery",
+        "updated_at": "2026-08-08T05:07:39.087610Z"
+      },
+      "TF-0022": {
+        "acceptance_criteria": [
+          "不依赖 vite dev server 也能运行",
+          "启动流程稳定无崩溃"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.75,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087617Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0022",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0019",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "加载内置前端资源、启动流程稳定、脱离 dev server 可运行。",
+        "title": "打包与启动流程打磨",
+        "updated_at": "2026-08-08T05:07:39.087625Z"
+      },
+      "TF-0023": {
+        "acceptance_criteria": [
+          "透明全屏 Canvas Window",
+          "passive 时 ignoresMouseEvents=true",
+          "Control Window 提供编辑入口"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [
+          "TF-0024"
+        ],
+        "confidence": 0.6,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087632Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0023",
+        "kind": "milestone",
+        "non_goals": [],
+        "primary_parent": "TF-0001",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "在 wlroots 验证成功后扩展到 macOS",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "先用 wlroots 跑通，macOS 后续实现：Canvas Window + Control Window（ignoresMouseEvents + 独立 NSPanel 控制入口）。",
+        "title": "Phase 3（后续）：macOS DesktopSurface",
+        "updated_at": "2026-08-08T05:07:39.087640Z"
+      },
+      "TF-0024": {
+        "acceptance_criteria": [
+          "passive 穿透 / editing 可交互",
+          "不出现在 Dock/普通窗口列表"
+        ],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.6,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087647Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0024",
+        "kind": "task",
+        "non_goals": [],
+        "primary_parent": "TF-0023",
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "borderless/transparent NSWindow 全屏透明画布，passive=ignoresMouseEvents true；独立小 NSPanel 承载编辑按钮。",
+        "title": "macOS Canvas Window + Control Window（ignoresMouseEvents）",
+        "updated_at": "2026-08-08T05:07:39.087657Z"
+      },
+      "TF-0025": {
+        "acceptance_criteria": [],
+        "alignment": {
+          "fit": "unknown",
+          "fit_confidence": 0.0,
+          "user_goal": "",
+          "validation_plan": [],
+          "why_not_enough": "",
+          "why_this_task": ""
+        },
+        "alignment_records": [],
+        "assumptions": [],
+        "children": [],
+        "confidence": 0.7,
+        "context_tags": [],
+        "created_at": "2026-08-08T05:07:39.087665Z",
+        "deprecated_at": null,
+        "derived_progress": 0.0,
+        "desired_outcomes": [],
+        "deviations": [],
+        "difficulty": "unknown",
+        "estimated_total_minutes": null,
+        "evidence": [],
+        "execution_hints": [],
+        "id": "TF-0025",
+        "kind": "risk",
+        "mitigation": "用 wayland-sys / 直接 FFI 声明，先用最小原型在 Wayfire 验证再集成",
+        "non_goals": [],
+        "primary_parent": null,
+        "priority": 3,
+        "progress": 0.0,
+        "progress_source": "manual",
+        "purpose": "提前标注 Wayland 穿透实现的技术风险",
+        "remaining_minutes_max": null,
+        "remaining_minutes_min": null,
+        "requirements": [],
+        "source_sessions": [],
+        "status": "ready",
+        "success_metrics": [],
+        "summary": "gtk-layer-shell 未直接暴露 input region；需在 gdk 同一条 wayland 连接上用 wl_compositor_create_region + wl_surface_set_input_region 的原始 FFI，与 gtk 链接的 libwayland 版本需一致，否则可能崩溃或无效。",
+        "title": "input region 需在 gdk 连接上用 libwayland FFI 实现，存在链接/版本风险",
+        "updated_at": "2026-08-08T05:07:39.087674Z"
+      }
+    },
+    "reason": "proposal_applied",
+    "roots": [
+      "TF-0001",
+      "TF-0025"
+    ],
+    "schema_version": 1,
+    "status_legend": {
+      "archived": "已归档，通常不参与当前 todo",
+      "blocked": "被依赖、信息或外部条件阻塞",
+      "deprecated": "已废止但保留历史",
+      "done": "已完成并通过验收",
+      "in_progress": "正在推进或作为长期目标持续演进",
+      "proposed": "已提出但尚未确认或排期",
+      "ready": "可开始执行，当前没有未满足依赖",
+      "review_needed": "产物或判断已到可检查阶段，但需要复核验收标准、证据、不足风险和实际结果后，才能标为已完成。"
+    },
+    "status_queues": {
+      "actionable_todos": [
+        "TF-0002",
+        "TF-0003",
+        "TF-0007",
+        "TF-0011",
+        "TF-0012",
+        "TF-0013",
+        "TF-0016",
+        "TF-0018",
+        "TF-0020",
+        "TF-0021",
+        "TF-0022",
+        "TF-0024",
+        "TF-0025",
+        "TF-0004",
+        "TF-0005",
+        "TF-0006",
+        "TF-0008",
+        "TF-0009",
+        "TF-0010",
+        "TF-0014",
+        "TF-0015",
+        "TF-0017",
+        "TF-0019",
+        "TF-0023"
+      ],
+      "blocked": [],
+      "by_status": {
+        "archived": [],
+        "blocked": [],
+        "deprecated": [],
+        "done": [],
+        "in_progress": [
+          "TF-0001",
+          "TF-0002"
+        ],
+        "proposed": [
+          "TF-0003"
+        ],
+        "ready": [
+          "TF-0004",
+          "TF-0005",
+          "TF-0006",
+          "TF-0007",
+          "TF-0008",
+          "TF-0009",
+          "TF-0010",
+          "TF-0011",
+          "TF-0012",
+          "TF-0013",
+          "TF-0014",
+          "TF-0015",
+          "TF-0016",
+          "TF-0017",
+          "TF-0018",
+          "TF-0019",
+          "TF-0020",
+          "TF-0021",
+          "TF-0022",
+          "TF-0023",
+          "TF-0024",
+          "TF-0025"
+        ],
+        "review_needed": []
+      },
+      "evergreen_open_goals": [
+        "TF-0001"
+      ],
+      "open": [
+        "TF-0001",
+        "TF-0002",
+        "TF-0003",
+        "TF-0004",
+        "TF-0005",
+        "TF-0006",
+        "TF-0007",
+        "TF-0008",
+        "TF-0009",
+        "TF-0010",
+        "TF-0011",
+        "TF-0012",
+        "TF-0013",
+        "TF-0014",
+        "TF-0015",
+        "TF-0016",
+        "TF-0017",
+        "TF-0018",
+        "TF-0019",
+        "TF-0020",
+        "TF-0021",
+        "TF-0022",
+        "TF-0023",
+        "TF-0024",
+        "TF-0025"
+      ],
+      "ready": [
+        "TF-0004",
+        "TF-0005",
+        "TF-0006",
+        "TF-0007",
+        "TF-0008",
+        "TF-0009",
+        "TF-0010",
+        "TF-0011",
+        "TF-0012",
+        "TF-0013",
+        "TF-0014",
+        "TF-0015",
+        "TF-0016",
+        "TF-0017",
+        "TF-0018",
+        "TF-0019",
+        "TF-0020",
+        "TF-0021",
+        "TF-0022",
+        "TF-0023",
+        "TF-0024",
+        "TF-0025"
+      ],
+      "review_needed": []
+    },
+    "summary": {
+      "blocked_count": 0,
+      "done_count": 0,
+      "edge_count": 36,
+      "node_count": 25,
+      "open_count": 25,
+      "review_needed_count": 0
+    },
+    "tree_edges": [
+      "TFE-0001",
+      "TFE-0002",
+      "TFE-0003",
+      "TFE-0004",
+      "TFE-0007",
+      "TFE-0009",
+      "TFE-0010",
+      "TFE-0011",
+      "TFE-0014",
+      "TFE-0016",
+      "TFE-0017",
+      "TFE-0018",
+      "TFE-0019",
+      "TFE-0021",
+      "TFE-0022",
+      "TFE-0023",
+      "TFE-0024",
+      "TFE-0028",
+      "TFE-0030",
+      "TFE-0031",
+      "TFE-0032",
+      "TFE-0033",
+      "TFE-0035"
+    ],
+    "workspace_path": "/home/k/Documents/personalProgram/desktop-canvas"
+  },
+  "snapshot_id": "0001",
+  "todos": [
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0001",
+      "kind": "global_task",
+      "next_action": "Test1 启动：桌面正常、笔迹恢复、鼠标可点击桌面、边缘可见微弱 Handle",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "in_progress",
+      "success_metrics": [
+        "Test1-6 全部通过",
+        "一次 free draw stroke 只触发少量保存（500ms 防抖）"
+      ],
+      "title": "桌面画板 MVP：透明 Excalidraw 画布 + 边缘编辑入口 + 鼠标穿透"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0002",
+      "kind": "milestone",
+      "next_action": "决策 TF-0003 已确认",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "为后续所有阶段提供可运行的工程基础",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "in_progress",
+      "success_metrics": [],
+      "title": "工程脚手架与 WebView 渲染路径"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.8,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0003",
+      "kind": "decision",
+      "next_action": "方案满足：全屏透明覆盖层 + input region 可控 + React/Excalidraw 可渲染 + IPC 可用",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "确定能否继续满足核心验收（Wayland 鼠标穿透）",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "proposed",
+      "success_metrics": [
+        "在 Wayfire 上完成 Test2/Test4（穿透）验收"
+      ],
+      "title": "Wayland 覆盖层 WebView 方案：Tauri v2 vs wry + gtk-layer-shell"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0007",
+      "kind": "task",
+      "next_action": "背景透明",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "透明背景 Excalidraw 画布嵌入（隐藏默认 UI）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0011",
+      "kind": "task",
+      "next_action": "Passive 显示微弱 Handle",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "EditHandle 组件（右边缘 Handle + hover 展开 Edit）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0012",
+      "kind": "task",
+      "next_action": "invoke('enter_edit_mode') 成功后才 setMode('editing')",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "前后端 IPC：enter_edit_mode / exit_edit_mode"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0013",
+      "kind": "task",
+      "next_action": "可画 freehand/rect/arrow/text",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Editing 工具栏（Pen/Rect/Arrow/Text/Delete/Undo/Redo/Done）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.75,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0016",
+      "kind": "task",
+      "next_action": "窗口覆盖目标屏幕且透明",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "gtk-layer-shell 全屏透明覆盖层 + 键盘交互性控制"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.7,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0018",
+      "kind": "task",
+      "next_action": "Test1-6 全部通过",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Wayfire 环境验收测试（Test 1–6）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0020",
+      "kind": "task",
+      "next_action": "启动、加载、保存、模式切换均有日志",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "tracing 日志 + 关键平台调用失败处理"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0021",
+      "kind": "task",
+      "next_action": "异常退出后重启可恢复最近保存",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "损坏 scene.json 容错与 crash recovery"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.75,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0022",
+      "kind": "task",
+      "next_action": "不依赖 vite dev server 也能运行",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "打包与启动流程打磨"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.6,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0024",
+      "kind": "task",
+      "next_action": "passive 穿透 / editing 可交互",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "macOS Canvas Window + Control Window（ignoresMouseEvents）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [],
+      "confidence": 0.7,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0025",
+      "kind": "risk",
+      "next_action": "补充下一步动作或开始执行",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "提前标注 Wayland 穿透实现的技术风险",
+      "ready": true,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "input region 需在 gdk 连接上用 libwayland FFI 实现，存在链接/版本风险"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0003"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0004",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0003",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "前端脚手架：Vite + React + TS + Excalidraw"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0003"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0005",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0003",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Rust 原生侧脚手架：webview + gtk-layer-shell + tracing + 存储模块"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0002"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0006",
+      "kind": "milestone",
+      "next_action": "先完成依赖：TF-0002",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "先验证核心绘图与持久化链路，不涉及平台细节",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Phase 1：前端画布与 scene 持久化跑通"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0007"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0008",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0007",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "scene 状态管理与 500ms 防抖自动保存"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0008"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0009",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0008",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "scene.json 原子写入与启动恢复（tmp→flush→rename）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0006"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0010",
+      "kind": "milestone",
+      "next_action": "先完成依赖：TF-0006",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "在接入真实平台 surface 之前验证交互状态机",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Phase 2：Passive / Hover / Editing 状态机（普通窗口模拟）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0010"
+      ],
+      "confidence": 0.75,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0014",
+      "kind": "milestone",
+      "next_action": "先完成依赖：TF-0010",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "在真实 wlroots compositor（Wayfire）上实现鼠标穿透与编辑切换",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Phase 4：Wayland DesktopSurface（wlroots）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0003"
+      ],
+      "confidence": 0.9,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0015",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0003",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "DesktopSurface trait 抽象与模式命令接线"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0016"
+      ],
+      "confidence": 0.7,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0017",
+      "kind": "task",
+      "next_action": "先完成依赖：TF-0016",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "input region 控制（passive=handle rect / editing=fullscreen）"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0014"
+      ],
+      "confidence": 0.85,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0019",
+      "kind": "milestone",
+      "next_action": "先完成依赖：TF-0014",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Phase 5：日志、容错与打包"
+    },
+    {
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "blocked_by": [
+        "TF-0010"
+      ],
+      "confidence": 0.6,
+      "context_tags": [],
+      "desired_outcomes": [],
+      "difficulty": "unknown",
+      "id": "TF-0023",
+      "kind": "milestone",
+      "next_action": "先完成依赖：TF-0010",
+      "priority": 3,
+      "progress": 0.0,
+      "purpose": "在 wlroots 验证成功后扩展到 macOS",
+      "ready": false,
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "status": "ready",
+      "success_metrics": [],
+      "title": "Phase 3（后续）：macOS DesktopSurface"
+    }
+  ]
+}
