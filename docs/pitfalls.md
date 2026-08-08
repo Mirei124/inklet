@@ -58,7 +58,15 @@
 - **方案**：不缓存尺寸，改为监听 `connect_size_allocate`，每次 resize 更新
   尺寸并**按当前模式重设 input region**。
 
-### 6. 实际 surface 尺寸（1920×1046）与 monitor 尺寸（1920×1080）不一致
+### 6. `wl_surface.set_input_region` 在**下一次 commit 才生效**
+- **现象**：初始 input region 正常（webview 首帧渲染会自动 commit），
+  但拖拽 handle 后热区变了却不生效——点击新位置穿透、旧位置仍可点。
+- **原因**：协议规定 input region 请求进入 pending 状态，要等 surface 下一次
+  `wl_surface.commit` 才应用。拖拽结束后没有新渲染/commit，新热区一直不生效。
+- **方案**：marshalled `set_input_region` 之后**手动 marshal `wl_surface.commit`
+  （opcode 6）**强制应用 pending 状态。仅 `wl_display_flush`/`roundtrip` 不够。
+
+### 7. 实际 surface 尺寸（1920×1046）与 monitor 尺寸（1920×1080）不一致
 - **现象**：layer-shell 窗口被 compositor 配置成 1046 高（少了 34px，原因未知，
   可能是 Wayfire 保留区域），用 `monitor_at_window().geometry()` 会拿到 1080。
 - **方案**：用**窗口 allocation**（即 surface 真实尺寸）作为坐标基准，

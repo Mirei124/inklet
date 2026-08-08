@@ -49,6 +49,8 @@ export type Command =
   | "set_canvas_layer"
   | "get_handle_position"
   | "set_handle_position"
+  | "get_settings"
+  | "set_lang"
   | "log_debug";
 
 /** 把前端状态/错误上报到 Rust 日志（调试用，浏览器 mock 下忽略）。 */
@@ -167,6 +169,17 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
       localStorage.setItem(MOCK_HANDLE_Y_KEY, String(y));
       return delay({ y });
     }
+    case "get_settings":
+      return delay({
+        layer: localStorage.getItem(MOCK_LAYER_KEY) || "overlay",
+        handleY: Number(localStorage.getItem(MOCK_HANDLE_Y_KEY) || "0.5"),
+        lang: localStorage.getItem(MOCK_LANG_KEY) || undefined,
+      });
+    case "set_lang": {
+      const lang = args?.lang === "en" ? "en" : "zh";
+      localStorage.setItem(MOCK_LANG_KEY, lang);
+      return delay({ lang });
+    }
     default:
       return delay(null);
   }
@@ -174,3 +187,4 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
 
 const MOCK_LAYER_KEY = "desktop-canvas.mock.layer";
 const MOCK_HANDLE_Y_KEY = "desktop-canvas.mock.handleY";
+const MOCK_LANG_KEY = "desktop-canvas.mock.lang";

@@ -10,8 +10,10 @@
  */
 import { useRef, useState } from "react";
 import type { CanvasLayer } from "./bridge";
+import { t, type Lang } from "./i18n";
 
 interface EditHandleProps {
+  lang: Lang;
   layer: CanvasLayer;
   handleY: number;
   onEnterEdit: () => void;
@@ -34,6 +36,7 @@ interface DragState {
 }
 
 export function EditHandle({
+  lang,
   layer,
   handleY,
   onEnterEdit,
@@ -77,7 +80,7 @@ export function EditHandle({
     }
   };
 
-  const layerLabel = layer === "overlay" ? "⇵ 置底" : "⇵ 置顶";
+  const layerLabel = layer === "overlay" ? t(lang, "layerToBack") : t(lang, "layerToFront");
 
   return (
     <div
@@ -93,17 +96,22 @@ export function EditHandle({
       <button
         type="button"
         className="edit-handle-bar"
-        aria-label="编辑入口（拖拽移动，点击展开）"
-        title="拖拽移动 · 点击展开"
+        aria-label={t(lang, "editBarTitle")}
+        title={t(lang, "editBarTitle")}
       />
-      <button type="button" className="edit-handle-item" onClick={onEnterEdit} title="进入编辑模式">
-        <span>✎ Edit</span>
+      <button
+        type="button"
+        className="edit-handle-item"
+        onClick={onEnterEdit}
+        title={t(lang, "enterEditTitle")}
+      >
+        <span>{t(lang, "edit")}</span>
       </button>
       <button
         type="button"
         className="edit-handle-item"
         onClick={onToggleLayer}
-        title={layer === "overlay" ? "移到壁纸层（所有窗口之下）" : "移到所有窗口之上"}
+        title={layer === "overlay" ? t(lang, "layerToBackTitle") : t(lang, "layerToFrontTitle")}
       >
         <span>{layerLabel}</span>
       </button>

@@ -69,6 +69,7 @@ mod ffi {
         pub fn wl_proxy_get_version(proxy: *mut c_void) -> u32;
         pub fn wl_proxy_destroy(proxy: *mut c_void);
         pub fn wl_display_flush(display: *mut c_void) -> i32;
+        pub fn wl_display_roundtrip(display: *mut c_void) -> i32;
 
         // 核心协议接口描述符（数据符号）
         pub static wl_region_interface: c_void;
@@ -80,6 +81,7 @@ const OP_COMPOSITOR_CREATE_REGION: u32 = 1;
 const OP_REGION_DESTROY: u32 = 0;
 const OP_REGION_ADD: u32 = 1;
 const OP_SURFACE_SET_INPUT_REGION: u32 = 5;
+const OP_SURFACE_COMMIT: u32 = 6;
 
 pub struct WaylandSurface {
     window: gtk::Window,
@@ -165,12 +167,19 @@ impl WaylandSurface {
     }
 
     /// 设置编辑入口的垂直位置（0..1），并立即重算 passive 热区。
+    ///
+    /// 仅 flush 可能在当前 IPC 回调里不生效（连接处于读取/派发中间态），
+    /// 因此延后一次 `wl_display_roundtrip`，确保 compositor 真正应用 input region。
     pub fn set_handle_y(&self, y: f32) {
         let y = y.clamp(0.02, 0.98);
         *self.handle_y.borrow_mut() = y;
         if *self.mode.borrow() == SurfaceMode::Passive {
             let _ = self.apply_current_region();
         }
+        let wl_display = self.wl_display as usize;
+        glib::MainContext::default().invoke(move || unsafe {
+            ffi::wl_display_roundtrip(wl_display as *mut c_void);
+        });
         tracing::info!(y, "handle position set");
     }
 
@@ -306,6 +315,17 @@ fn set_input_region_ffi(
             0,
             0,
             obj_arg.as_ptr(),
+        );
+
+        // wl_surface.set_input_region 在**下一次 commit 才生效**（协议规定）。
+        // 没有新渲染时 webview 不会自动 commit，这里必须手动 commit 应用 pending 状态。
+        ffi::wl_proxy_marshal_array_flags(
+            wl_surface,
+            OP_SURFACE_COMMIT,
+            std::ptr::null(),
+            0,
+            0,
+            std::ptr::null(),
         );
 
         ffi::wl_proxy_marshal_array_flags(

@@ -97,6 +97,22 @@ fn dispatch(cmd: &str, args: &Value, surface: &WaylandSurface) -> Result<Value, 
             write_settings(&settings);
             Ok(json!({ "y": surface.handle_y() }))
         }
+        "get_settings" => {
+            let s = read_settings();
+            Ok(json!({
+                "layer": surface.layer(),
+                "handleY": surface.handle_y(),
+                "lang": s.get("lang").and_then(Value::as_str).unwrap_or("zh"),
+            }))
+        }
+        "set_lang" => {
+            let lang = args.get("lang").and_then(Value::as_str).unwrap_or("zh");
+            let lang = if lang == "en" { "en" } else { "zh" };
+            let mut settings = read_settings();
+            settings["lang"] = json!(lang);
+            write_settings(&settings);
+            Ok(json!({ "lang": lang }))
+        }
         other => Err(format!("unknown command: {other}")),
     }
 }
@@ -108,7 +124,9 @@ fn read_settings() -> Value {
         .ok()
         .flatten()
         .and_then(|s| serde_json::from_str(&s).ok())
-        .unwrap_or_else(|| json!({ "version": 1, "layer": "overlay", "handleY": 0.5 }))
+        .unwrap_or_else(
+            || json!({ "version": 1, "layer": "overlay", "handleY": 0.5, "lang": "zh" }),
+        )
 }
 
 /// 写入 settings.json。

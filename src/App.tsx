@@ -15,6 +15,8 @@ import { Canvas } from "./Canvas";
 import type { SceneChange } from "./Canvas";
 import { EditHandle } from "./EditHandle";
 import { Toolbar } from "./Toolbar";
+import { detectLang } from "./i18n";
+import type { Lang } from "./i18n";
 import { createDebouncedSaver, loadScene, persistScene } from "./state/scene";
 import type { SceneFile } from "./state/scene";
 
@@ -25,6 +27,7 @@ export default function App() {
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
   const [layer, setLayer] = useState<CanvasLayer>("overlay");
   const [handleY, setHandleY] = useState(0.5);
+  const [lang, setLang] = useState<Lang>("zh");
 
   // 前端 JS 错误上报到 Rust 日志（调试用）
   useEffect(() => {
@@ -49,19 +52,30 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [scene, layerResult, posResult] = await Promise.all([
+      const [scene, settings] = await Promise.all([
         loadScene(),
-        invoke("get_canvas_layer") as Promise<{ layer: CanvasLayer }>,
-        invoke("get_handle_position") as Promise<{ y: number }>,
+        invoke("get_settings") as Promise<{
+          layer: CanvasLayer;
+          handleY: number;
+          lang?: string;
+        }>,
       ]);
       if (cancelled) return;
+      // 语言：settings 里有则用，没有则按系统区域检测并持久化
+      const resolvedLang: Lang =
+        settings.lang === "en" ? "en" : settings.lang === "zh" ? "zh" : detectLang();
+      if (!settings.lang) {
+        void invoke("set_lang", { lang: resolvedLang });
+      }
       logDebug(
-        `loaded scene: ${scene.elements.length} elements; layer=${layerResult.layer}; ` +
-          `handleY=${posResult.y.toFixed(2)}; viewport=${window.innerWidth}x${window.innerHeight}`,
+        `loaded scene: ${scene.elements.length} elements; layer=${settings.layer}; ` +
+          `handleY=${settings.handleY.toFixed(2)}; lang=${resolvedLang}; ` +
+          `viewport=${window.innerWidth}x${window.innerHeight}`,
       );
       setInitialScene(scene);
-      setLayer(layerResult.layer);
-      setHandleY(posResult.y);
+      setLayer(settings.layer);
+      setHandleY(settings.handleY);
+      setLang(resolvedLang);
     })();
     return () => {
       cancelled = true;
@@ -93,18 +107,21 @@ export default function App() {
     }
   }, [enterEditMode]);
 
-  // 调试：列出 passive 模式下仍可见的 Excalidraw UI 元素
+  // 调试：记录 webview 收到的指针事件（定位输入区域问题）
   useEffect(() => {
-    const t = setTimeout(() => {
-      const handle = document.querySelector(".edit-handle");
-      const bar = handle ? getComputedStyle(handle, "::before") : null;
+    const onDown = (e: PointerEvent) =>
       logDebug(
-        `DIAG-UI: handle=${!!handle} ` +
-          `handleRect=${handle ? JSON.stringify(handle.getBoundingClientRect()) : "?"} ` +
-          `barDisplay=${bar ? bar.display : "?"} barOpacity=${bar ? bar.opacity : "?"}`,
+        `PTR down x=${e.clientX.toFixed(0)} y=${e.clientY.toFixed(0)} ` +
+          `target=${(e.target as HTMLElement).className || "?"}`,
       );
-    }, 3000);
-    return () => clearTimeout(t);
+    const onUp = (e: PointerEvent) =>
+      logDebug(`PTR up x=${e.clientX.toFixed(0)} y=${e.clientY.toFixed(0)}`);
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("pointerup", onUp);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("pointerup", onUp);
+    };
   }, []);
 
   const exitEditMode = useCallback(async () => {
@@ -145,6 +162,7 @@ export default function App() {
       ) : null}
       {mode === "passive" ? (
         <EditHandle
+          lang={lang}
           layer={layer}
           handleY={handleY}
           onEnterEdit={enterEditMode}
@@ -153,7 +171,7 @@ export default function App() {
           onPositionCommit={handlePositionCommit}
         />
       ) : null}
-      {mode === "editing" ? <Toolbar onDone={exitEditMode} handleY={handleY} /> : null}
+      {mode === "editing" ? <Toolbar lang={lang} onDone={exitEditMode} handleY={handleY} /> : null}
     </div>
   );
 }
