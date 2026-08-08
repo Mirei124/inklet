@@ -17,7 +17,7 @@
     "kind": "global_task",
     "next_action": "Test1 启动：桌面正常、笔迹恢复、鼠标可点击桌面、边缘可见微弱 Handle",
     "priority": 3,
-    "progress": 85.0,
+    "progress": 92.0,
     "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
     "ready": true,
     "remaining_minutes_max": null,
@@ -28,60 +28,6 @@
       "一次 free draw stroke 只触发少量保存（500ms 防抖）"
     ],
     "title": "桌面画板 MVP：透明 Excalidraw 画布 + 边缘编辑入口 + 鼠标穿透"
-  },
-  {
-    "alignment": {
-      "fit": "unknown",
-      "fit_confidence": 0.0,
-      "user_goal": "",
-      "validation_plan": [],
-      "why_not_enough": "",
-      "why_this_task": ""
-    },
-    "blocked_by": [],
-    "confidence": 0.85,
-    "context_tags": [],
-    "desired_outcomes": [],
-    "difficulty": "unknown",
-    "id": "TF-0019",
-    "kind": "milestone",
-    "next_action": "关键事件均有日志",
-    "priority": 3,
-    "progress": 70.0,
-    "purpose": "",
-    "ready": true,
-    "remaining_minutes_max": null,
-    "remaining_minutes_min": null,
-    "status": "in_progress",
-    "success_metrics": [],
-    "title": "Phase 5：日志、容错与打包"
-  },
-  {
-    "alignment": {
-      "fit": "unknown",
-      "fit_confidence": 0.0,
-      "user_goal": "",
-      "validation_plan": [],
-      "why_not_enough": "",
-      "why_this_task": ""
-    },
-    "blocked_by": [],
-    "confidence": 0.75,
-    "context_tags": [],
-    "desired_outcomes": [],
-    "difficulty": "unknown",
-    "id": "TF-0022",
-    "kind": "task",
-    "next_action": "不依赖 vite dev server 也能运行",
-    "priority": 3,
-    "progress": 60.0,
-    "purpose": "",
-    "ready": true,
-    "remaining_minutes_max": null,
-    "remaining_minutes_min": null,
-    "status": "in_progress",
-    "success_metrics": [],
-    "title": "打包与启动流程打磨"
   },
   {
     "alignment": {

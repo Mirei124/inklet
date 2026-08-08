@@ -77,10 +77,15 @@
 - **方案**：用 `gdk_window.display().monitor_at_window(gdk_window)`。
   另外 `gdk_window.geometry()` 返回 `(i32,i32,i32,i32)` 元组，不是 Rectangle。
 
-### 8. `pkill -f` 会杀掉执行命令的 shell 自己
-- **现象**：`pkill -f "target/debug/desktop-canvas"` 把当前 shell 也杀了
-  （命令行里含该字符串），命令退出码 144。
-- **方案**：用 `pkill -x desktop-canvas`（精确匹配进程名）。
+### 8. `pkill -f` / `pgrep -f` 会杀掉执行命令的 shell 自己
+- **现象**：`pkill -f "target/debug/desktop-canvas"` 或
+  `pgrep -f "vite/bin/vite.js"` 把当前 shell 也杀了（bash 的命令行里就含
+  这个字符串，`-f` 全命令行匹配），命令退出码 144（被信号杀死）。
+  这条**反复出现**，务必记住。
+- **方案**：
+  - 精确匹配进程名：`pkill -x desktop-canvas`（`-x` 只匹配进程名）。
+  - 按端口找 PID 再 kill：`ss -ltnp | grep :1420` → 取 `pid=` 字段 → `kill <pid>`。
+  - 绝不把"要匹配的字符串"写进自己命令行的 `-f` 模式里。
 
 ---
 
@@ -188,6 +193,34 @@
 ### 23. 本机没有 GTK3 版 gtk-layer-shell
 - 系统只有 `gtk4-layer-shell`，wry/webkit 用的是 GTK3。
 - **方案**：Arch 安装 `sudo pacman -S gtk-layer-shell`。
+
+---
+
+## 五、打包 / 发布
+
+### 24. 自定义协议要用 `request.path()` 而非 `request.uri()`
+- **现象**：加载 `dc://app/index.html` 时按 `uri` 解析成 `app/index.html`，
+  映射到 `dist/app/index.html`（不存在），页面 404。
+- **方案**：用 webkit2gtk 的 `URISchemeRequestExt::path()`（返回路径部分
+  `/index.html`），干净且正确。
+
+### 25. vite 生产构建必须 `base: './'`
+- **现象**：默认 `base: '/'` 使内置 HTML 引用 `/assets/xxx.js` 绝对路径，
+  在自定义协议 `dc://app/index.html` 下解析错乱。
+- **方案**：`vite.config.ts` 设 `base: "./"`，HTML 用相对路径 `./assets/...`。
+
+### 26. 自包含二进制的资源嵌入：`include_dir`
+- 需求：仿 Tauri 把前端嵌进二进制，单文件可运行（无需外部 dist）。
+- **方案**：`include_dir!("$CARGO_MANIFEST_DIR/../dist")` 静态嵌入目录，
+  `DIST.get_file(rel)` 运行时取字节。注意 dist 必须在**编译时**存在
+  （先 `pnpm build`）。
+- **区分 debug/release**：`#[cfg(not(debug_assertions))]` 嵌入；
+  debug 读磁盘（`../dist`），避免开发时也强制先 build 前端。
+
+### 27. debug-only 的导入要 `#[cfg(debug_assertions)]` 门控
+- **现象**：只在 `#[cfg(debug_assertions)]` 代码块里用的导入（如 `SettingsExt`
+  用于 inspector、`PathBuf` 用于 debug 磁盘读取），release 编译报 unused import。
+- **方案**：给这些 `use` 也加 `#[cfg(debug_assertions)]`。
 
 ---
 
