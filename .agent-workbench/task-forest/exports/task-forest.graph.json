@@ -908,7 +908,7 @@
     }
   },
   "event_id": null,
-  "generated_at": "2026-08-08T12:18:03.547144Z",
+  "generated_at": "2026-08-08T17:29:12.191384Z",
   "nodes": {
     "TF-0001": {
       "acceptance_criteria": [
@@ -1990,30 +1990,34 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087632Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 90.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
       "estimated_total_minutes": null,
-      "evidence": [],
+      "evidence": [
+        "macOS 核心编译通过（arm64 Mach-O）；Canvas Window + Control Panel 双窗口创建成功（CGWindowList 确认 layer13/130x80 控制面板、layer0 画布）；前端 React 挂载（1470x919）且 IPC 全通（load_scene/get_settings/save_scene）；右缘 handle 竖条渲染可见；custom protocol inklet:// 托管 dist 成功",
+        "Canvas layer 修复：去掉 tao native fullscreen（会重置 NSWindow level），改为手动 setFrame 铺满主屏 + kCGStatusWindowLevel(21)。CGWindowList 确认 Canvas layer=21 全屏[0,0 1470x956]，Control layer=22 [2810,916 130x80]。clippy 零告警，cargo test 4/4 过，typecheck 过",
+        "macOS 交互验证通过：Canvas 透明（clearColor）+ 穿透（ignoresMouseEvents）+ 当前桌面显示（MoveToActiveSpace/FullScreenNone，不切 Space）；Control 窗口承载竖条交互（点击展开/拖拽定位）；坐标单位统一逻辑/物理像素；前端 mode 同步（__dc_sync_mode 修复 Control 触发切换）；Canvas 避开菜单栏（visibleFrame）；多语言 i18n（settings.lang 注入 + set_lang 同步）"
+      ],
       "execution_hints": [],
       "id": "TF-0023",
       "kind": "milestone",
       "non_goals": [],
       "primary_parent": "TF-0001",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 90.0,
       "progress_source": "manual",
       "purpose": "在 wlroots 验证成功后扩展到 macOS",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "in_progress",
       "success_metrics": [],
       "summary": "先用 wlroots 跑通，macOS 后续实现：Canvas Window + Control Window（ignoresMouseEvents + 独立 NSPanel 控制入口）。",
       "title": "Phase 3（后续）：macOS DesktopSurface",
-      "updated_at": "2026-08-08T05:07:39.087640Z"
+      "updated_at": "2026-08-08T17:29:12.024573Z"
     },
     "TF-0024": {
       "acceptance_criteria": [
@@ -2035,30 +2039,33 @@
       "context_tags": [],
       "created_at": "2026-08-08T05:07:39.087647Z",
       "deprecated_at": null,
-      "derived_progress": 0.0,
+      "derived_progress": 85.0,
       "desired_outcomes": [],
       "deviations": [],
       "difficulty": "unknown",
       "estimated_total_minutes": null,
-      "evidence": [],
+      "evidence": [
+        "MacSurface 实现完成：tao+wry+objc2。Canvas ignoresMouseEvents 切换、Control 浮动窗口（130x80 layer13）、NSWindow level 切换已实现。剩余：全屏排除菜单栏/Dock、Canvas layer 需修正为 overlay 层级、交互验收",
+        "passive 穿透 + editing 可交互已验证（点击 Edit 进入编辑、工具栏显示、可画画）；Control 竖条交互完成；剩余：正式 app bundle（Info.plist/Dock 图标/应用名）、release 打包流程、'不出现在 Dock' 的正式化"
+      ],
       "execution_hints": [],
       "id": "TF-0024",
       "kind": "task",
       "non_goals": [],
       "primary_parent": "TF-0023",
       "priority": 3,
-      "progress": 0.0,
+      "progress": 85.0,
       "progress_source": "manual",
       "purpose": "",
       "remaining_minutes_max": null,
       "remaining_minutes_min": null,
       "requirements": [],
       "source_sessions": [],
-      "status": "ready",
+      "status": "in_progress",
       "success_metrics": [],
       "summary": "borderless/transparent NSWindow 全屏透明画布，passive=ignoresMouseEvents true；独立小 NSPanel 承载编辑按钮。",
       "title": "macOS Canvas Window + Control Window（ignoresMouseEvents）",
-      "updated_at": "2026-08-08T05:07:39.087657Z"
+      "updated_at": "2026-08-08T17:29:12.185607Z"
     },
     "TF-0025": {
       "acceptance_criteria": [],
@@ -2155,12 +2162,12 @@
         "TF-0022"
       ],
       "in_progress": [
-        "TF-0001"
+        "TF-0001",
+        "TF-0023",
+        "TF-0024"
       ],
       "proposed": [],
       "ready": [
-        "TF-0023",
-        "TF-0024",
         "TF-0025"
       ],
       "review_needed": []
@@ -2175,8 +2182,6 @@
       "TF-0025"
     ],
     "ready": [
-      "TF-0023",
-      "TF-0024",
       "TF-0025"
     ],
     "review_needed": []
