@@ -72,3 +72,13 @@ fn init_tracing() {
 pub(crate) fn dev_mode() -> bool {
     std::env::args().any(|a| a == "--dev") || std::env::var_os("DC_DEV").is_some()
 }
+
+/// 构建 vite dev server URL（--dev 模式加载；`DC_AUTOEDIT` 时自动进编辑模式）。
+/// Linux 与 macOS 共用。
+pub(crate) fn dev_url() -> String {
+    if std::env::var_os("DC_AUTOEDIT").is_some() {
+        format!("{DEV_SERVER_URL}/?autoedit=1")
+    } else {
+        DEV_SERVER_URL.to_string()
+    }
+}

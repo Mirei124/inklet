@@ -1,6 +1,6 @@
 //! macOS (AppKit / WKWebView)：tao 窗口 + wry + objc2。
 
-use super::{dev_mode, restore_surface_settings, DEV_SERVER_URL};
+use super::{dev_mode, dev_url, restore_surface_settings};
 use crate::desktop::macos::MacSurface;
 use crate::ipc;
 use serde_json::Value;
@@ -22,11 +22,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
         &event_loop,
         |wv| {
             if dev_mode() {
-                let url = if std::env::var_os("DC_AUTOEDIT").is_some() {
-                    format!("{DEV_SERVER_URL}/?autoedit=1")
-                } else {
-                    DEV_SERVER_URL.to_string()
-                };
+                let url = dev_url();
                 tracing::info!(url = %url, "loading dev server");
                 wv.load_url(&url).ok();
             } else {

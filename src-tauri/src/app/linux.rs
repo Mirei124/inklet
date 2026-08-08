@@ -1,7 +1,7 @@
 //! Linux (Wayland / GTK)：gtk-layer-shell 覆盖窗口 + WebKitGTK。
 
 use super::assets::mime_for;
-use super::{dev_mode, restore_surface_settings, resolve_asset, DEV_SERVER_URL};
+use super::{dev_mode, dev_url, restore_surface_settings, resolve_asset};
 use crate::desktop::wayland::{self, WaylandSurface};
 use crate::ipc;
 use crate::ipc::AppContext;
@@ -78,11 +78,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     if dev_mode() {
-        let url = if std::env::var_os("DC_AUTOEDIT").is_some() {
-            format!("{DEV_SERVER_URL}/?autoedit=1")
-        } else {
-            DEV_SERVER_URL.to_string()
-        };
+        let url = dev_url();
         tracing::info!(url = %url, "loading dev server");
         webview.load_uri(&url);
     } else {
