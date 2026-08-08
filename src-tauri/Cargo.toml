@@ -25,6 +25,8 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 dirs = "6"
 libc = "0.2"
+# 生产构建：把 dist/ 嵌入二进制（release 自包含，运行时从内存提供前端资源）
+include_dir = "0.7"
 
 [dev-dependencies]
 tempfile = "3"

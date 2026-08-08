@@ -5,6 +5,7 @@ use crate::desktop::surface::DesktopSurface;
 use crate::desktop::wayland::{self, WaylandSurface};
 use crate::ipc::{self, AppContext};
 use gtk::prelude::*;
+#[cfg(debug_assertions)]
 use std::path::PathBuf;
 use std::rc::Rc;
 #[cfg(debug_assertions)]
@@ -16,6 +17,13 @@ use webkit2gtk::{
 const DEV_SERVER_URL: &str = "http://localhost:1420";
 const APP_SCHEME: &str = "dc";
 const APP_ENTRY: &str = "dc://app/index.html";
+
+// 生产构建（release）：把 dist/ 整个目录嵌入二进制，运行时从内存提供前端资源，
+// 使二进制自包含（不需要外部 dist 目录）。
+#[cfg(not(debug_assertions))]
+use include_dir::{include_dir, Dir};
+#[cfg(not(debug_assertions))]
+static DIST: Dir = include_dir!("$CARGO_MANIFEST_DIR/../dist");
 
 pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     init_tracing();
@@ -118,18 +126,25 @@ fn dev_mode() -> bool {
     std::env::args().any(|a| a == "--dev") || std::env::var_os("DC_DEV").is_some()
 }
 
-/// 生产模式：注册 `dc` scheme，从 `../dist` 静态服务内置前端资源。
+/// 生产模式：注册 `dc` scheme。release 构建从嵌入的 dist 提供资源（自包含二进制），
+/// debug 构建从 `../dist` 磁盘目录读取（便于开发）。
 fn register_custom_protocol(
     web_context: &webkit2gtk::WebContext,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let dist = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../dist")
-        .canonicalize()?;
-    tracing::info!(dist = %dist.display(), "serving assets from dist");
+    #[cfg(debug_assertions)]
+    {
+        let dist = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../dist");
+        tracing::info!(dist = %dist.display(), "serving assets from dist (debug)");
+    }
+    #[cfg(not(debug_assertions))]
+    tracing::info!("serving embedded assets from dist (release)");
 
     web_context.register_uri_scheme(APP_SCHEME, move |request| {
         // path() 返回 URI 的路径部分：dc://app/index.html -> /index.html
-        if let Some(response) = serve_file(&dist, request.path().as_deref()) {
+        if let Some((bytes, mime)) = serve_file(request.path().as_deref()) {
+            let stream = gtk::gio::MemoryInputStream::from_bytes(&glib::Bytes::from(&bytes));
+            let response = webkit2gtk::URISchemeResponse::new(&stream, bytes.len() as i64);
+            response.set_content_type(mime);
             request.finish_with_response(&response);
         } else {
             let mut err = glib::Error::new(gtk::gio::IOErrorEnum::NotFound, "not found");
@@ -139,25 +154,48 @@ fn register_custom_protocol(
     Ok(())
 }
 
-fn serve_file(dist: &std::path::Path, path: Option<&str>) -> Option<webkit2gtk::URISchemeResponse> {
-    let rel = path.unwrap_or("/index.html");
+/// 解析前端资源路径，返回 (字节, MIME)。
+fn serve_file(path: Option<&str>) -> Option<(Vec<u8>, &'static str)> {
+    let rel = normalize_rel(path);
+    // 目录请求（如 "/" 或 "/assets/"）-> 尝试 index.html
+    let rel = if rel.is_empty() {
+        "index.html".to_string()
+    } else if rel.ends_with('/') {
+        format!("{rel}index.html")
+    } else {
+        rel
+    };
     let rel = rel.trim_start_matches('/');
 
-    let mut full = dist.join(rel);
-    if full.is_dir() {
-        full = full.join("index.html");
+    #[cfg(not(debug_assertions))]
+    {
+        let file = DIST.get_file(rel)?;
+        let mime = mime_for(rel.rsplit('.').next().unwrap_or("html"));
+        Some((file.contents().to_vec(), mime))
     }
-    let canonical = full.canonicalize().ok()?;
-    if !canonical.starts_with(dist) {
-        return None; // 防路径穿越
+    #[cfg(debug_assertions)]
+    {
+        let dist = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../dist");
+        let full = dist.join(rel);
+        let canonical = full.canonicalize().ok()?;
+        if !canonical.starts_with(&dist) {
+            return None; // 防路径穿越
+        }
+        let bytes = std::fs::read(&canonical).ok()?;
+        let mime = mime_for(
+            canonical
+                .extension()
+                .and_then(|e| e.to_str())
+                .unwrap_or("html"),
+        );
+        Some((bytes, mime))
     }
-    let bytes = std::fs::read(&canonical).ok()?;
-    let stream = gtk::gio::MemoryInputStream::from_bytes(&glib::Bytes::from(&bytes));
-    let response = webkit2gtk::URISchemeResponse::new(&stream, bytes.len() as i64);
-    if let Some(ext) = canonical.extension().and_then(|e| e.to_str()) {
-        response.set_content_type(mime_for(ext));
-    }
-    Some(response)
+}
+
+fn normalize_rel(path: Option<&str>) -> String {
+    path.unwrap_or("/index.html")
+        .trim_start_matches('/')
+        .to_string()
 }
 
 fn mime_for(ext: &str) -> &'static str {
