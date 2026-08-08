@@ -76,6 +76,38 @@ export default function App() {
     setMode("editing");
   }, []);
 
+  // 调试：URL 带 ?autoedit=1 时启动后自动进入编辑模式（配合 DC_AUTOEDIT）
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("autoedit")) {
+      logDebug("autoedit: entering editing mode");
+      void enterEditMode();
+    }
+  }, [enterEditMode]);
+
+  // 调试：检查 Excalidraw 是否挂载、CSS 是否加载
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const sheets = Array.from(document.styleSheets);
+      const excalidrawEl = document.querySelector(".excalidraw");
+      const ex = excalidrawEl ? getComputedStyle(excalidrawEl) : null;
+      const sheetSizes = sheets.map((s) => {
+        try {
+          return s.cssRules.length;
+        } catch {
+          return -1;
+        }
+      });
+      const ws = document.querySelector(".welcome-screen-center");
+      logDebug(
+        `DIAG: styleSheets=${sheets.length} rules=${JSON.stringify(sheetSizes)}, ` +
+          `.excalidraw=${!!excalidrawEl}, ` +
+          `excalidrawCSSvar=${ex?.getPropertyValue("--color-primary")?.trim() || "(none)"}, ` +
+          `welcomeVisible=${ws ? getComputedStyle(ws).display : "absent"}`,
+      );
+    }, 3000);
+    return () => clearTimeout(t);
+  }, []);
+
   const exitEditMode = useCallback(async () => {
     await saver.flush(); // 退出前先落盘
     await invoke("exit_edit_mode");

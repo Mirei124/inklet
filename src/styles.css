@@ -40,6 +40,13 @@ body {
   background: transparent;
 }
 
+/* 隐藏空场景欢迎页（桌面覆盖层不需要） */
+.excalidraw .welcome-screen-center,
+.excalidraw .welcome-screen-decor,
+.excalidraw .welcome-screen-decor-hint {
+  display: none;
+}
+
 /* 右缘编辑入口：CSS 相对定位固定在右缘中央，与原生侧 passive 热区对齐 */
 .edit-handle {
   position: absolute;

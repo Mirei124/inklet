@@ -8,7 +8,8 @@ use gtk::prelude::*;
 use std::path::PathBuf;
 use std::rc::Rc;
 use webkit2gtk::{
-    URISchemeRequestExt, URISchemeResponseExt, UserContentManagerExt, WebContextExt, WebViewExt,
+    SettingsExt, URISchemeRequestExt, URISchemeResponseExt, UserContentManagerExt, WebContextExt,
+    WebViewExt,
 };
 
 const DEV_SERVER_URL: &str = "http://localhost:1420";
@@ -44,6 +45,11 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
         .user_content_manager(&user_content)
         .build();
     webview.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
+    // 调试：允许 webkit inspector（WEBKIT_INSPECTOR_SERVER 可远程调试）
+    #[cfg(debug_assertions)]
+    if let Some(settings) = WebViewExt::settings(&webview) {
+        settings.set_enable_developer_extras(true);
+    }
 
     // 4. IPC 桥接（webkit 的 script message 回调在 GTK 主线程执行，无需 Send）
     let state = Rc::new(AppContext {
@@ -70,8 +76,13 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     if dev_mode() {
-        tracing::info!(url = DEV_SERVER_URL, "loading dev server");
-        webview.load_uri(DEV_SERVER_URL);
+        let url = if std::env::var_os("DC_AUTOEDIT").is_some() {
+            format!("{DEV_SERVER_URL}/?autoedit=1")
+        } else {
+            DEV_SERVER_URL.to_string()
+        };
+        tracing::info!(url = %url, "loading dev server");
+        webview.load_uri(&url);
     } else {
         tracing::info!(url = APP_ENTRY, "loading packaged assets");
         webview.load_uri(APP_ENTRY);
