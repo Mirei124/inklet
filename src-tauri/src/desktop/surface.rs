@@ -33,15 +33,26 @@ pub struct ScreenSize {
 pub trait DesktopSurface {
     fn enter_passive(&self) -> Result<(), SurfaceError>;
     fn enter_editing(&self) -> Result<(), SurfaceError>;
+    /// macOS 路径当前不通过 dispatch 调用，保留供平台内部/调试使用。
+    #[cfg_attr(target_os = "macos", allow(dead_code))]
     fn mode(&self) -> SurfaceMode;
     fn screen_size(&self) -> ScreenSize;
     /// passive 模式下仅接收鼠标的热区（编辑入口）。
     fn handle_rect(&self) -> Rect;
+    /// 当前画布所在 layer："overlay"（所有窗口之上）或 "background"（壁纸之上）。
+    fn layer(&self) -> &'static str;
+    /// 切换画布 layer。
+    fn set_layer_str(&self, layer: &str);
+    /// 编辑入口的垂直位置（0..1，占屏高比例）。
+    fn handle_y(&self) -> f32;
+    /// 设置编辑入口垂直位置并更新对应原生 hot zone。
+    fn set_handle_y(&self, y: f32);
 }
 
 #[derive(Debug)]
+#[cfg_attr(target_os = "macos", allow(dead_code))]
 pub enum SurfaceError {
-    /// 当前不是 Wayland（gdk 拿不到 wl_surface），或窗口未 realize。
+    /// 当前不是支持的平台（gdk 拿不到 wl_surface，或窗口未初始化）。
     NotWayland,
     NoGdkWindow,
     NullRegion,
@@ -51,6 +62,12 @@ pub enum SurfaceError {
     /// 预留：GTK 相关错误。
     #[allow(dead_code)]
     Gtk(String),
+    /// 平台窗口未就绪（macOS / 通用）。
+    #[allow(dead_code)]
+    NotAvailable,
+    /// macOS Cocoa/AppKit 相关错误。
+    #[allow(dead_code)]
+    Cocoa(String),
 }
 
 impl fmt::Display for SurfaceError {
@@ -61,6 +78,8 @@ impl fmt::Display for SurfaceError {
             SurfaceError::NullRegion => write!(f, "failed to create wl_region"),
             SurfaceError::Wayland(msg) => write!(f, "wayland error: {msg}"),
             SurfaceError::Gtk(msg) => write!(f, "gtk error: {msg}"),
+            SurfaceError::NotAvailable => write!(f, "platform window not available"),
+            SurfaceError::Cocoa(msg) => write!(f, "cocoa error: {msg}"),
         }
     }
 }

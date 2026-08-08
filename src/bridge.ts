@@ -71,7 +71,24 @@ declare global {
       };
     };
     __dc_ipc_reply?: (id: number, ok: boolean, payload: string) => void;
+    /** 原生侧注入的平台标记（macOS = "macos"；Linux 不注入） */
+    __dc_platform?: string;
+    /**
+     * 原生主动推送模式切换（macOS Control 窗口触发的切换不走 invoke/pending，
+     * reply 无人接收，需要原生直接推送给前端同步 React state）。
+     */
+    __dc_sync_mode?: (mode: "passive" | "editing") => void;
   }
+}
+
+/**
+ * 是否为 macOS 原生环境。
+ *
+ * macOS 上编辑入口（竖条）由独立 Control 窗口承载，Canvas 里的
+ * EditHandle 需要隐藏（因为 Canvas 全屏穿透不可交互）。Linux 保持原样。
+ */
+export function isNativeMacOS(): boolean {
+  return typeof window !== "undefined" && window.__dc_platform === "macos";
 }
 
 let nextId = 0;
@@ -94,8 +111,18 @@ if (typeof window !== "undefined") {
 function nativeAvailable(): boolean {
   return (
     typeof window !== "undefined" &&
-    typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function"
+    (typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function" ||
+     typeof (window as unknown as Record<string, unknown>).ipc === "object")
   );
+}
+
+/** 发送消息到原生侧，自动选择可用的传输层。 */
+function postNativeMessage(msg: string): void {
+  if (typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function") {
+    window.webkit!.messageHandlers!.ipc!.postMessage(msg);
+  } else {
+    ((window as unknown as Record<string, { postMessage: (m: string) => void }>).ipc).postMessage(msg);
+  }
 }
 
 /**
@@ -108,7 +135,7 @@ export function invoke(cmd: Command, args?: Record<string, unknown>): Promise<un
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject });
-    window.webkit!.messageHandlers!.ipc!.postMessage(JSON.stringify({ id, cmd, args: args ?? {} }));
+    postNativeMessage(JSON.stringify({ id, cmd, args: args ?? {} }));
   });
 }
 

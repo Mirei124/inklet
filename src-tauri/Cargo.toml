@@ -4,19 +4,8 @@ version = "0.1.0"
 description = "Desktop overlay drawing board: transparent Excalidraw canvas with passive mouse-through"
 edition = "2021"
 
+# ── 跨平台依赖 ──────────────────────────────────────────────
 [dependencies]
-# WebView：直接用 WebKitGTK（wry 在 Linux 仅支持 X11，无法挂进
-# Wayland layer-shell；webkit2gtk 是 wry 的底层实现，可嵌入任意 GTK 容器）
-# v2_40：启用 WebKitGTK 4.1 对应 API（默认无特性时多数类型不可用）
-webkit2gtk = { version = "2.0", features = ["v2_40"] }
-# GTK3 窗口，托管 webkit webview
-gtk = "0.18"
-glib = "0.18"
-gio = "0.18"
-# Wayland layer-shell：让普通 GTK 窗口变成桌面覆盖层
-# v0_6 提供 set_keyboard_mode（Exclusive/None），非弃用的 bool 版接口
-gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
-
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
@@ -24,9 +13,27 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 dirs = "6"
-libc = "0.2"
-# 生产构建：把 dist/ 嵌入二进制（release 自包含，运行时从内存提供前端资源）
+# 生产构建：把 dist/ 嵌入二进制（release 自包含）
 include_dir = "0.7"
+
+# ── Linux (Wayland / GTK) ───────────────────────────────────
+[target.'cfg(target_os = "linux")'.dependencies]
+webkit2gtk = { version = "2.0", features = ["v2_40"] }
+gtk = "0.18"
+glib = "0.18"
+gio = "0.18"
+gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
+libc = "0.2"
+
+# ── macOS (AppKit / WKWebView) ──────────────────────────────
+[target.'cfg(target_os = "macos")'.dependencies]
+tao = { version = "0.32", features = ["rwh_06"] }
+wry = "0.56"
+http = "1"
+raw-window-handle = "0.6"
+objc2 = "0.6"
+objc2-foundation = "0.3"
+objc2-app-kit = "0.3"
 
 [dev-dependencies]
 tempfile = "3"

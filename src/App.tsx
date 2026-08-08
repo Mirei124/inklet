@@ -9,7 +9,7 @@
  * 模式切换以 backend 成功为准：先 await invoke，再更新 UI 状态。
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { invoke, logDebug } from "./bridge";
+import { invoke, logDebug, isNativeMacOS } from "./bridge";
 import type { AppMode, CanvasLayer } from "./bridge";
 import { Canvas } from "./Canvas";
 import type { SceneChange } from "./Canvas";
@@ -24,6 +24,15 @@ const TRANSPARENT = "transparent";
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>("passive");
+
+  // 原生主动推送模式切换（macOS Control 窗口触发，不走 invoke/pending）。
+  // 必须尽早注册，确保 Control 按钮点击时能更新 React state。
+  useEffect(() => {
+    window.__dc_sync_mode = (m) => setMode(m);
+    return () => {
+      delete window.__dc_sync_mode;
+    };
+  }, []);
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
   const [layer, setLayer] = useState<CanvasLayer>("overlay");
   const [handleY, setHandleY] = useState(0.5);
@@ -160,7 +169,7 @@ export default function App() {
           onChange={handleSceneChange}
         />
       ) : null}
-      {mode === "passive" ? (
+      {mode === "passive" && !isNativeMacOS() ? (
         <EditHandle
           lang={lang}
           layer={layer}

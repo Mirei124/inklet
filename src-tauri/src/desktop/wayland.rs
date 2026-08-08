@@ -245,6 +245,22 @@ impl DesktopSurface for WaylandSurface {
             *self.handle_y.borrow(),
         )
     }
+
+    fn layer(&self) -> &'static str {
+        self.layer()
+    }
+
+    fn set_layer_str(&self, layer: &str) {
+        self.set_layer_str(layer);
+    }
+
+    fn handle_y(&self) -> f32 {
+        self.handle_y()
+    }
+
+    fn set_handle_y(&self, y: f32) {
+        self.set_handle_y(y);
+    }
 }
 
 /// 根据 surface 尺寸、模式与 handle 位置计算 input region。

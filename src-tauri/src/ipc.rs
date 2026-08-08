@@ -1,56 +1,77 @@
 //! IPC 桥接：把 webview 发来的 JSON 命令分发给 commands，
 //! 通过 evaluate_javascript 回调 `window.__dc_ipc_reply(id, ok, payload)` 回包。
+//!
+//! `dispatch()` 是平台无关的命令分发，Linux 和 macOS 共用。
+//! `handle()` 是 Linux/WebKitGTK 的入口。
 
 use crate::commands;
 use crate::desktop::surface::DesktopSurface;
-use crate::desktop::wayland::WaylandSurface;
+#[cfg(target_os = "linux")]
 use gtk::prelude::*;
 use serde_json::{json, Value};
+#[cfg(target_os = "linux")]
 use std::rc::Rc;
+#[cfg(target_os = "linux")]
 use webkit2gtk::{WebView, WebViewExt};
 
+/// Linux 侧的 IPC 上下文（macOS 直接持有 MacSurface + 共享 dispatch）。
+#[cfg(target_os = "linux")]
 pub struct AppContext {
-    pub surface: Rc<WaylandSurface>,
+    pub surface: Rc<dyn DesktopSurface>,
     pub webview: WebView,
 }
 
-pub fn handle(ctx: &AppContext, message: &str) {
-    let parsed: Value = match serde_json::from_str(message) {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::warn!("bad ipc message: {e}");
-            return;
-        }
-    };
-    let id = parsed.get("id").and_then(Value::as_u64).unwrap_or(0);
-    let cmd = parsed.get("cmd").and_then(Value::as_str).unwrap_or("");
-    let args = parsed.get("args").cloned().unwrap_or_else(|| json!({}));
-    tracing::debug!(cmd, "ipc command");
-
-    let result = dispatch(cmd, &args, ctx.surface.as_ref());
-
-    // 进入编辑模式时确保 webview 拿到 GTK 焦点，键盘输入（文字/快捷键）才生效
-    if cmd == "enter_edit_mode" {
-        ctx.webview.grab_focus();
-    }
-
-    // payload 以 JS 字符串字面量注入（JSON 对象直接裸拼会解析成块语句）：
-    //  - 成功：payload_text = 结果的 JSON 文本，前端 JSON.parse(payload) 还原
-    //  - 失败：payload_text = 错误消息文本，前端直接作为 Error 消息
-    let (ok, payload_text) = match &result {
+/// 构建 IPC 回包的 JS 代码（供平台调用方 eval）。
+pub fn reply_js(id: u64, result: &Result<Value, String>) -> String {
+    let (ok, payload_text) = match result {
         Ok(v) => (
             true,
             serde_json::to_string(v).unwrap_or_else(|_| "null".into()),
         ),
         Err(e) => (false, e.to_string()),
     };
-    let payload_literal = serde_json::to_string(&payload_text).unwrap_or_else(|_| "\"\"".into());
-    let js = format!("window.__dc_ipc_reply({id}, {ok}, {payload_literal});");
+    let payload_literal =
+        serde_json::to_string(&payload_text).unwrap_or_else(|_| "\"\"".into());
+    format!("window.__dc_ipc_reply({id}, {ok}, {payload_literal});")
+}
+
+#[cfg(target_os = "linux")]
+pub fn handle(ctx: &AppContext, message: &str) {
+    let (id, cmd, args) = parse_message(message);
+    let result = dispatch(&cmd, &args, ctx.surface.as_ref());
+
+    if cmd == "enter_edit_mode" {
+        ctx.webview.grab_focus();
+    }
+
+    let js = reply_js(id, &result);
     ctx.webview
         .evaluate_javascript(&js, None, None, None::<&gio::Cancellable>, |_| {});
 }
 
-fn dispatch(cmd: &str, args: &Value, surface: &WaylandSurface) -> Result<Value, String> {
+/// Linux 侧消息解析（macOS 用 wry 的 ipc_handler 直接拿 body 字符串）。
+#[cfg(target_os = "linux")]
+fn parse_message(message: &str) -> (u64, String, Value) {
+    let parsed: Value = match serde_json::from_str(message) {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::warn!("bad ipc message: {e}");
+            return (0, String::new(), json!({}));
+        }
+    };
+    let id = parsed.get("id").and_then(Value::as_u64).unwrap_or(0);
+    let cmd = parsed
+        .get("cmd")
+        .and_then(Value::as_str)
+        .unwrap_or("")
+        .to_string();
+    let args = parsed.get("args").cloned().unwrap_or_else(|| json!({}));
+    tracing::debug!(cmd = %cmd, "ipc command");
+    (id, cmd, args)
+}
+
+/// 平台无关的命令分发。Linux 与 macOS 共用。
+pub fn dispatch(cmd: &str, args: &Value, surface: &dyn DesktopSurface) -> Result<Value, String> {
     match cmd {
         "enter_edit_mode" => {
             surface.enter_editing().map_err(|e| e.to_string())?;
