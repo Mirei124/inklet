@@ -1,4 +1,4 @@
-# Desktop Canvas — 项目指南
+# Inklet — 项目指南
 
 桌面透明画板（wlroots Wayland）。技术栈：React + Excalidraw（前端）、Rust + gtk-layer-shell + WebKitGTK（原生）、自建 IPC。MVP 全部验收测试已在 Wayfire 通过。
 
@@ -13,18 +13,18 @@ cd src-tauri && cargo run -- --dev
 
 # 生产自包含二进制（前端嵌入）
 make build-release            # = pnpm build + cargo build --release
-./src-tauri/target/release/desktop-canvas
+./src-tauri/target/release/inklet
 ```
 
-数据：scene 与 settings 在 `~/.local/share/desktop-canvas/`。应用日志默认写终端（后台跑时重定向到 `/tmp/dc-app.log` 等）。
+数据：scene 与 settings 在 `~/.local/share/inklet/`。应用日志默认写终端（后台跑时重定向到 `/tmp/dc-app.log` 等）。
 
 ## 操作注意事项（反复踩坑，务必先读）
 
 ### 1. 绝不用 `pkill -f` / `pgrep -f` 匹配自己命令行里会出现的字符串
-`pkill -f "desktop-canvas"` 或 `pgrep -f "vite/bin/vite.js"` 会匹配到**执行这条命令的 shell 本身**（shell 命令行里就含该字符串），把自己杀掉，命令退出码 144。这是本项目里反复踩的坑。
+`pkill -f "inklet"` 或 `pgrep -f "vite/bin/vite.js"` 会匹配到**执行这条命令的 shell 本身**（shell 命令行里就含该字符串），把自己杀掉，命令退出码 144。这是本项目里反复踩的坑。
 
 正确做法：
-- 精确匹配进程名：`pkill -x desktop-canvas`
+- 精确匹配进程名：`pkill -x inklet`
 - 按端口找 PID 再 kill：
   ```bash
   VITE_PID=$(ss -ltnp | grep ':1420' | grep -oP 'pid=\K[0-9]+' | head -1)
@@ -39,7 +39,7 @@ pnpm 11 屏蔽依赖的 postinstall（如 esbuild）。不要跑交互式 `pnpm 
 用 Bash 工具启动长驻进程（vite、应用）时，`nohup cmd > log 2>&1 &` 保证不随工具调用结束被杀。vite 卡死不响应时：按端口（1420）找 PID 强杀后重启。
 
 ### 4. 改前端代码后若 webview 没热更新，重启应用
-vite HMR 与 webview 的 WebSocket 可能断连。前端改动没生效时：`pkill -x desktop-canvas` 后重启原生（它会重新加载 vite 页面）。
+vite HMR 与 webview 的 WebSocket 可能断连。前端改动没生效时：`pkill -x inklet` 后重启原生（它会重新加载 vite 页面）。
 
 ### 5. 编辑模式相关
 - 编辑模式是整屏输入 + 键盘 Exclusive；passive 是 input region 只留右缘热区。

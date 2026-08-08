@@ -1,4 +1,4 @@
-# Desktop Canvas
+# Inklet
 
 桌面透明画板：始终显示在桌面上的 Excalidraw 画布，默认鼠标穿透，只保留右缘编辑入口；点击进入编辑模式绘制，完成后恢复穿透，scene 自动持久化到本地 JSON。
 
@@ -35,17 +35,17 @@ make build-release
 # 等价于：pnpm build && cd src-tauri && cargo build --release
 ```
 
-产物：`src-tauri/target/release/desktop-canvas`（**前端已嵌入二进制**，单文件可直接运行，无需 dist 目录）。
+产物：`src-tauri/target/release/inklet`（**前端已嵌入二进制**，单文件可直接运行，无需 dist 目录）。
 
 ```bash
 # 直接运行自包含二进制
-./src-tauri/target/release/desktop-canvas
+./src-tauri/target/release/inklet
 ```
 
 ## 数据文件
 
-- scene：`~/.local/share/desktop-canvas/scene.json`（Excalidraw 元素原样保存）
-- settings：`~/.local/share/desktop-canvas/settings.json`（layer / handleY / lang）
+- scene：`~/.local/share/inklet/scene.json`（Excalidraw 元素原样保存）
+- settings：`~/.local/share/inklet/settings.json`（layer / handleY / lang）
 
 ## 项目结构
 
@@ -69,3 +69,16 @@ src-tauri/      Rust 原生
 ## 踩坑记录
 
 见 [docs/pitfalls.md](docs/pitfalls.md)：wry 仅 X11、wayland 请求 inline 不导出、input region 需 commit 生效、webkit DPR、vite 剥离 Excalidraw SCSS 等。
+
+## 致谢
+
+- [Excalidraw](https://excalidraw.com/)（[MIT](https://github.com/excalidraw/excalidraw/blob/master/LICENSE)）—— 绘图引擎与编辑器 UI，本项目直接嵌入使用
+- [Tauri](https://tauri.app/)（MIT/Apache-2.0）—— 工程脚手架基于 `create-tauri-app` 生成（运行时改用 WebKitGTK 直连 layer-shell）
+- [Vite](https://vitejs.dev/) / [React](https://react.dev/) / [TypeScript](https://www.typescriptlang.org/) —— 前端构建与框架
+- [WebKitGTK](https://webkitgtk.org/)（LGPL）—— 底层 WebView 渲染
+- [gtk-layer-shell](https://github.com/wmww/gtk-layer-shell)（MIT）—— Wayland layer-shell 覆盖层
+- 以及所有被依赖的开源项目 🙏
+
+## License
+
+[MIT](LICENSE)

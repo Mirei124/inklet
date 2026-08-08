@@ -353,7 +353,7 @@ pub fn create_layer_window() -> Result<gtk::Window, SurfaceError> {
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
     window.set_decorated(false);
     window.set_app_paintable(true);
-    window.set_title("desktop-canvas");
+    window.set_title("inklet");
     window.set_visual(
         gtk::gdk::Screen::default()
             .and_then(|s| s.rgba_visual())
@@ -362,7 +362,7 @@ pub fn create_layer_window() -> Result<gtk::Window, SurfaceError> {
 
     window.init_layer_shell();
     window.set_layer(Layer::Overlay);
-    window.set_namespace("desktop-canvas");
+    window.set_namespace("inklet");
     for edge in [Edge::Top, Edge::Bottom, Edge::Left, Edge::Right] {
         window.set_anchor(edge, true);
     }

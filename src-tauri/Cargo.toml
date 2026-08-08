@@ -1,5 +1,5 @@
 [package]
-name = "desktop-canvas"
+name = "inklet"
 version = "0.1.0"
 description = "Desktop overlay drawing board: transparent Excalidraw canvas with passive mouse-through"
 edition = "2021"

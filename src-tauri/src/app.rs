@@ -116,8 +116,8 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
 
 fn init_tracing() {
     use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-    let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new("desktop_canvas=debug,warn"));
+    let filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("inklet=debug,warn"));
     let _ = fmt().with_env_filter(filter).finish().try_init();
 }
 

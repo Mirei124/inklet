@@ -116,7 +116,7 @@ export function invoke(cmd: Command, args?: Record<string, unknown>): Promise<un
 /* 浏览器开发用 mock：把 scene 存在 localStorage，重启页面也能找回     */
 /* ------------------------------------------------------------------ */
 
-const MOCK_SCENE_KEY = "desktop-canvas.mock.scene";
+const MOCK_SCENE_KEY = "inklet.mock.scene";
 
 function mockScene(): SceneFile {
   try {
@@ -185,6 +185,6 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
   }
 }
 
-const MOCK_LAYER_KEY = "desktop-canvas.mock.layer";
-const MOCK_HANDLE_Y_KEY = "desktop-canvas.mock.handleY";
-const MOCK_LANG_KEY = "desktop-canvas.mock.lang";
+const MOCK_LAYER_KEY = "inklet.mock.layer";
+const MOCK_HANDLE_Y_KEY = "inklet.mock.handleY";
+const MOCK_LANG_KEY = "inklet.mock.lang";

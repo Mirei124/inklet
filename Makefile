@@ -27,4 +27,4 @@ test:
 build-release:
 	pnpm build
 	cd src-tauri && cargo build --release
-	@echo "产物: src-tauri/target/release/desktop-canvas"
+	@echo "产物: src-tauri/target/release/inklet"

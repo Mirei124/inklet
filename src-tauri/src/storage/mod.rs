@@ -1,6 +1,6 @@
 //! scene.json / settings.json 的原子存储。
 //!
-//! 数据目录（Linux）：~/.local/share/desktop-canvas/
+//! 数据目录（Linux）：~/.local/share/inklet/
 //! 原子写入：先写 scene.json.tmp -> flush -> rename 到 scene.json，
 //! 保证中断不会损坏现有文件。scene.json 损坏时保留原文件、返回错误，
 //! 上层回退到空 scene 启动。
@@ -48,11 +48,11 @@ impl Storage {
         Self { dir }
     }
 
-    /// 默认数据目录：~/.local/share/desktop-canvas/
+    /// 默认数据目录：~/.local/share/inklet/
     pub fn default() -> Self {
         let dir = dirs::data_local_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("desktop-canvas");
+            .join("inklet");
         Self { dir }
     }
 
