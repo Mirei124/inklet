@@ -50,7 +50,7 @@ pub fn handle(ctx: &AppContext, message: &str) {
         .evaluate_javascript(&js, None, None, None::<&gio::Cancellable>, |_| {});
 }
 
-fn dispatch(cmd: &str, args: &Value, surface: &dyn DesktopSurface) -> Result<Value, String> {
+fn dispatch(cmd: &str, args: &Value, surface: &WaylandSurface) -> Result<Value, String> {
     match cmd {
         "enter_edit_mode" => {
             surface.enter_editing().map_err(|e| e.to_string())?;
@@ -75,6 +75,20 @@ fn dispatch(cmd: &str, args: &Value, surface: &dyn DesktopSurface) -> Result<Val
                 "width": r.width,
                 "height": r.height
             }))
+        }
+        "get_canvas_layer" => Ok(json!({ "layer": surface.layer() })),
+        "set_canvas_layer" => {
+            let layer = args
+                .get("layer")
+                .and_then(Value::as_str)
+                .unwrap_or("overlay");
+            surface.set_layer_str(layer);
+            let storage = crate::storage::Storage::default();
+            let settings = json!({ "version": 1, "layer": layer });
+            if let Err(e) = storage.save_settings(&settings.to_string()) {
+                tracing::warn!("failed to save settings: {e}");
+            }
+            Ok(json!({ "layer": layer }))
         }
         other => Err(format!("unknown command: {other}")),
     }

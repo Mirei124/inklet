@@ -60,10 +60,26 @@ impl Storage {
         self.dir.join("scene.json")
     }
 
-    /// 预留：settings.json 路径。
-    #[allow(dead_code)]
     pub fn settings_path(&self) -> PathBuf {
         self.dir.join("settings.json")
+    }
+
+    /// 读取 settings.json；不存在返回 `Ok(None)`，内容损坏返回 `Err(Corrupt)`。
+    pub fn load_settings(&self) -> Result<Option<String>, StorageError> {
+        let path = self.settings_path();
+        let raw = match fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(e) => return Err(StorageError::Io(e)),
+        };
+        serde_json::from_str::<serde_json::Value>(&raw).map_err(|_| StorageError::Corrupt)?;
+        Ok(Some(raw))
+    }
+
+    /// 原子保存 settings.json。
+    pub fn save_settings(&self, json: &str) -> Result<(), StorageError> {
+        serde_json::from_str::<serde_json::Value>(json).map_err(StorageError::InvalidJson)?;
+        self.atomic_write(&self.settings_path(), json.as_bytes())
     }
 
     /// 读取 scene.json；文件不存在返回 `Ok(None)`，内容损坏返回 `Err(Corrupt)`。

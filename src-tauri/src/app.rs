@@ -29,6 +29,16 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let surface = Rc::new(WaylandSurface::new(window.clone())?);
     tracing::info!("wayland surface initialized, mode = {:?}", surface.mode());
 
+    // 恢复上次保存的 canvas layer（overlay / background）
+    let storage = crate::storage::Storage::default();
+    if let Ok(Some(json)) = storage.load_settings() {
+        if let Ok(settings) = serde_json::from_str::<serde_json::Value>(&json) {
+            if let Some(layer) = settings.get("layer").and_then(serde_json::Value::as_str) {
+                surface.set_layer_str(layer);
+            }
+        }
+    }
+
     // 3. webview（透明背景）
     let web_context =
         webkit2gtk::WebContext::default().ok_or("failed to get default webkit WebContext")?;

@@ -158,6 +158,26 @@ impl WaylandSurface {
     fn set_keyboard_mode(&self, mode: KeyboardMode) {
         self.window.set_keyboard_mode(mode);
     }
+
+    /// 当前画布所在 layer（"overlay" 顶层 / "background" 壁纸层）。
+    pub fn layer(&self) -> &'static str {
+        match self.window.layer() {
+            Layer::Overlay => "overlay",
+            Layer::Background => "background",
+            _ => "overlay",
+        }
+    }
+
+    /// 切换画布 layer：overlay=所有窗口之上，background=壁纸之上/所有窗口之下。
+    pub fn set_layer_str(&self, layer: &str) {
+        let layer = match layer {
+            "background" => Layer::Background,
+            _ => Layer::Overlay,
+        };
+        self.window.set_layer(layer);
+        flush_display(self.wl_display);
+        tracing::info!(?layer, "canvas layer switched");
+    }
 }
 
 impl DesktopSurface for WaylandSurface {

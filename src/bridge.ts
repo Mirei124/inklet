@@ -35,6 +35,9 @@ export interface SceneFile {
   appState: Record<string, unknown>;
 }
 
+/** 画布所在 layer：overlay=所有窗口之上，background=壁纸之上/所有窗口之下 */
+export type CanvasLayer = "overlay" | "background";
+
 export type Command =
   | "enter_edit_mode"
   | "exit_edit_mode"
@@ -42,6 +45,8 @@ export type Command =
   | "save_scene"
   | "screen_size"
   | "get_handle_rect"
+  | "get_canvas_layer"
+  | "set_canvas_layer"
   | "log_debug";
 
 /** 把前端状态/错误上报到 Rust 日志（调试用，浏览器 mock 下忽略）。 */
@@ -146,7 +151,16 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
       const h = window.innerHeight;
       return delay({ x: w - 44, y: Math.round((h - 44) / 2), width: 44, height: 44 });
     }
+    case "get_canvas_layer":
+      return delay({ layer: localStorage.getItem(MOCK_LAYER_KEY) || "overlay" });
+    case "set_canvas_layer": {
+      const layer = args?.layer === "background" ? "background" : "overlay";
+      localStorage.setItem(MOCK_LAYER_KEY, layer);
+      return delay({ layer });
+    }
     default:
       return delay(null);
   }
 }
+
+const MOCK_LAYER_KEY = "desktop-canvas.mock.layer";

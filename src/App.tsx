@@ -10,7 +10,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { invoke, logDebug } from "./bridge";
-import type { AppMode } from "./bridge";
+import type { AppMode, CanvasLayer } from "./bridge";
 import { Canvas } from "./Canvas";
 import type { SceneChange } from "./Canvas";
 import { EditHandle } from "./EditHandle";
@@ -23,6 +23,7 @@ const TRANSPARENT = "transparent";
 export default function App() {
   const [mode, setMode] = useState<AppMode>("passive");
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
+  const [layer, setLayer] = useState<CanvasLayer>("overlay");
 
   // 前端 JS 错误上报到 Rust 日志（调试用）
   useEffect(() => {
@@ -47,12 +48,17 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const scene = await loadScene();
+      const [scene, layerResult] = await Promise.all([
+        loadScene(),
+        invoke("get_canvas_layer") as Promise<{ layer: CanvasLayer }>,
+      ]);
       if (cancelled) return;
       logDebug(
-        `loaded scene: ${scene.elements.length} elements; viewport=${window.innerWidth}x${window.innerHeight}`,
+        `loaded scene: ${scene.elements.length} elements; layer=${layerResult.layer}; ` +
+          `viewport=${window.innerWidth}x${window.innerHeight}`,
       );
       setInitialScene(scene);
+      setLayer(layerResult.layer);
     })();
     return () => {
       cancelled = true;
@@ -84,25 +90,26 @@ export default function App() {
     }
   }, [enterEditMode]);
 
-  // 调试：检查 Excalidraw 是否挂载、CSS 是否加载
+  // 调试：列出 passive 模式下仍可见的 Excalidraw UI 元素
   useEffect(() => {
     const t = setTimeout(() => {
-      const sheets = Array.from(document.styleSheets);
-      const excalidrawEl = document.querySelector(".excalidraw");
-      const ex = excalidrawEl ? getComputedStyle(excalidrawEl) : null;
-      const sheetSizes = sheets.map((s) => {
-        try {
-          return s.cssRules.length;
-        } catch {
-          return -1;
-        }
-      });
-      const ws = document.querySelector(".welcome-screen-center");
+      const topMenu = document.querySelector(".canvas-root.mode-passive .App-menu_top");
+      const topMenuAny = document.querySelector(".App-menu_top");
+      const rule = Array.from(document.styleSheets)
+        .flatMap((s) => {
+          try {
+            return Array.from(s.cssRules);
+          } catch {
+            return [];
+          }
+        })
+        .filter((r) => r.cssText.includes("mode-passive") && r.cssText.includes("display: none"))
+        .map((r) => r.cssText.slice(0, 80))
+        .join(" || ");
       logDebug(
-        `DIAG: styleSheets=${sheets.length} rules=${JSON.stringify(sheetSizes)}, ` +
-          `.excalidraw=${!!excalidrawEl}, ` +
-          `excalidrawCSSvar=${ex?.getPropertyValue("--color-primary")?.trim() || "(none)"}, ` +
-          `welcomeVisible=${ws ? getComputedStyle(ws).display : "absent"}`,
+        `DIAG-UI: modePassiveTop=${topMenu ? getComputedStyle(topMenu).display : "absent"} ` +
+          `anyTop=${topMenuAny ? getComputedStyle(topMenuAny).display : "absent"} ` +
+          `matchedRules=${rule || "(none)"}`,
       );
     }, 3000);
     return () => clearTimeout(t);
@@ -114,6 +121,15 @@ export default function App() {
     setMode("passive");
   }, [saver]);
 
+  const toggleLayer = useCallback(async () => {
+    const next: CanvasLayer = layer === "overlay" ? "background" : "overlay";
+    const result = (await invoke("set_canvas_layer", { layer: next })) as {
+      layer: CanvasLayer;
+    };
+    setLayer(result.layer);
+    logDebug(`canvas layer -> ${result.layer}`);
+  }, [layer]);
+
   return (
     <div className="app-root">
       {initialScene ? (
@@ -123,7 +139,9 @@ export default function App() {
           onChange={handleSceneChange}
         />
       ) : null}
-      {mode === "passive" ? <EditHandle onEnterEdit={enterEditMode} /> : null}
+      {mode === "passive" ? (
+        <EditHandle layer={layer} onEnterEdit={enterEditMode} onToggleLayer={toggleLayer} />
+      ) : null}
       {mode === "editing" ? <Toolbar onDone={exitEditMode} /> : null}
     </div>
   );

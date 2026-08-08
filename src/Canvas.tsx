@@ -22,7 +22,7 @@ const TRANSPARENT = "transparent";
 
 export function Canvas({ initialScene, editing, onChange }: CanvasProps) {
   return (
-    <div className="canvas-root">
+    <div className={`canvas-root mode-${editing ? "editing" : "passive"}`}>
       <Excalidraw
         initialData={{
           elements: initialScene.elements,

@@ -47,41 +47,48 @@ body {
   display: none;
 }
 
-/* 右缘编辑入口：CSS 相对定位固定在右缘中央，与原生侧 passive 热区对齐 */
+/* passive（只读）模式隐藏 Excalidraw 的菜单 / 缩放 / 帮助等 UI。
+   注意：Excalidraw 用 .excalidraw .App-menu_top（0,2,0），这里需更高特异性。 */
+.canvas-root.mode-passive .App-menu_top,
+.canvas-root.mode-passive .App-menu_bottom,
+.canvas-root.mode-passive .help-icon,
+.canvas-root.mode-passive .excalidraw-contextMenuContainer {
+  display: none;
+}
+
+/* 右缘编辑入口：CSS 相对定位固定在右缘中央，与原生侧 passive 热区对齐。
+   hover 展开两个药丸：Edit / 图层切换 */
 .edit-handle {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  border: none;
-  background: transparent;
-  cursor: pointer;
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 120px;
-  height: 120px;
-  padding: 0;
-  outline: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 4px;
 }
 
-.edit-handle-label {
+.edit-handle-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   height: 34px;
   max-width: 8px;
   padding: 0 2px;
   overflow: hidden;
   white-space: nowrap;
+  border: none;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: transparent;
   font-size: 13px;
   font-weight: 500;
   border-radius: 17px;
+  cursor: pointer;
+  outline: none;
   transition:
     max-width 0.15s ease,
     padding 0.15s ease,
@@ -89,19 +96,21 @@ body {
     color 0.15s ease;
 }
 
-.edit-handle:hover .edit-handle-label {
-  max-width: 108px;
+.edit-handle:hover .edit-handle-item,
+.edit-handle-item:hover {
+  max-width: 130px;
   padding: 0 14px;
   background: rgba(37, 99, 235, 0.92);
   color: #fff;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
 
-/* 编辑模式顶部 Done 按钮 */
+/* 编辑模式顶部居中 Done 按钮（避开 Excalidraw 右上角自有按钮） */
 .toolbar {
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 200;
 }
 
