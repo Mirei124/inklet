@@ -7,9 +7,10 @@ use crate::ipc::{self, AppContext};
 use gtk::prelude::*;
 use std::path::PathBuf;
 use std::rc::Rc;
+#[cfg(debug_assertions)]
+use webkit2gtk::SettingsExt;
 use webkit2gtk::{
-    SettingsExt, URISchemeRequestExt, URISchemeResponseExt, UserContentManagerExt, WebContextExt,
-    WebViewExt,
+    URISchemeRequestExt, URISchemeResponseExt, UserContentManagerExt, WebContextExt, WebViewExt,
 };
 
 const DEV_SERVER_URL: &str = "http://localhost:1420";
