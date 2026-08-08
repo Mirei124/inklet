@@ -41,7 +41,13 @@ export type Command =
   | "load_scene"
   | "save_scene"
   | "screen_size"
-  | "get_handle_rect";
+  | "get_handle_rect"
+  | "log_debug";
+
+/** 把前端状态/错误上报到 Rust 日志（调试用，浏览器 mock 下忽略）。 */
+export function logDebug(msg: string): void {
+  void invoke("log_debug", { msg });
+}
 
 interface Pending {
   resolve: (value: unknown) => void;

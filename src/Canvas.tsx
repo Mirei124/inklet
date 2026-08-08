@@ -28,6 +28,9 @@ export function Canvas({ initialScene, editing, onChange }: CanvasProps) {
           elements: initialScene.elements,
           appState: {
             ...initialScene.appState,
+            // collaborators 必须是 Map（Excalidraw 内部会 .forEach）；
+            // 从 JSON 还原时是 {}，必须重建为 Map
+            collaborators: new Map(),
             viewBackgroundColor: TRANSPARENT,
           },
         }}

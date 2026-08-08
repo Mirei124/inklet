@@ -4,6 +4,7 @@
 use crate::commands;
 use crate::desktop::surface::DesktopSurface;
 use crate::desktop::wayland::WaylandSurface;
+use gtk::prelude::*;
 use serde_json::{json, Value};
 use std::rc::Rc;
 use webkit2gtk::{WebView, WebViewExt};
@@ -28,17 +29,23 @@ pub fn handle(ctx: &AppContext, message: &str) {
 
     let result = dispatch(cmd, &args, ctx.surface.as_ref());
 
-    let (ok, payload) = match &result {
+    // 进入编辑模式时确保 webview 拿到 GTK 焦点，键盘输入（文字/快捷键）才生效
+    if cmd == "enter_edit_mode" {
+        ctx.webview.grab_focus();
+    }
+
+    // payload 以 JS 字符串字面量注入（JSON 对象直接裸拼会解析成块语句）：
+    //  - 成功：payload_text = 结果的 JSON 文本，前端 JSON.parse(payload) 还原
+    //  - 失败：payload_text = 错误消息文本，前端直接作为 Error 消息
+    let (ok, payload_text) = match &result {
         Ok(v) => (
             true,
             serde_json::to_string(v).unwrap_or_else(|_| "null".into()),
         ),
-        Err(e) => (
-            false,
-            serde_json::to_string(&e.to_string()).unwrap_or_else(|_| "\"error\"".into()),
-        ),
+        Err(e) => (false, e.to_string()),
     };
-    let js = format!("window.__dc_ipc_reply({id}, {ok}, {payload});");
+    let payload_literal = serde_json::to_string(&payload_text).unwrap_or_else(|_| "\"\"".into());
+    let js = format!("window.__dc_ipc_reply({id}, {ok}, {payload_literal});");
     ctx.webview
         .evaluate_javascript(&js, None, None, None::<&gio::Cancellable>, |_| {});
 }
@@ -55,6 +62,7 @@ fn dispatch(cmd: &str, args: &Value, surface: &dyn DesktopSurface) -> Result<Val
         }
         "load_scene" => commands::load_scene(),
         "save_scene" => commands::save_scene(args),
+        "log_debug" => commands::log_debug(args),
         "screen_size" => {
             let s = surface.screen_size();
             Ok(json!({ "width": s.width, "height": s.height }))

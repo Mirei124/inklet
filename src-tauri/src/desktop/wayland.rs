@@ -14,10 +14,15 @@ use gtk::prelude::*;
 use gtk_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 use libc::c_void;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-/// 编辑热区尺寸（CSS 像素），与前端 EditHandle 对齐。
-pub const HOTZONE_WIDTH: i32 = 44;
-pub const HOTZONE_HEIGHT: i32 = 44;
+/// 编辑热区尺寸（表面/物理坐标）。
+///
+/// 前端 handle 用 CSS 相对定位（right:0 / top:50%）天然跟随 DPR；
+/// 这里的热区要足够大，覆盖 webkit 的 device pixel ratio（实测 1.25）下
+/// 展开后的编辑按钮，同时尽量小以少占用桌面点击区域。
+pub const HOTZONE_WIDTH: i32 = 200;
+pub const HOTZONE_HEIGHT: i32 = 240;
 
 /// libwayland / gdk-wayland 原始 FFI。
 ///
@@ -47,9 +52,10 @@ mod ffi {
     }
 
     extern "C" {
-        // gdk-wayland：从 gdk 窗口/显示拿 wl_surface / wl_compositor
+        // gdk-wayland：从 gdk 窗口/显示拿 wl_surface / wl_compositor / wl_display
         pub fn gdk_wayland_window_get_wl_surface(window: *mut c_void) -> *mut c_void;
         pub fn gdk_wayland_display_get_wl_compositor(display: *mut c_void) -> *mut c_void;
+        pub fn gdk_wayland_display_get_wl_display(display: *mut c_void) -> *mut c_void;
 
         // libwayland-client 导出的底层封装函数
         pub fn wl_proxy_marshal_array_flags(
@@ -62,6 +68,7 @@ mod ffi {
         ) -> *mut c_void;
         pub fn wl_proxy_get_version(proxy: *mut c_void) -> u32;
         pub fn wl_proxy_destroy(proxy: *mut c_void);
+        pub fn wl_display_flush(display: *mut c_void) -> i32;
 
         // 核心协议接口描述符（数据符号）
         pub static wl_region_interface: c_void;
@@ -78,8 +85,11 @@ pub struct WaylandSurface {
     window: gtk::Window,
     wl_surface: *mut c_void,
     compositor: *mut c_void,
-    size: ScreenSize,
-    mode: RefCell<SurfaceMode>,
+    /// gdk 连接的 wl_display，用于 set_input_region 后显式 flush。
+    wl_display: *mut c_void,
+    /// 当前 surface 尺寸（表面坐标），随窗口 resize 更新。
+    size: Rc<RefCell<ScreenSize>>,
+    mode: Rc<RefCell<SurfaceMode>>,
 }
 
 impl WaylandSurface {
@@ -92,82 +102,56 @@ impl WaylandSurface {
             unsafe { ffi::gdk_wayland_window_get_wl_surface(gdk_window.as_ptr() as *mut c_void) };
         let compositor =
             unsafe { ffi::gdk_wayland_display_get_wl_compositor(display.as_ptr() as *mut c_void) };
-        if wl_surface.is_null() || compositor.is_null() {
+        let wl_display =
+            unsafe { ffi::gdk_wayland_display_get_wl_display(display.as_ptr() as *mut c_void) };
+        if wl_surface.is_null() || compositor.is_null() || wl_display.is_null() {
             return Err(SurfaceError::NotWayland);
         }
 
-        let size = output_size(&gdk_window);
+        let alloc = window.allocation();
+        let size = Rc::new(RefCell::new(ScreenSize {
+            width: alloc.width() as u32,
+            height: alloc.height() as u32,
+        }));
+        let mode = Rc::new(RefCell::new(SurfaceMode::Passive));
+
         let surface = Self {
             window,
             wl_surface,
             compositor,
+            wl_display,
             size,
-            mode: RefCell::new(SurfaceMode::Passive),
+            mode,
         };
+        surface.connect_resize_handler();
         surface.enter_passive()?;
         Ok(surface)
     }
 
-    fn set_input_region(&self, rect: Rect) -> Result<(), SurfaceError> {
-        // 等价于：
-        //   region = wl_compositor.create_region()
-        //   region.add(x, y, w, h)
-        //   surface.set_input_region(region)
-        //   region.destroy()
-        // 用 wl_proxy_marshal_array_flags 手工封装（new_id 槽填 0 表示分配新 id）。
-        unsafe {
-            // wl_compositor.create_region -> 返回新 region proxy
-            let new_id = [ffi::WlArgument { n: 0 }];
-            let region = ffi::wl_proxy_marshal_array_flags(
-                self.compositor,
-                OP_COMPOSITOR_CREATE_REGION,
-                std::ptr::addr_of!(ffi::wl_region_interface).cast(),
-                ffi::wl_proxy_get_version(self.compositor),
-                0,
-                new_id.as_ptr(),
-            );
-            if region.is_null() {
-                return Err(SurfaceError::NullRegion);
-            }
+    /// 窗口尺寸变化时更新 surface 尺寸，并按当前模式重设 input region。
+    fn connect_resize_handler(&self) {
+        let wl_surface = self.wl_surface;
+        let compositor = self.compositor;
+        let wl_display = self.wl_display;
+        let size = self.size.clone();
+        let mode = self.mode.clone();
+        self.window.connect_size_allocate(move |_win, alloc| {
+            *size.borrow_mut() = ScreenSize {
+                width: alloc.width() as u32,
+                height: alloc.height() as u32,
+            };
+            let rect = input_rect_for(*size.borrow(), *mode.borrow());
+            let _ = set_input_region_ffi(wl_surface, compositor, rect);
+            flush_display(wl_display);
+            tracing::debug!(?alloc, "input region re-applied on resize");
+        });
+    }
 
-            // wl_region.add(x, y, w, h)
-            let rect_args = [
-                ffi::WlArgument { i: rect.x },
-                ffi::WlArgument { i: rect.y },
-                ffi::WlArgument { i: rect.width },
-                ffi::WlArgument { i: rect.height },
-            ];
-            ffi::wl_proxy_marshal_array_flags(
-                region,
-                OP_REGION_ADD,
-                std::ptr::null(),
-                0,
-                0,
-                rect_args.as_ptr(),
-            );
-
-            // wl_surface.set_input_region(region)
-            let obj_arg = [ffi::WlArgument { o: region }];
-            ffi::wl_proxy_marshal_array_flags(
-                self.wl_surface,
-                OP_SURFACE_SET_INPUT_REGION,
-                std::ptr::null(),
-                0,
-                0,
-                obj_arg.as_ptr(),
-            );
-
-            // wl_region.destroy() + 释放 proxy
-            ffi::wl_proxy_marshal_array_flags(
-                region,
-                OP_REGION_DESTROY,
-                std::ptr::null(),
-                0,
-                0,
-                std::ptr::null(),
-            );
-            ffi::wl_proxy_destroy(region);
-        }
+    fn apply_current_region(&self) -> Result<(), SurfaceError> {
+        let rect = input_rect_for(*self.size.borrow(), *self.mode.borrow());
+        set_input_region_ffi(self.wl_surface, self.compositor, rect)?;
+        flush_display(self.wl_display);
+        tracing::debug!(?rect, "input region applied");
         Ok(())
     }
 
@@ -178,23 +162,18 @@ impl WaylandSurface {
 
 impl DesktopSurface for WaylandSurface {
     fn enter_passive(&self) -> Result<(), SurfaceError> {
-        self.set_input_region(self.handle_rect())?;
-        self.set_keyboard_mode(KeyboardMode::None);
         *self.mode.borrow_mut() = SurfaceMode::Passive;
-        tracing::info!("enter passive (input region = edit handle)");
+        self.set_keyboard_mode(KeyboardMode::None);
+        self.apply_current_region()?;
+        tracing::info!("enter passive");
         Ok(())
     }
 
     fn enter_editing(&self) -> Result<(), SurfaceError> {
-        self.set_input_region(Rect {
-            x: 0,
-            y: 0,
-            width: self.size.width as i32,
-            height: self.size.height as i32,
-        })?;
-        self.set_keyboard_mode(KeyboardMode::Exclusive);
         *self.mode.borrow_mut() = SurfaceMode::Editing;
-        tracing::info!("enter editing (input region = fullscreen)");
+        self.set_keyboard_mode(KeyboardMode::Exclusive);
+        self.apply_current_region()?;
+        tracing::info!("enter editing");
         Ok(())
     }
 
@@ -203,16 +182,97 @@ impl DesktopSurface for WaylandSurface {
     }
 
     fn screen_size(&self) -> ScreenSize {
-        self.size
+        *self.size.borrow()
     }
 
     fn handle_rect(&self) -> Rect {
-        Rect {
-            x: self.size.width as i32 - HOTZONE_WIDTH,
-            y: (self.size.height as i32 - HOTZONE_HEIGHT) / 2,
+        input_rect_for(*self.size.borrow(), SurfaceMode::Passive)
+    }
+}
+
+/// 根据 surface 尺寸与模式计算 input region。
+fn input_rect_for(size: ScreenSize, mode: SurfaceMode) -> Rect {
+    match mode {
+        SurfaceMode::Editing => Rect {
+            x: 0,
+            y: 0,
+            width: size.width as i32,
+            height: size.height as i32,
+        },
+        SurfaceMode::Passive => Rect {
+            x: size.width as i32 - HOTZONE_WIDTH,
+            y: (size.height as i32 - HOTZONE_HEIGHT) / 2,
             width: HOTZONE_WIDTH,
             height: HOTZONE_HEIGHT,
+        },
+    }
+}
+
+/// 设置 input region 的 FFI 封装：
+///   region = wl_compositor.create_region(); region.add(x,y,w,h);
+///   surface.set_input_region(region); region.destroy();
+/// 用 wl_proxy_marshal_array_flags 手工封装（new_id 槽填 0 表示分配新 id）。
+fn set_input_region_ffi(
+    wl_surface: *mut c_void,
+    compositor: *mut c_void,
+    rect: Rect,
+) -> Result<(), SurfaceError> {
+    unsafe {
+        let new_id = [ffi::WlArgument { n: 0 }];
+        let region = ffi::wl_proxy_marshal_array_flags(
+            compositor,
+            OP_COMPOSITOR_CREATE_REGION,
+            std::ptr::addr_of!(ffi::wl_region_interface).cast(),
+            ffi::wl_proxy_get_version(compositor),
+            0,
+            new_id.as_ptr(),
+        );
+        if region.is_null() {
+            return Err(SurfaceError::NullRegion);
         }
+
+        let rect_args = [
+            ffi::WlArgument { i: rect.x },
+            ffi::WlArgument { i: rect.y },
+            ffi::WlArgument { i: rect.width },
+            ffi::WlArgument { i: rect.height },
+        ];
+        ffi::wl_proxy_marshal_array_flags(
+            region,
+            OP_REGION_ADD,
+            std::ptr::null(),
+            0,
+            0,
+            rect_args.as_ptr(),
+        );
+
+        let obj_arg = [ffi::WlArgument { o: region }];
+        ffi::wl_proxy_marshal_array_flags(
+            wl_surface,
+            OP_SURFACE_SET_INPUT_REGION,
+            std::ptr::null(),
+            0,
+            0,
+            obj_arg.as_ptr(),
+        );
+
+        ffi::wl_proxy_marshal_array_flags(
+            region,
+            OP_REGION_DESTROY,
+            std::ptr::null(),
+            0,
+            0,
+            std::ptr::null(),
+        );
+        ffi::wl_proxy_destroy(region);
+    }
+    Ok(())
+}
+
+/// 把排队中的 wayland 请求立即发给 compositor。
+fn flush_display(wl_display: *mut c_void) {
+    unsafe {
+        ffi::wl_display_flush(wl_display);
     }
 }
 
@@ -239,20 +299,4 @@ pub fn create_layer_window() -> Result<gtk::Window, SurfaceError> {
     window.show_all();
     window.realize();
     Ok(window)
-}
-
-fn output_size(gdk_window: &gtk::gdk::Window) -> ScreenSize {
-    // layer-shell 四边锚定后 surface 尺寸 = 输出尺寸；用 monitor geometry 更可靠。
-    if let Some(monitor) = gdk_window.display().monitor_at_window(gdk_window) {
-        let geo = monitor.geometry();
-        return ScreenSize {
-            width: geo.width() as u32,
-            height: geo.height() as u32,
-        };
-    }
-    let (_x, _y, w, h) = gdk_window.geometry();
-    ScreenSize {
-        width: w as u32,
-        height: h as u32,
-    }
 }

@@ -6,22 +6,19 @@
  *  - hover：展开为 “✎ Edit” 小药丸
  *  - 点击：进入编辑模式
  *
- * 整块热区由原生侧 input region 决定（passive 模式下只有这块区域接收鼠标），
- * 这里用 rect 把按钮精确对齐到热区。
+ * 用 CSS 相对定位（right:0 / top:50%）固定在右缘中央，天然跟随
+ * webkit 的 device pixel ratio，与原生侧 passive 模式的 input region
+ * 热区（右缘中央）对齐。
  */
-import type { Rect } from "./bridge";
-
 interface EditHandleProps {
-  rect: Rect;
   onEnterEdit: () => void;
 }
 
-export function EditHandle({ rect, onEnterEdit }: EditHandleProps) {
+export function EditHandle({ onEnterEdit }: EditHandleProps) {
   return (
     <button
       type="button"
       className="edit-handle"
-      style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
       onClick={onEnterEdit}
       aria-label="进入编辑模式"
       title="点击进入编辑模式"

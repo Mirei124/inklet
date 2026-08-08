@@ -61,6 +61,14 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     window.show_all();
     webview.grab_focus();
 
+    // 观察 layer-shell 表面尺寸变化序列
+    window.connect_size_allocate(|_win, alloc| {
+        tracing::debug!(?alloc, "window size-allocate");
+    });
+    webview.connect_size_allocate(|_wv, alloc| {
+        tracing::debug!(?alloc, "webview size-allocate");
+    });
+
     if dev_mode() {
         tracing::info!(url = DEV_SERVER_URL, "loading dev server");
         webview.load_uri(DEV_SERVER_URL);

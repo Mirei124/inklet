@@ -9,8 +9,8 @@
  * 模式切换以 backend 成功为准：先 await invoke，再更新 UI 状态。
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { invoke } from "./bridge";
-import type { AppMode, Rect } from "./bridge";
+import { invoke, logDebug } from "./bridge";
+import type { AppMode } from "./bridge";
 import { Canvas } from "./Canvas";
 import type { SceneChange } from "./Canvas";
 import { EditHandle } from "./EditHandle";
@@ -23,7 +23,23 @@ const TRANSPARENT = "transparent";
 export default function App() {
   const [mode, setMode] = useState<AppMode>("passive");
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
-  const [handleRect, setHandleRect] = useState<Rect | null>(null);
+
+  // 前端 JS 错误上报到 Rust 日志（调试用）
+  useEffect(() => {
+    const onError = (event: ErrorEvent) => {
+      logDebug(`JS error: ${event.message} @ ${event.filename}:${event.lineno}`);
+    };
+    const onRejection = (event: PromiseRejectionEvent) => {
+      logDebug(`unhandled rejection: ${String(event.reason)}`);
+    };
+    window.addEventListener("error", onError);
+    window.addEventListener("unhandledrejection", onRejection);
+    logDebug(`app mounted, size=${window.innerWidth}x${window.innerHeight}`);
+    return () => {
+      window.removeEventListener("error", onError);
+      window.removeEventListener("unhandledrejection", onRejection);
+    };
+  }, []);
 
   // 保存器只创建一次，保证防抖计时不因重渲染而重置
   const saver = useMemo(() => createDebouncedSaver((scene: SceneFile) => persistScene(scene)), []);
@@ -31,13 +47,12 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [scene, rect] = await Promise.all([
-        loadScene(),
-        invoke("get_handle_rect") as Promise<Rect>,
-      ]);
+      const scene = await loadScene();
       if (cancelled) return;
+      logDebug(
+        `loaded scene: ${scene.elements.length} elements; viewport=${window.innerWidth}x${window.innerHeight}`,
+      );
       setInitialScene(scene);
-      setHandleRect(rect);
     })();
     return () => {
       cancelled = true;
@@ -76,9 +91,7 @@ export default function App() {
           onChange={handleSceneChange}
         />
       ) : null}
-      {mode === "passive" && handleRect ? (
-        <EditHandle rect={handleRect} onEnterEdit={enterEditMode} />
-      ) : null}
+      {mode === "passive" ? <EditHandle onEnterEdit={enterEditMode} /> : null}
       {mode === "editing" ? <Toolbar onDone={exitEditMode} /> : null}
     </div>
   );

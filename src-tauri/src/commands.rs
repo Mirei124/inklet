@@ -33,3 +33,11 @@ pub fn save_scene(args: &Value) -> Result<Value, String> {
     tracing::info!("scene saved");
     Ok(Value::Null)
 }
+
+/// 前端调试日志通道：让前端把错误/状态上报到 Rust 日志，便于排查。
+pub fn log_debug(args: &Value) -> Result<Value, String> {
+    if let Some(msg) = args.get("msg").and_then(Value::as_str) {
+        tracing::info!("[web] {msg}");
+    }
+    Ok(Value::Null)
+}
