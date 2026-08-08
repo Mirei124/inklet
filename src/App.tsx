@@ -116,8 +116,10 @@ export default function App() {
     }
   }, [enterEditMode]);
 
-  // 调试：记录 webview 收到的指针事件（定位输入区域问题）
+  // 调试：记录 webview 收到的指针事件（定位输入区域问题）。
+  // 仅开发模式（vite dev）启用，生产构建（dist）关闭，避免 release 日志噪音。
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
     const onDown = (e: PointerEvent) =>
       logDebug(
         `PTR down x=${e.clientX.toFixed(0)} y=${e.clientY.toFixed(0)} ` +

@@ -1,4 +1,4 @@
-.PHONY: check test fmt lint build-release
+.PHONY: check test fmt lint build-release app-bundle
 
 # 一键质量检查（格式化 + 静态检查 + 测试）
 check: fmt lint typecheck test
@@ -28,3 +28,13 @@ build-release:
 	pnpm build
 	cd src-tauri && cargo build --release
 	@echo "产物: src-tauri/target/release/inklet"
+
+# macOS：在 build-release 基础上打包成可分发的 Inklet.app
+# （含 Info.plist，LSUIElement 使应用不出现在 Dock，仅作为桌面覆盖层）
+app-bundle: build-release
+	@echo "打包 Inklet.app ..."
+	rm -rf dist/Inklet.app
+	mkdir -p dist/Inklet.app/Contents/MacOS dist/Inklet.app/Contents/Resources
+	cp src-tauri/target/release/inklet dist/Inklet.app/Contents/MacOS/inklet
+	cp src-tauri/Info.plist dist/Inklet.app/Contents/Info.plist
+	@echo "产物: dist/Inklet.app"
