@@ -1034,14 +1034,15 @@
     "estimated_total_minutes": null,
     "evidence": [
       "MacSurface 实现完成：tao+wry+objc2。Canvas ignoresMouseEvents 切换、Control 浮动窗口（130x80 layer13）、NSWindow level 切换已实现。剩余：全屏排除菜单栏/Dock、Canvas layer 需修正为 overlay 层级、交互验收",
-      "passive 穿透 + editing 可交互已验证（点击 Edit 进入编辑、工具栏显示、可画画）；Control 竖条交互完成；剩余：正式 app bundle（Info.plist/Dock 图标/应用名）、release 打包流程、'不出现在 Dock' 的正式化"
+      "passive 穿透 + editing 可交互已验证（点击 Edit 进入编辑、工具栏显示、可画画）；Control 竖条交互完成；剩余：正式 app bundle（Info.plist/Dock 图标/应用名）、release 打包流程、'不出现在 Dock' 的正式化",
+      ".app bundle 打包完成：make app-bundle → dist/Inklet.app（Info.plist LSUIElement=true 不出现在 Dock，CFBundleName=Inklet）。release 日志降为 info（RUST_LOG 可覆盖），前端 PTR 调试日志 import.meta.env.DEV 门控关闭。open 启动 .app 验证进程/窗口正常（Canvas layer=-1 background 为用户设置，Control layer=22）"
     ],
     "execution_hints": [],
     "id": "TF-0024",
     "kind": "task",
     "non_goals": [],
     "priority": 3,
-    "progress": 85.0,
+    "progress": 95.0,
     "progress_source": "manual",
     "purpose": "",
     "remaining_minutes_max": null,
@@ -1052,7 +1053,7 @@
     "success_metrics": [],
     "summary": "borderless/transparent NSWindow 全屏透明画布，passive=ignoresMouseEvents true；独立小 NSPanel 承载编辑按钮。",
     "title": "macOS Canvas Window + Control Window（ignoresMouseEvents）",
-    "updated_at": "2026-08-08T17:29:12.185607Z"
+    "updated_at": "2026-08-08T17:39:43.695423Z"
   },
   "TF-0025": {
     "acceptance_criteria": [],

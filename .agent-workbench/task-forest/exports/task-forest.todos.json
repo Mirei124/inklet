@@ -74,7 +74,7 @@
     "kind": "task",
     "next_action": "passive 穿透 / editing 可交互",
     "priority": 3,
-    "progress": 85.0,
+    "progress": 95.0,
     "purpose": "",
     "ready": true,
     "remaining_minutes_max": null,
