@@ -407,30 +407,22 @@ fn serve_dist(
 
     // URI 形如 inklet://index.html 或 inklet://assets/xxx.js
     let uri_path = request.uri().path().to_string();
-    let mut rel = uri_path.trim_start_matches('/').to_string();
-    // 目录请求（"" 或结尾 "/"）→ index.html
-    if rel.is_empty() || rel.ends_with('/') {
-        rel.push_str("index.html");
-    }
 
     let not_found = Response::builder()
         .status(StatusCode::NOT_FOUND)
         .body(std::borrow::Cow::Borrowed(&b"not found"[..]))
         .unwrap();
 
-    let Some(file) = crate::app::dist_file(&rel) else {
-        tracing::warn!(rel, "inklet:// resource not found");
+    let Some((bytes, mime)) = crate::app::resolve_asset(&uri_path) else {
+        tracing::warn!(path = %uri_path, "inklet:// resource not found");
         return not_found;
     };
-
-    let ext = rel.rsplit('.').next().unwrap_or("html");
-    let mime = crate::app::mime_for(ext);
 
     let mut builder = Response::builder().status(StatusCode::OK);
     if let Ok(hv) = HeaderValue::from_str(mime) {
         builder = builder.header(CONTENT_TYPE, hv);
     }
-    builder.body(std::borrow::Cow::Borrowed(file)).unwrap()
+    builder.body(std::borrow::Cow::Borrowed(bytes)).unwrap()
 }
 
 /// 从 tao Window 获取 NSWindow 裸指针。

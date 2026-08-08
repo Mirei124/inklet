@@ -54,6 +54,24 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
+/// 从 settings.json 恢复 surface 状态（layer / handleY），跨平台共用。
+/// 返回 lang（若有），供 macOS 同步 Control 窗口语言。
+fn restore_surface_settings(surface: &dyn crate::desktop::surface::DesktopSurface) -> Option<String> {
+    let storage = crate::storage::Storage::default();
+    let json = storage.load_settings().ok().flatten()?;
+    let settings: serde_json::Value = serde_json::from_str(&json).ok()?;
+    if let Some(layer) = settings.get("layer").and_then(serde_json::Value::as_str) {
+        surface.set_layer_str(layer);
+    }
+    if let Some(y) = settings.get("handleY").and_then(serde_json::Value::as_f64) {
+        surface.set_handle_y(y as f32);
+    }
+    settings
+        .get("lang")
+        .and_then(serde_json::Value::as_str)
+        .map(String::from)
+}
+
 // ═══════════════════════════════════════════════════════════════
 // Linux (Wayland / GTK)
 // ═══════════════════════════════════════════════════════════════
@@ -71,17 +89,7 @@ fn run_linux() -> Result<(), Box<dyn std::error::Error>> {
     tracing::info!("wayland surface initialized, mode = {:?}", surface.mode());
 
     // 恢复上次保存的 canvas layer 与 handle 位置
-    let storage = crate::storage::Storage::default();
-    if let Ok(Some(json)) = storage.load_settings() {
-        if let Ok(settings) = serde_json::from_str::<serde_json::Value>(&json) {
-            if let Some(layer) = settings.get("layer").and_then(serde_json::Value::as_str) {
-                surface.set_layer_str(layer);
-            }
-            if let Some(y) = settings.get("handleY").and_then(serde_json::Value::as_f64) {
-                surface.set_handle_y(y as f32);
-            }
-        }
-    }
+    restore_surface_settings(surface.as_ref());
 
     // 3. webview（透明背景）
     let web_context =
@@ -153,9 +161,7 @@ fn run_linux() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(target_os = "macos")]
 fn run_macos() -> Result<(), Box<dyn std::error::Error>> {
     use crate::desktop::macos::MacSurface;
-    use crate::desktop::surface::DesktopSurface;
     use crate::ipc;
-    use crate::storage::Storage;
     use serde_json::Value;
     use std::cell::RefCell;
     use std::rc::Rc;
@@ -216,24 +222,9 @@ fn run_macos() -> Result<(), Box<dyn std::error::Error>> {
 
     *surface_holder.borrow_mut() = Some(surface.clone());
 
-    // 恢复设置
-    let storage = Storage::default();
-    if let Ok(Some(settings_json)) = storage.load_settings() {
-        if let Ok(settings) = serde_json::from_str::<Value>(&settings_json) {
-            if let Some(layer) = settings.get("layer").and_then(Value::as_str) {
-                surface.set_layer_str(layer);
-            }
-            if let Some(y) = settings.get("handleY").and_then(Value::as_f64) {
-                surface.set_handle_y(y as f32);
-            }
-            // 恢复语言并同步 Control 按钮
-            let lang = settings
-                .get("lang")
-                .and_then(Value::as_str)
-                .unwrap_or("zh");
-            surface.set_control_lang(lang);
-        }
-    }
+    // 恢复设置（layer/handleY），并同步 Control 窗口语言
+    let lang = restore_surface_settings(surface.as_ref()).unwrap_or_else(|| "zh".to_string());
+    surface.set_control_lang(&lang);
 
     // ── 事件循环 ───────────────────────────────────────────────
     let surface_ref = surface.clone();
@@ -335,33 +326,36 @@ fn register_custom_protocol(
     Ok(())
 }
 
-/// 解析前端资源路径，返回 (字节, MIME)。（Linux WebKitGTK custom protocol）
+/// 从嵌入的 DIST 解析资源并返回 (字节, MIME)。跨平台共用
+/// （Linux `dc://` custom protocol + macOS `inklet://` wry protocol）。
+///
+/// `path` 是 URL 的路径部分（如 `index.html`、`assets/x.js`、空串或 `/assets/`）；
+/// 目录请求自动映射到 `index.html`。
+pub fn resolve_asset(path: &str) -> Option<(&'static [u8], &'static str)> {
+    let mut rel = path.trim_start_matches('/').to_string();
+    if rel.is_empty() || rel.ends_with('/') {
+        rel.push_str("index.html");
+    }
+    let file = DIST.get_file(&rel)?;
+    let mime = mime_for(rel.rsplit('.').next().unwrap_or("html"));
+    Some((file.contents(), mime))
+}
+
+/// 解析前端资源路径，返回 (字节, MIME)。Linux WebKitGTK custom protocol。
 #[cfg(target_os = "linux")]
 fn serve_file(path: Option<&str>) -> Option<(Vec<u8>, &'static str)> {
-    let rel = normalize_rel(path);
-    // 目录请求（如 "/" 或 "/assets/"）-> 尝试 index.html
-    let rel = if rel.is_empty() {
-        "index.html".to_string()
-    } else if rel.ends_with('/') {
-        format!("{rel}index.html")
-    } else {
-        rel
-    };
-    let rel = rel.trim_start_matches('/');
-
-    #[cfg(not(debug_assertions))]
-    {
-        let file = DIST.get_file(rel)?;
-        let mime = mime_for(rel.rsplit('.').next().unwrap_or("html"));
-        Some((file.contents().to_vec(), mime))
-    }
+    let raw = path.unwrap_or("/index.html");
     #[cfg(debug_assertions)]
     {
+        // 开发时从磁盘读（无需先 build dist），并防路径穿越
+        let mut rel = raw.trim_start_matches('/').to_string();
+        if rel.is_empty() || rel.ends_with('/') {
+            rel.push_str("index.html");
+        }
         let dist = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../dist");
-        let full = dist.join(rel);
-        let canonical = full.canonicalize().ok()?;
+        let canonical = dist.join(rel).canonicalize().ok()?;
         if !canonical.starts_with(&dist) {
-            return None; // 防路径穿越
+            return None;
         }
         let bytes = std::fs::read(&canonical).ok()?;
         let mime = mime_for(
@@ -372,16 +366,14 @@ fn serve_file(path: Option<&str>) -> Option<(Vec<u8>, &'static str)> {
         );
         Some((bytes, mime))
     }
+    #[cfg(not(debug_assertions))]
+    {
+        let (bytes, mime) = resolve_asset(raw)?;
+        Some((bytes.to_vec(), mime))
+    }
 }
 
-#[cfg(target_os = "linux")]
-fn normalize_rel(path: Option<&str>) -> String {
-    path.unwrap_or("/index.html")
-        .trim_start_matches('/')
-        .to_string()
-}
-
-/// 根据扩展名返回 MIME（Linux custom protocol 与 macOS wry protocol 共用）。
+/// 根据扩展名返回 MIME（跨平台共用）。
 pub fn mime_for(ext: &str) -> &'static str {
     match ext {
         "html" | "htm" => "text/html",
@@ -400,10 +392,4 @@ pub fn mime_for(ext: &str) -> &'static str {
         "map" => "application/json",
         _ => "application/octet-stream",
     }
-}
-
-/// 从嵌入的 DIST 读取资源文件，返回文件字节（macOS wry protocol 用）。
-#[cfg(target_os = "macos")]
-pub fn dist_file(rel: &str) -> Option<&'static [u8]> {
-    DIST.get_file(rel).map(|f| f.contents())
 }
