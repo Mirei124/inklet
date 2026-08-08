@@ -144,7 +144,11 @@ impl MacSurface {
         // 所有 AppKit 调用必须在主线程
         let mtm = objc2_foundation::MainThreadMarker::new()
             .ok_or(SurfaceError::NotAvailable)?;
-        let _ = mtm;
+        // 隐藏 Dock 图标（覆盖层应用不应出现在 Dock / App Switcher）。
+        // 裸二进制没有 bundle，Info.plist 的 LSUIElement 不生效，必须运行时设置。
+        // Accessory：不出现在 Dock，仍可激活并接收键盘输入。
+        let app = objc2_app_kit::NSApplication::sharedApplication(mtm);
+        app.setActivationPolicy(objc2_app_kit::NSApplicationActivationPolicy::Accessory);
         // on_ipc 需要被 Canvas 和 Control 两个 webview 共享，包进 Rc
         let on_ipc = Rc::new(on_ipc);
         // ── Canvas Window ──────────────────────────────────────

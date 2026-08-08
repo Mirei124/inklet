@@ -291,12 +291,12 @@ fn load_embedded_app(wv: &wry::WebView) {
 
 fn init_tracing() {
     use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-    // 开发构建默认打印 debug（便于排查）；release 构建默认只打 info/warn，
-    // 避免 PTR 等调试日志刷屏。仍可用 RUST_LOG 环境变量覆盖。
+    // 开发构建默认打印 debug（便于排查）；release 构建只打 warn，
+    // 避免常规日志刷屏。仍可用 RUST_LOG 环境变量覆盖。
     #[cfg(debug_assertions)]
     let default_filter = "inklet=debug,warn";
     #[cfg(not(debug_assertions))]
-    let default_filter = "inklet=info,warn";
+    let default_filter = "inklet=warn";
     let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_filter));
     let _ = fmt().with_env_filter(filter).finish().try_init();
 }
