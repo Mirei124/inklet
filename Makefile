@@ -1,4 +1,4 @@
-.PHONY: check test fmt lint
+.PHONY: check test fmt lint build-release
 
 # 一键质量检查（格式化 + 静态检查 + 测试）
 check: fmt lint typecheck test
@@ -22,3 +22,9 @@ typecheck:
 test:
 	pnpm test
 	cd src-tauri && cargo test
+
+# 一键打包：构建前端 + release 二进制（自包含，前端已嵌入）
+build-release:
+	pnpm build
+	cd src-tauri && cargo build --release
+	@echo "产物: src-tauri/target/release/desktop-canvas"
