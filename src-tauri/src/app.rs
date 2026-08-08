@@ -156,7 +156,7 @@ fn run_macos() -> Result<(), Box<dyn std::error::Error>> {
     use crate::desktop::surface::DesktopSurface;
     use crate::ipc;
     use crate::storage::Storage;
-    use serde_json::{json, Value};
+    use serde_json::Value;
     use std::cell::RefCell;
     use std::rc::Rc;
     use tao::event_loop::{ControlFlow, EventLoop};
@@ -188,22 +188,12 @@ fn run_macos() -> Result<(), Box<dyn std::error::Error>> {
             }
         },
         move |msg| {
-            // 解析并分发 IPC 命令
+            // 解析并分发 IPC 命令（parse_message/dispatch/reply_js 与 Linux 共用）
             if let Some(ref surface) = *sh.borrow() {
-                let parsed: Value = match serde_json::from_str(&msg) {
-                    Ok(v) => v,
-                    Err(e) => {
-                        tracing::warn!("bad ipc message: {e}");
-                        return;
-                    }
-                };
-                let id = parsed.get("id").and_then(Value::as_u64).unwrap_or(0);
-                let cmd = parsed
-                    .get("cmd")
-                    .and_then(Value::as_str)
-                    .unwrap_or("")
-                    .to_string();
-                let args = parsed.get("args").cloned().unwrap_or_else(|| json!({}));
+                let (id, cmd, args) = ipc::parse_message(&msg);
+                if cmd.is_empty() {
+                    return;
+                }
 
                 let result = ipc::dispatch(&cmd, &args, surface.as_ref());
 
@@ -247,7 +237,18 @@ fn run_macos() -> Result<(), Box<dyn std::error::Error>> {
 
     // ── 事件循环 ───────────────────────────────────────────────
     let surface_ref = surface.clone();
+    let mut dock_hidden = false;
     event_loop.run(move |event, _, control_flow| {
+        // 首次进入事件循环时隐藏 Dock：tao 的 run 启动时会激活 NSApp 为
+        // Regular（窗口创建前的设置会被覆盖），此时 NSApp 已完全启动，
+        // 设置 Accessory 不会再被重置。
+        if !dock_hidden {
+            dock_hidden = true;
+            if let Some(mtm) = objc2_foundation::MainThreadMarker::new() {
+                let app = objc2_app_kit::NSApplication::sharedApplication(mtm);
+                app.setActivationPolicy(objc2_app_kit::NSApplicationActivationPolicy::Accessory);
+            }
+        }
         *control_flow = ControlFlow::Wait;
 
         match event {

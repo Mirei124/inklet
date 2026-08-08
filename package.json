@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Desktop overlay drawing board: a transparent Excalidraw canvas pinned to the desktop with a passive mouse-through mode and a small edge edit handle.",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -k -n web,native -c blue,green \"vite\" \"cd src-tauri && cargo run -- --dev\"",
+    "dev:web": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
@@ -25,6 +26,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "concurrently": "^10.0.4",
     "eslint": "^9.30.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.5.3",

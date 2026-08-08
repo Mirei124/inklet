@@ -49,9 +49,9 @@ pub fn handle(ctx: &AppContext, message: &str) {
         .evaluate_javascript(&js, None, None, None::<&gio::Cancellable>, |_| {});
 }
 
-/// Linux 侧消息解析（macOS 用 wry 的 ipc_handler 直接拿 body 字符串）。
-#[cfg(target_os = "linux")]
-fn parse_message(message: &str) -> (u64, String, Value) {
+/// 平台无关的消息解析：从 `{id, cmd, args}` JSON 提取字段。
+/// Linux WebKitGTK 与 macOS wry 共用（ipc_handler 都拿到 body 字符串）。
+pub fn parse_message(message: &str) -> (u64, String, Value) {
     let parsed: Value = match serde_json::from_str(message) {
         Ok(v) => v,
         Err(e) => {

@@ -144,11 +144,6 @@ impl MacSurface {
         // 所有 AppKit 调用必须在主线程
         let mtm = objc2_foundation::MainThreadMarker::new()
             .ok_or(SurfaceError::NotAvailable)?;
-        // 隐藏 Dock 图标（覆盖层应用不应出现在 Dock / App Switcher）。
-        // 裸二进制没有 bundle，Info.plist 的 LSUIElement 不生效，必须运行时设置。
-        // Accessory：不出现在 Dock，仍可激活并接收键盘输入。
-        let app = objc2_app_kit::NSApplication::sharedApplication(mtm);
-        app.setActivationPolicy(objc2_app_kit::NSApplicationActivationPolicy::Accessory);
         // on_ipc 需要被 Canvas 和 Control 两个 webview 共享，包进 Rc
         let on_ipc = Rc::new(on_ipc);
         // ── Canvas Window ──────────────────────────────────────
@@ -218,6 +213,10 @@ impl MacSurface {
         let _ = control_wv.evaluate_script("window.currentY = 0.5;");
         let control_window = RefCell::new(Some(control_window));
 
+        // 注意：隐藏 Dock（NSApplicationActivationPolicy::Accessory）不在这里设置。
+        // tao 在窗口创建 / 事件循环 run 时会把 NSApp 激活策略重置为 Regular，
+        // 提前设置会被覆盖。真正的设置放在 app.rs 事件循环首次回调里
+        // （此时 NSApp 已完全启动，不会再被重置）。
         let this = Rc::new(Self {
             canvas_window,
             canvas_wv,
@@ -358,12 +357,19 @@ impl DesktopSurface for MacSurface {
             _ => "overlay",
         };
         *self.layer.borrow_mut() = l.to_string();
+        let level = if l == "background" {
+            BACKGROUND_LEVEL
+        } else {
+            OVERLAY_LEVEL
+        };
         unsafe {
-            self.ns().setLevel(if l == "background" {
-                BACKGROUND_LEVEL
-            } else {
-                OVERLAY_LEVEL
-            });
+            self.ns().setLevel(level);
+            // Control 窗口跟随 Canvas 层级（置底时 Control 也应沉到壁纸层）
+            if let Some(ref ctrl) = *self.control_window.borrow() {
+                if let Ok(ctrl_ns) = get_ns_window_ptr(ctrl) {
+                    (*ctrl_ns).setLevel(level + 1);
+                }
+            }
         }
         // 同步 layer 到 Control 按钮标签
         if let Some(ref wv) = *self.control_wv.borrow() {
