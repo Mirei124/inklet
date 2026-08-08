@@ -18,11 +18,11 @@ use std::rc::Rc;
 
 /// 编辑热区尺寸（表面/物理坐标）。
 ///
-/// 前端 handle 用 CSS 相对定位（right:0 / top:50%）天然跟随 DPR；
-/// 这里的热区要足够大，覆盖 webkit 的 device pixel ratio（实测 1.25）下
-/// 展开后的编辑按钮，同时尽量小以少占用桌面点击区域。
+/// 前端 handle 用 CSS 相对定位（right:0 / top 由 handle_y 决定）天然跟随 DPR；
+/// 热区要覆盖展开后的编辑按钮（约 130 CSS px 宽），同时尽量小以少占用桌面点击。
+/// 热区垂直居中于 handle_y 位置。
 pub const HOTZONE_WIDTH: i32 = 200;
-pub const HOTZONE_HEIGHT: i32 = 240;
+pub const HOTZONE_HEIGHT: i32 = 150;
 
 /// libwayland / gdk-wayland 原始 FFI。
 ///
@@ -90,6 +90,8 @@ pub struct WaylandSurface {
     /// 当前 surface 尺寸（表面坐标），随窗口 resize 更新。
     size: Rc<RefCell<ScreenSize>>,
     mode: Rc<RefCell<SurfaceMode>>,
+    /// 编辑入口的垂直位置（0..1，占屏高比例），passive 热区与 Done 跟随它。
+    handle_y: Rc<RefCell<f32>>,
 }
 
 impl WaylandSurface {
@@ -114,6 +116,7 @@ impl WaylandSurface {
             height: alloc.height() as u32,
         }));
         let mode = Rc::new(RefCell::new(SurfaceMode::Passive));
+        let handle_y = Rc::new(RefCell::new(0.5));
 
         let surface = Self {
             window,
@@ -122,6 +125,7 @@ impl WaylandSurface {
             wl_display,
             size,
             mode,
+            handle_y,
         };
         surface.connect_resize_handler();
         surface.enter_passive()?;
@@ -135,12 +139,13 @@ impl WaylandSurface {
         let wl_display = self.wl_display;
         let size = self.size.clone();
         let mode = self.mode.clone();
+        let handle_y = self.handle_y.clone();
         self.window.connect_size_allocate(move |_win, alloc| {
             *size.borrow_mut() = ScreenSize {
                 width: alloc.width() as u32,
                 height: alloc.height() as u32,
             };
-            let rect = input_rect_for(*size.borrow(), *mode.borrow());
+            let rect = input_rect_for(*size.borrow(), *mode.borrow(), *handle_y.borrow());
             let _ = set_input_region_ffi(wl_surface, compositor, rect);
             flush_display(wl_display);
             tracing::debug!(?alloc, "input region re-applied on resize");
@@ -148,11 +153,30 @@ impl WaylandSurface {
     }
 
     fn apply_current_region(&self) -> Result<(), SurfaceError> {
-        let rect = input_rect_for(*self.size.borrow(), *self.mode.borrow());
+        let rect = input_rect_for(
+            *self.size.borrow(),
+            *self.mode.borrow(),
+            *self.handle_y.borrow(),
+        );
         set_input_region_ffi(self.wl_surface, self.compositor, rect)?;
         flush_display(self.wl_display);
         tracing::debug!(?rect, "input region applied");
         Ok(())
+    }
+
+    /// 设置编辑入口的垂直位置（0..1），并立即重算 passive 热区。
+    pub fn set_handle_y(&self, y: f32) {
+        let y = y.clamp(0.02, 0.98);
+        *self.handle_y.borrow_mut() = y;
+        if *self.mode.borrow() == SurfaceMode::Passive {
+            let _ = self.apply_current_region();
+        }
+        tracing::info!(y, "handle position set");
+    }
+
+    /// 当前编辑入口垂直位置（0..1）。
+    pub fn handle_y(&self) -> f32 {
+        *self.handle_y.borrow()
     }
 
     fn set_keyboard_mode(&self, mode: KeyboardMode) {
@@ -206,12 +230,16 @@ impl DesktopSurface for WaylandSurface {
     }
 
     fn handle_rect(&self) -> Rect {
-        input_rect_for(*self.size.borrow(), SurfaceMode::Passive)
+        input_rect_for(
+            *self.size.borrow(),
+            SurfaceMode::Passive,
+            *self.handle_y.borrow(),
+        )
     }
 }
 
-/// 根据 surface 尺寸与模式计算 input region。
-fn input_rect_for(size: ScreenSize, mode: SurfaceMode) -> Rect {
+/// 根据 surface 尺寸、模式与 handle 位置计算 input region。
+fn input_rect_for(size: ScreenSize, mode: SurfaceMode, handle_y: f32) -> Rect {
     match mode {
         SurfaceMode::Editing => Rect {
             x: 0,
@@ -219,12 +247,16 @@ fn input_rect_for(size: ScreenSize, mode: SurfaceMode) -> Rect {
             width: size.width as i32,
             height: size.height as i32,
         },
-        SurfaceMode::Passive => Rect {
-            x: size.width as i32 - HOTZONE_WIDTH,
-            y: (size.height as i32 - HOTZONE_HEIGHT) / 2,
-            width: HOTZONE_WIDTH,
-            height: HOTZONE_HEIGHT,
-        },
+        SurfaceMode::Passive => {
+            // 热区垂直居中于 handle_y 位置
+            let cy = (handle_y * size.height as f32) as i32;
+            Rect {
+                x: size.width as i32 - HOTZONE_WIDTH,
+                y: cy - HOTZONE_HEIGHT / 2,
+                width: HOTZONE_WIDTH,
+                height: HOTZONE_HEIGHT,
+            }
+        }
     }
 }
 

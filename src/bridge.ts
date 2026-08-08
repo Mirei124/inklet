@@ -47,6 +47,8 @@ export type Command =
   | "get_handle_rect"
   | "get_canvas_layer"
   | "set_canvas_layer"
+  | "get_handle_position"
+  | "set_handle_position"
   | "log_debug";
 
 /** 把前端状态/错误上报到 Rust 日志（调试用，浏览器 mock 下忽略）。 */
@@ -158,9 +160,17 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
       localStorage.setItem(MOCK_LAYER_KEY, layer);
       return delay({ layer });
     }
+    case "get_handle_position":
+      return delay({ y: Number(localStorage.getItem(MOCK_HANDLE_Y_KEY) || "0.5") });
+    case "set_handle_position": {
+      const y = typeof args?.y === "number" ? args.y : 0.5;
+      localStorage.setItem(MOCK_HANDLE_Y_KEY, String(y));
+      return delay({ y });
+    }
     default:
       return delay(null);
   }
 }
 
 const MOCK_LAYER_KEY = "desktop-canvas.mock.layer";
+const MOCK_HANDLE_Y_KEY = "desktop-canvas.mock.handleY";

@@ -24,6 +24,7 @@ export default function App() {
   const [mode, setMode] = useState<AppMode>("passive");
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
   const [layer, setLayer] = useState<CanvasLayer>("overlay");
+  const [handleY, setHandleY] = useState(0.5);
 
   // 前端 JS 错误上报到 Rust 日志（调试用）
   useEffect(() => {
@@ -48,17 +49,19 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [scene, layerResult] = await Promise.all([
+      const [scene, layerResult, posResult] = await Promise.all([
         loadScene(),
         invoke("get_canvas_layer") as Promise<{ layer: CanvasLayer }>,
+        invoke("get_handle_position") as Promise<{ y: number }>,
       ]);
       if (cancelled) return;
       logDebug(
         `loaded scene: ${scene.elements.length} elements; layer=${layerResult.layer}; ` +
-          `viewport=${window.innerWidth}x${window.innerHeight}`,
+          `handleY=${posResult.y.toFixed(2)}; viewport=${window.innerWidth}x${window.innerHeight}`,
       );
       setInitialScene(scene);
       setLayer(layerResult.layer);
+      setHandleY(posResult.y);
     })();
     return () => {
       cancelled = true;
@@ -119,6 +122,18 @@ export default function App() {
     logDebug(`canvas layer -> ${result.layer}`);
   }, [layer]);
 
+  // handle 拖拽：实时更新渲染位置（本地状态）
+  const handlePositionChange = useCallback((y: number) => {
+    setHandleY(y);
+  }, []);
+
+  // handle 拖拽结束：同步原生热区 + 持久化
+  const handlePositionCommit = useCallback((y: number) => {
+    setHandleY(y);
+    void invoke("set_handle_position", { y });
+    logDebug(`handle position committed: ${y.toFixed(2)}`);
+  }, []);
+
   return (
     <div className="app-root">
       {initialScene ? (
@@ -129,9 +144,16 @@ export default function App() {
         />
       ) : null}
       {mode === "passive" ? (
-        <EditHandle layer={layer} onEnterEdit={enterEditMode} onToggleLayer={toggleLayer} />
+        <EditHandle
+          layer={layer}
+          handleY={handleY}
+          onEnterEdit={enterEditMode}
+          onToggleLayer={toggleLayer}
+          onPositionChange={handlePositionChange}
+          onPositionCommit={handlePositionCommit}
+        />
       ) : null}
-      {mode === "editing" ? <Toolbar onDone={exitEditMode} /> : null}
+      {mode === "editing" ? <Toolbar onDone={exitEditMode} handleY={handleY} /> : null}
     </div>
   );
 }

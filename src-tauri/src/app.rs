@@ -29,12 +29,15 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let surface = Rc::new(WaylandSurface::new(window.clone())?);
     tracing::info!("wayland surface initialized, mode = {:?}", surface.mode());
 
-    // 恢复上次保存的 canvas layer（overlay / background）
+    // 恢复上次保存的 canvas layer 与 handle 位置
     let storage = crate::storage::Storage::default();
     if let Ok(Some(json)) = storage.load_settings() {
         if let Ok(settings) = serde_json::from_str::<serde_json::Value>(&json) {
             if let Some(layer) = settings.get("layer").and_then(serde_json::Value::as_str) {
                 surface.set_layer_str(layer);
+            }
+            if let Some(y) = settings.get("handleY").and_then(serde_json::Value::as_f64) {
+                surface.set_handle_y(y as f32);
             }
         }
     }

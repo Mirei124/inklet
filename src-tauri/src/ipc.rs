@@ -83,13 +83,38 @@ fn dispatch(cmd: &str, args: &Value, surface: &WaylandSurface) -> Result<Value, 
                 .and_then(Value::as_str)
                 .unwrap_or("overlay");
             surface.set_layer_str(layer);
-            let storage = crate::storage::Storage::default();
-            let settings = json!({ "version": 1, "layer": layer });
-            if let Err(e) = storage.save_settings(&settings.to_string()) {
-                tracing::warn!("failed to save settings: {e}");
-            }
+            let mut settings = read_settings();
+            settings["layer"] = json!(layer);
+            write_settings(&settings);
             Ok(json!({ "layer": layer }))
         }
+        "get_handle_position" => Ok(json!({ "y": surface.handle_y() })),
+        "set_handle_position" => {
+            let y = args.get("y").and_then(Value::as_f64).unwrap_or(0.5) as f32;
+            surface.set_handle_y(y);
+            let mut settings = read_settings();
+            settings["handleY"] = json!(y);
+            write_settings(&settings);
+            Ok(json!({ "y": surface.handle_y() }))
+        }
         other => Err(format!("unknown command: {other}")),
+    }
+}
+
+/// 读取 settings.json，缺失/损坏时返回默认值。
+fn read_settings() -> Value {
+    crate::storage::Storage::default()
+        .load_settings()
+        .ok()
+        .flatten()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_else(|| json!({ "version": 1, "layer": "overlay", "handleY": 0.5 }))
+}
+
+/// 写入 settings.json。
+fn write_settings(settings: &Value) {
+    let storage = crate::storage::Storage::default();
+    if let Err(e) = storage.save_settings(&settings.to_string()) {
+        tracing::warn!("failed to save settings: {e}");
     }
 }

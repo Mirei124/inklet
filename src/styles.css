@@ -56,9 +56,9 @@ body {
   display: none;
 }
 
-/* 右缘编辑入口：CSS 相对定位固定在右缘中央，与原生侧 passive 热区对齐。
-   折叠状态只显示单个窄条（::before）；hover 时展开为两个药丸：
-   Edit / 图层切换。 */
+/* 右缘编辑入口：位置由 handleY 决定（top 由 JS 设置）。
+   折叠态只显示单个窄条；点击展开为两个药丸（Edit / 图层切换）；
+   拖拽窄条可沿右缘移动位置。 */
 .edit-handle {
   position: absolute;
   right: 0;
@@ -66,28 +66,34 @@ body {
   transform: translateY(-50%);
   z-index: 100;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row-reverse;
+  align-items: center;
   gap: 8px;
-  padding: 12px 8px;
-  min-width: 130px;
+  padding: 10px 6px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.edit-handle:active {
+  cursor: grabbing;
 }
 
-/* 折叠态：单个窄条 */
-.edit-handle::before {
-  content: "";
+/* 折叠态：单个窄条（可点击展开 / 拖拽移动） */
+.edit-handle-bar {
   width: 8px;
   height: 34px;
-  background: rgba(0, 0, 0, 0.45);
+  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.45);
   border-radius: 17px;
-  transition: opacity 0.15s ease;
+  cursor: grab;
+  flex-shrink: 0;
 }
-.edit-handle:hover::before {
-  opacity: 0;
+.edit-handle-bar:active {
+  cursor: grabbing;
 }
 
-/* 两个药丸：默认收起，hover 展开 */
+/* 两个药丸：默认收起，is-expanded 时展开（位于竖条左侧） */
 .edit-handle-item {
   display: flex;
   align-items: center;
@@ -112,7 +118,7 @@ body {
     opacity 0.15s ease;
 }
 
-.edit-handle:hover .edit-handle-item,
+.edit-handle.is-expanded .edit-handle-item,
 .edit-handle-item:hover {
   max-width: 130px;
   padding: 0 14px;
@@ -120,7 +126,7 @@ body {
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
 
-/* 编辑模式 Done 按钮：右缘中央（与 passive 的编辑入口同一位置） */
+/* 编辑模式 Done 按钮：右缘、y 跟随 handleY（top 由 JS 设置） */
 .toolbar {
   position: absolute;
   right: 16px;
