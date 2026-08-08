@@ -1,0 +1,109 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  user-select: none;
+}
+
+.app-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+}
+
+.canvas-root {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+/* Excalidraw 容器保持透明（真正的画布底色由 appState.viewBackgroundColor 控制） */
+.canvas-root .excalidraw {
+  background: transparent;
+}
+
+/* 右缘编辑入口：整块热区（尺寸由原生侧 input region 决定）可点击 */
+.edit-handle {
+  position: absolute;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  outline: none;
+}
+
+.edit-handle-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  max-width: 8px;
+  padding: 0 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgba(20, 20, 25, 0.3);
+  color: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 17px;
+  transition:
+    max-width 0.15s ease,
+    padding 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.edit-handle:hover .edit-handle-label {
+  max-width: 180px;
+  padding: 0 14px;
+  background: rgba(37, 99, 235, 0.92);
+  color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* 编辑模式顶部 Done 按钮 */
+.toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+}
+
+.done-button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.92);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.done-button:hover {
+  background: rgba(29, 78, 216, 0.95);
+}

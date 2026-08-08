@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+# 提交前质量门禁：
+#  - 前端改动 -> prettier / eslint / tsc / vitest
+#  - Rust 改动 -> rustfmt / clippy / cargo test
+# 启用方式（一次性）：git config core.hooksPath .githooks
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+staged() { git diff --cached --name-only; }
+
+if staged | grep -qE '^(src/|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|tsconfig|vite\.config|vitest\.config|eslint\.config|\.prettierrc|index\.html)'; then
+  echo "==> 前端检查"
+  pnpm format:check
+  pnpm lint
+  pnpm typecheck
+  pnpm test
+fi
+
+if staged | grep -q '^src-tauri/'; then
+  echo "==> Rust 检查"
+  cd src-tauri
+  cargo fmt --check
+  cargo clippy -- -D warnings
+  cargo test
+fi

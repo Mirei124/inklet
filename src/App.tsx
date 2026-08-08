@@ -1,51 +1,85 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+/**
+ * App.tsx
+ *
+ * 顶层状态机：Passive ↔ Editing。
+ *  - Passive：画布只读、鼠标穿透（原生侧 input region 只保留右缘热区），
+ *    仅 EditHandle 可交互。
+ *  - Editing：整画布接收输入，显示工具栏 + Done。
+ *
+ * 模式切换以 backend 成功为准：先 await invoke，再更新 UI 状态。
+ */
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { invoke } from "./bridge";
+import type { AppMode, Rect } from "./bridge";
+import { Canvas } from "./Canvas";
+import type { SceneChange } from "./Canvas";
+import { EditHandle } from "./EditHandle";
+import { Toolbar } from "./Toolbar";
+import { createDebouncedSaver, loadScene, persistScene } from "./state/scene";
+import type { SceneFile } from "./state/scene";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+const TRANSPARENT = "transparent";
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+export default function App() {
+  const [mode, setMode] = useState<AppMode>("passive");
+  const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
+  const [handleRect, setHandleRect] = useState<Rect | null>(null);
+
+  // 保存器只创建一次，保证防抖计时不因重渲染而重置
+  const saver = useMemo(() => createDebouncedSaver((scene: SceneFile) => persistScene(scene)), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [scene, rect] = await Promise.all([
+        loadScene(),
+        invoke("get_handle_rect") as Promise<Rect>,
+      ]);
+      if (cancelled) return;
+      setInitialScene(scene);
+      setHandleRect(rect);
+    })();
+    return () => {
+      cancelled = true;
+      saver.cancel();
+    };
+  }, [saver]);
+
+  const handleSceneChange: SceneChange = useCallback(
+    (elements, appState) => {
+      saver.schedule({
+        version: 1,
+        elements,
+        appState: { ...appState, viewBackgroundColor: TRANSPARENT },
+      });
+    },
+    [saver],
+  );
+
+  const enterEditMode = useCallback(async () => {
+    await invoke("enter_edit_mode");
+    setMode("editing");
+  }, []);
+
+  const exitEditMode = useCallback(async () => {
+    await saver.flush(); // 退出前先落盘
+    await invoke("exit_edit_mode");
+    setMode("passive");
+  }, [saver]);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
+    <div className="app-root">
+      {initialScene ? (
+        <Canvas
+          initialScene={initialScene}
+          editing={mode === "editing"}
+          onChange={handleSceneChange}
         />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+      ) : null}
+      {mode === "passive" && handleRect ? (
+        <EditHandle rect={handleRect} onEnterEdit={enterEditMode} />
+      ) : null}
+      {mode === "editing" ? <Toolbar onDone={exitEditMode} /> : null}
+    </div>
   );
 }
-
-export default App;
