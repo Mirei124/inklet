@@ -17,7 +17,7 @@
     "kind": "global_task",
     "next_action": "Test1 启动：桌面正常、笔迹恢复、鼠标可点击桌面、边缘可见微弱 Handle",
     "priority": 3,
-    "progress": 92.0,
+    "progress": 95.0,
     "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
     "ready": true,
     "remaining_minutes_max": null,

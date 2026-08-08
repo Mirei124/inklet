@@ -38,7 +38,7 @@
       "协作/云同步/账号/多画板/SQLite/X11/Windows/GNOME 适配/截图/OCR/AI（MVP 均不实现）"
     ],
     "priority": 3,
-    "progress": 92.0,
+    "progress": 95.0,
     "progress_source": "manual",
     "purpose": "验证“桌面画板 + 局部编辑入口 + mouse passthrough”的交互是否好用，为后续扩展打基础",
     "remaining_minutes_max": null,
@@ -58,7 +58,7 @@
     ],
     "summary": "始终显示在桌面上的透明 Excalidraw 画布，默认鼠标穿透，仅边缘编辑按钮可交互；点击进入编辑模式，完成后恢复穿透，scene 自动持久化到本地 JSON。",
     "title": "桌面画板 MVP：透明 Excalidraw 画布 + 边缘编辑入口 + 鼠标穿透",
-    "updated_at": "2026-08-08T12:08:27.842794Z"
+    "updated_at": "2026-08-08T12:18:03.210669Z"
   },
   "TF-0002": {
     "acceptance_criteria": [
