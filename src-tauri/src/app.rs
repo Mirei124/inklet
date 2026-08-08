@@ -127,7 +127,8 @@ fn register_custom_protocol(
     tracing::info!(dist = %dist.display(), "serving assets from dist");
 
     web_context.register_uri_scheme(APP_SCHEME, move |request| {
-        if let Some(response) = serve_file(&dist, request.uri().as_deref()) {
+        // path() 返回 URI 的路径部分：dc://app/index.html -> /index.html
+        if let Some(response) = serve_file(&dist, request.path().as_deref()) {
             request.finish_with_response(&response);
         } else {
             let mut err = glib::Error::new(gtk::gio::IOErrorEnum::NotFound, "not found");
@@ -137,11 +138,8 @@ fn register_custom_protocol(
     Ok(())
 }
 
-fn serve_file(dist: &std::path::Path, uri: Option<&str>) -> Option<webkit2gtk::URISchemeResponse> {
-    // 形如 dc://app/index.html -> 取 index.html
-    let rel = uri
-        .and_then(|u| u.split_once("://").map(|(_, p)| p))
-        .unwrap_or("index.html");
+fn serve_file(dist: &std::path::Path, path: Option<&str>) -> Option<webkit2gtk::URISchemeResponse> {
+    let rel = path.unwrap_or("/index.html");
     let rel = rel.trim_start_matches('/');
 
     let mut full = dist.join(rel);
