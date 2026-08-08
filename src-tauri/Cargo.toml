@@ -1,25 +1,30 @@
 [package]
-name = "dc-scaffold"
+name = "desktop-canvas"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Desktop overlay drawing board: transparent Excalidraw canvas with passive mouse-through"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "dc_scaffold_lib"
-crate-type = ["staticlib", "cdylib", "rlib"]
-
-[build-dependencies]
-tauri-build = { version = "2", features = [] }
-
 [dependencies]
-tauri = { version = "2", features = [] }
-tauri-plugin-opener = "2"
+# WebView：直接用 WebKitGTK（wry 在 Linux 仅支持 X11，无法挂进
+# Wayland layer-shell；webkit2gtk 是 wry 的底层实现，可嵌入任意 GTK 容器）
+# v2_40：启用 WebKitGTK 4.1 对应 API（默认无特性时多数类型不可用）
+webkit2gtk = { version = "2.0", features = ["v2_40"] }
+# GTK3 窗口，托管 webkit webview
+gtk = "0.18"
+glib = "0.18"
+gio = "0.18"
+# Wayland layer-shell：让普通 GTK 窗口变成桌面覆盖层
+# v0_6 提供 set_keyboard_mode（Exclusive/None），非弃用的 bool 版接口
+gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
+
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+dirs = "6"
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"

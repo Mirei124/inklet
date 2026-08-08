@@ -3,8 +3,8 @@
  *
  * 前后端 IPC 客户端。
  *
- * 原生侧（wry）会注入 `window.ipc.postMessage`；这里把所有命令走
- * id + cmd + args 的 JSON 协议，原生侧处理完成后回调
+ * 原生侧（WebKitGTK）注册了名为 `ipc` 的 script message handler，这里把所有
+ * 命令走 id + cmd + args 的 JSON 协议，原生侧处理完成后回调
  * `window.__dc_ipc_reply(id, ok, payload)`。
  *
  * 在普通浏览器里（无原生注入）自动回退到内存 mock，方便单独开发 UI。
@@ -50,7 +50,11 @@ interface Pending {
 
 declare global {
   interface Window {
-    ipc?: { postMessage: (message: string) => void };
+    webkit?: {
+      messageHandlers?: {
+        ipc?: { postMessage: (message: string) => void };
+      };
+    };
     __dc_ipc_reply?: (id: number, ok: boolean, payload: string) => void;
   }
 }
@@ -73,7 +77,10 @@ if (typeof window !== "undefined") {
 }
 
 function nativeAvailable(): boolean {
-  return typeof window !== "undefined" && typeof window.ipc?.postMessage === "function";
+  return (
+    typeof window !== "undefined" &&
+    typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function"
+  );
 }
 
 /**
@@ -86,7 +93,7 @@ export function invoke(cmd: Command, args?: Record<string, unknown>): Promise<un
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject });
-    window.ipc!.postMessage(JSON.stringify({ id, cmd, args: args ?? {} }));
+    window.webkit!.messageHandlers!.ipc!.postMessage(JSON.stringify({ id, cmd, args: args ?? {} }));
   });
 }
 
