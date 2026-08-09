@@ -169,6 +169,7 @@ export default function App() {
           initialScene={initialScene}
           editing={mode === "editing"}
           onChange={handleSceneChange}
+          lang={lang}
         />
       ) : null}
       {mode === "passive" && !isNativeMacOS() ? (

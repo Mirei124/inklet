@@ -7,6 +7,7 @@
  */
 import { Excalidraw } from "@excalidraw/excalidraw";
 import type { ExcalidrawProps } from "@excalidraw/excalidraw/types";
+import type { Lang } from "./i18n";
 import type { SceneFile } from "./state/scene";
 
 /** Excalidraw 的 onChange 签名，App 用它接收 scene 变化 */
@@ -16,14 +17,22 @@ interface CanvasProps {
   initialScene: SceneFile;
   editing: boolean;
   onChange: SceneChange;
+  /** 界面语言（Excalidraw UI 跟随应用的 en/zh 设置） */
+  lang: Lang;
 }
 
 const TRANSPARENT = "transparent";
 
-export function Canvas({ initialScene, editing, onChange }: CanvasProps) {
+/** 应用 Lang → Excalidraw 语言代码 */
+function excalidrawLangCode(lang: Lang): string {
+  return lang === "zh" ? "zh-CN" : "en";
+}
+
+export function Canvas({ initialScene, editing, onChange, lang }: CanvasProps) {
   return (
     <div className={`canvas-root mode-${editing ? "editing" : "passive"}`}>
       <Excalidraw
+        langCode={excalidrawLangCode(lang)}
         initialData={{
           elements: initialScene.elements,
           appState: {
