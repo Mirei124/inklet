@@ -1137,5 +1137,46 @@
     "summary": "pnpm dev 前后端并行（concurrently）；IPC parse_message 平台无关；资源服务统一 resolve_asset；settings 恢复抽共享函数；app.rs 拆分 app/{assets,linux,macos}.rs；dev_url 共享。全量验证通过（cargo test/clippy、前端 test/typecheck、release 启动）。",
     "title": "跨平台代码重构：合并重复、模块拆分",
     "updated_at": "2026-08-08T18:13:17.706658Z"
+  },
+  "TF-0027": {
+    "acceptance_criteria": [
+      "前后端依赖为当前最新（有生态兼容性约束时取最新兼容版本），编译测试全过"
+    ],
+    "alignment": {
+      "fit": "unknown",
+      "fit_confidence": 0.0,
+      "user_goal": "",
+      "validation_plan": [],
+      "why_not_enough": "",
+      "why_this_task": ""
+    },
+    "alignment_records": [],
+    "assumptions": [],
+    "confidence": 0.6,
+    "context_tags": [],
+    "created_at": "2026-08-09T04:01:12.428588Z",
+    "deprecated_at": null,
+    "desired_outcomes": [],
+    "deviations": [],
+    "difficulty": "unknown",
+    "estimated_total_minutes": null,
+    "evidence": [],
+    "execution_hints": [],
+    "id": "TF-0027",
+    "kind": "task",
+    "non_goals": [],
+    "priority": 3,
+    "progress": 100.0,
+    "progress_source": "manual",
+    "purpose": "",
+    "remaining_minutes_max": null,
+    "remaining_minutes_min": null,
+    "requirements": [],
+    "source_sessions": [],
+    "status": "done",
+    "success_metrics": [],
+    "summary": "前端 vite8/vitest4/eslint10/react19.2/typescript6.0.3（7.0 与 typescript-eslint 不兼容而降级）；Rust tao0.36 + cargo update 兼容最新。全量验证通过。",
+    "title": "依赖升级到最新",
+    "updated_at": "2026-08-09T04:01:12.428605Z"
   }
 }

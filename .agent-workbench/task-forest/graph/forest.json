@@ -25,7 +25,8 @@
         "TFE-0019",
         "TFE-0028",
         "TFE-0033",
-        "TFE-0037"
+        "TFE-0037",
+        "TFE-0038"
       ],
       "outgoing": [],
       "tree_child_edges": [
@@ -35,7 +36,8 @@
         "TFE-0019",
         "TFE-0028",
         "TFE-0033",
-        "TFE-0037"
+        "TFE-0037",
+        "TFE-0038"
       ],
       "tree_parent_edge": null
     },
@@ -465,10 +467,22 @@
       ],
       "tree_child_edges": [],
       "tree_parent_edge": "TFE-0037"
+    },
+    "TF-0027": {
+      "blocking_edges": [
+        "TFE-0038"
+      ],
+      "cross_edges": [],
+      "incoming": [],
+      "outgoing": [
+        "TFE-0038"
+      ],
+      "tree_child_edges": [],
+      "tree_parent_edge": "TFE-0038"
     }
   },
   "edge_type_counts": {
-    "child_of": 24,
+    "child_of": 25,
     "clarifies": 0,
     "contributes_to": 0,
     "depends_on": 11,
@@ -931,10 +945,22 @@
       "to": "TF-0001",
       "type": "child_of",
       "updated_at": "2026-08-08T18:13:17.706665Z"
+    },
+    "TFE-0038": {
+      "blocking": true,
+      "confidence": 0.6,
+      "created_at": "2026-08-09T04:01:12.428611Z",
+      "created_from_session": null,
+      "from": "TF-0027",
+      "id": "TFE-0038",
+      "reason": "CLI add-node --parent",
+      "to": "TF-0001",
+      "type": "child_of",
+      "updated_at": "2026-08-09T04:01:12.428614Z"
     }
   },
   "event_id": null,
-  "generated_at": "2026-08-08T18:13:17.712134Z",
+  "generated_at": "2026-08-09T04:01:12.434667Z",
   "nodes": {
     "TF-0001": {
       "acceptance_criteria": [
@@ -966,7 +992,8 @@
         "TF-0014",
         "TF-0019",
         "TF-0023",
-        "TF-0026"
+        "TF-0026",
+        "TF-0027"
       ],
       "confidence": 0.9,
       "context_tags": [],
@@ -2183,6 +2210,50 @@
       "summary": "pnpm dev 前后端并行（concurrently）；IPC parse_message 平台无关；资源服务统一 resolve_asset；settings 恢复抽共享函数；app.rs 拆分 app/{assets,linux,macos}.rs；dev_url 共享。全量验证通过（cargo test/clippy、前端 test/typecheck、release 启动）。",
       "title": "跨平台代码重构：合并重复、模块拆分",
       "updated_at": "2026-08-08T18:13:17.706658Z"
+    },
+    "TF-0027": {
+      "acceptance_criteria": [
+        "前后端依赖为当前最新（有生态兼容性约束时取最新兼容版本），编译测试全过"
+      ],
+      "alignment": {
+        "fit": "unknown",
+        "fit_confidence": 0.0,
+        "user_goal": "",
+        "validation_plan": [],
+        "why_not_enough": "",
+        "why_this_task": ""
+      },
+      "alignment_records": [],
+      "assumptions": [],
+      "children": [],
+      "confidence": 0.6,
+      "context_tags": [],
+      "created_at": "2026-08-09T04:01:12.428588Z",
+      "deprecated_at": null,
+      "derived_progress": 100.0,
+      "desired_outcomes": [],
+      "deviations": [],
+      "difficulty": "unknown",
+      "estimated_total_minutes": null,
+      "evidence": [],
+      "execution_hints": [],
+      "id": "TF-0027",
+      "kind": "task",
+      "non_goals": [],
+      "primary_parent": "TF-0001",
+      "priority": 3,
+      "progress": 100.0,
+      "progress_source": "manual",
+      "purpose": "",
+      "remaining_minutes_max": null,
+      "remaining_minutes_min": null,
+      "requirements": [],
+      "source_sessions": [],
+      "status": "done",
+      "success_metrics": [],
+      "summary": "前端 vite8/vitest4/eslint10/react19.2/typescript6.0.3（7.0 与 typescript-eslint 不兼容而降级）；Rust tao0.36 + cargo update 兼容最新。全量验证通过。",
+      "title": "依赖升级到最新",
+      "updated_at": "2026-08-09T04:01:12.428605Z"
     }
   },
   "reason": "rebuild",
@@ -2234,7 +2305,8 @@
         "TF-0020",
         "TF-0021",
         "TF-0022",
-        "TF-0026"
+        "TF-0026",
+        "TF-0027"
       ],
       "in_progress": [
         "TF-0001",
@@ -2263,9 +2335,9 @@
   },
   "summary": {
     "blocked_count": 0,
-    "done_count": 22,
-    "edge_count": 37,
-    "node_count": 26,
+    "done_count": 23,
+    "edge_count": 38,
+    "node_count": 27,
     "open_count": 4,
     "review_needed_count": 0
   },
@@ -2293,7 +2365,8 @@
     "TFE-0032",
     "TFE-0033",
     "TFE-0035",
-    "TFE-0037"
+    "TFE-0037",
+    "TFE-0038"
   ],
   "workspace_path": "/home/k/Documents/personalProgram/desktop-canvas"
 }

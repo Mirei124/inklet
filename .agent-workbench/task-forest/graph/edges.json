@@ -442,5 +442,17 @@
     "to": "TF-0001",
     "type": "child_of",
     "updated_at": "2026-08-08T18:13:17.706665Z"
+  },
+  "TFE-0038": {
+    "blocking": true,
+    "confidence": 0.6,
+    "created_at": "2026-08-09T04:01:12.428611Z",
+    "created_from_session": null,
+    "from": "TF-0027",
+    "id": "TFE-0038",
+    "reason": "CLI add-node --parent",
+    "to": "TF-0001",
+    "type": "child_of",
+    "updated_at": "2026-08-09T04:01:12.428614Z"
   }
 }
