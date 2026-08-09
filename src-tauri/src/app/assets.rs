@@ -6,12 +6,15 @@
 use include_dir::{include_dir, Dir};
 
 /// 编译时嵌入的 dist 目录（release 自包含；debug 也嵌入，Linux debug 走磁盘读取）。
+/// Linux debug 下仅 macOS 使用嵌入资源，故此处按平台放行 dead_code。
+#[cfg_attr(all(target_os = "linux", debug_assertions), allow(dead_code))]
 static DIST: Dir = include_dir!("$CARGO_MANIFEST_DIR/../dist");
 
 /// 从嵌入的 DIST 解析资源并返回 (字节, MIME)。
 ///
 /// `path` 是 URL 的路径部分（如 `index.html`、`assets/x.js`、空串或 `/assets/`）；
 /// 目录请求自动映射到 `index.html`。
+#[cfg_attr(all(target_os = "linux", debug_assertions), allow(dead_code))]
 pub fn resolve_asset(path: &str) -> Option<(&'static [u8], &'static str)> {
     let mut rel = path.trim_start_matches('/').to_string();
     if rel.is_empty() || rel.ends_with('/') {

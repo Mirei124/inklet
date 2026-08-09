@@ -30,8 +30,7 @@ pub fn reply_js(id: u64, result: &Result<Value, String>) -> String {
         ),
         Err(e) => (false, e.to_string()),
     };
-    let payload_literal =
-        serde_json::to_string(&payload_text).unwrap_or_else(|_| "\"\"".into());
+    let payload_literal = serde_json::to_string(&payload_text).unwrap_or_else(|_| "\"\"".into());
     format!("window.__dc_ipc_reply({id}, {ok}, {payload_literal});")
 }
 

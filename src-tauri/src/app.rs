@@ -13,6 +13,7 @@ mod linux;
 #[cfg(target_os = "macos")]
 mod macos;
 
+#[cfg(target_os = "macos")]
 pub use assets::resolve_asset;
 
 /// vite dev server 地址（`pnpm dev` 启动）。
@@ -64,7 +65,8 @@ fn init_tracing() {
     let default_filter = "inklet=debug,warn";
     #[cfg(not(debug_assertions))]
     let default_filter = "inklet=warn";
-    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_filter));
+    let filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_filter));
     let _ = fmt().with_env_filter(filter).finish().try_init();
 }
 

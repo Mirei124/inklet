@@ -1,14 +1,18 @@
 //! Linux (Wayland / GTK)：gtk-layer-shell 覆盖窗口 + WebKitGTK。
 
+#[cfg(debug_assertions)]
 use super::assets::mime_for;
-use super::{dev_mode, dev_url, restore_surface_settings, resolve_asset};
+#[cfg(not(debug_assertions))]
+use super::assets::resolve_asset;
+use super::{dev_mode, dev_url, restore_surface_settings};
+use crate::desktop::surface::DesktopSurface;
 use crate::desktop::wayland::{self, WaylandSurface};
 use crate::ipc;
 use crate::ipc::AppContext;
 use gtk::prelude::*;
-use std::rc::Rc;
 #[cfg(all(debug_assertions, target_os = "linux"))]
 use std::path::PathBuf;
+use std::rc::Rc;
 #[cfg(debug_assertions)]
 use webkit2gtk::SettingsExt;
 use webkit2gtk::{

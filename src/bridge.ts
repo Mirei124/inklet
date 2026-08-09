@@ -112,7 +112,7 @@ function nativeAvailable(): boolean {
   return (
     typeof window !== "undefined" &&
     (typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function" ||
-     typeof (window as unknown as Record<string, unknown>).ipc === "object")
+      typeof (window as unknown as Record<string, unknown>).ipc === "object")
   );
 }
 
@@ -121,7 +121,9 @@ function postNativeMessage(msg: string): void {
   if (typeof window.webkit?.messageHandlers?.ipc?.postMessage === "function") {
     window.webkit!.messageHandlers!.ipc!.postMessage(msg);
   } else {
-    ((window as unknown as Record<string, { postMessage: (m: string) => void }>).ipc).postMessage(msg);
+    (window as unknown as Record<string, { postMessage: (m: string) => void }>).ipc.postMessage(
+      msg,
+    );
   }
 }
 

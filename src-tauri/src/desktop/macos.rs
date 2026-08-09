@@ -142,8 +142,7 @@ impl MacSurface {
         on_ipc: impl Fn(String) + 'static,
     ) -> Result<Rc<Self>, SurfaceError> {
         // 所有 AppKit 调用必须在主线程
-        let mtm = objc2_foundation::MainThreadMarker::new()
-            .ok_or(SurfaceError::NotAvailable)?;
+        let mtm = objc2_foundation::MainThreadMarker::new().ok_or(SurfaceError::NotAvailable)?;
         // on_ipc 需要被 Canvas 和 Control 两个 webview 共享，包进 Rc
         let on_ipc = Rc::new(on_ipc);
         // ── Canvas Window ──────────────────────────────────────
@@ -402,7 +401,7 @@ fn serve_dist(
     _webview_id: wry::WebViewId,
     request: wry::http::Request<Vec<u8>>,
 ) -> wry::http::Response<std::borrow::Cow<'static, [u8]>> {
-    use wry::http::header::{CONTENT_TYPE, HeaderValue};
+    use wry::http::header::{HeaderValue, CONTENT_TYPE};
     use wry::http::{Response, StatusCode};
 
     // URI 形如 inklet://index.html 或 inklet://assets/xxx.js
