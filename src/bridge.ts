@@ -78,6 +78,8 @@ declare global {
      * reply 无人接收，需要原生直接推送给前端同步 React state）。
      */
     __dc_sync_mode?: (mode: "passive" | "editing") => void;
+    /** macOS Control 窗口切换画布可见性时同步 React 状态。 */
+    __dc_set_canvas_visibility?: (visible: boolean) => void;
   }
 }
 

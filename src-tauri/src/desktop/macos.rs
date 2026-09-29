@@ -25,9 +25,9 @@ const BACKGROUND_LEVEL: NSWindowLevel = -1;
 
 /// 控制面板尺寸。
 const CONTROL_WIDTH: f64 = 130.0;
-const CONTROL_HEIGHT: f64 = 80.0;
+const CONTROL_HEIGHT: f64 = 150.0;
 
-/// 控制窗口内联 HTML：右缘竖条（点击展开 Edit/图层按钮、拖拽定位），
+/// 控制窗口内联 HTML：右缘竖条（悬停展开操作按钮、拖拽定位），
 /// 走 wry IPC (`window.ipc.postMessage`)。
 const CONTROL_HTML: &str = r#"<!DOCTYPE html><html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,29 +40,31 @@ align-items:center;justify-content:flex-end;height:100vh}
 background:rgba(0,0,0,0.45);border-radius:17px;cursor:grab;flex-shrink:0}
 .bar:active{cursor:grabbing}
 /* 展开的按钮面板 */
-.panel{display:flex;flex-direction:column;gap:6px;align-items:stretch;
-max-width:0;opacity:0;overflow:hidden;transition:max-width .15s ease,opacity .15s ease}
-.panel.show{max-width:130px;opacity:1}
+.panel{display:none;flex-direction:column;gap:6px;align-items:center;min-width:92px}
+.panel.show{display:flex}
 .btn{border:none;border-radius:14px;color:#fff;font-size:13px;font-weight:500;
-cursor:pointer;padding:7px 12px;background:rgba(37,99,235,0.92);
+cursor:pointer;padding:7px 12px;width:100%;background:rgba(37,99,235,0.92);
 box-shadow:0 1px 6px rgba(0,0,0,0.35);white-space:nowrap}
 .btn:hover{background:rgba(29,78,216,0.95)}
+.bar:focus-visible,.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style></head><body>
-<div class="wrap">
+<div class="wrap" id="wrap">
   <div class="panel" id="panel">
-    <button class="btn" id="editBtn" onclick="send('enter_edit_mode',{})">&#9998; Edit</button>
+    <button class="btn" id="editBtn" onclick="enterEdit()">&#9998; Edit</button>
     <button class="btn" id="layerBtn" onclick="toggleLayer()">&#8693; Top</button>
+    <button class="btn" id="visibilityBtn" onclick="toggleVisibility()">&#9673; Hide</button>
   </div>
-  <div class="bar" id="bar"></div>
+  <button class="bar" id="bar" aria-label="Hover to expand · drag to move" aria-expanded="false" aria-controls="panel"></button>
 </div>
 <script>
 var currentY = 0.5;          // 当前 handleY（0..1），native 启动时注入
 var layer = 'overlay';
+var canvasVisible = true;
 var LANG = 'en';             // native 启动时注入（settings.json 的 lang）
 // 与前端 src/i18n.ts 文案保持一致
 var T = {
-  en: { edit: '&#9998; Edit', top: '&#8693; Top', back: '&#8693; Back' },
-  zh: { edit: '&#9998; &#32534;&#36753;', top: '&#8693; &#32622;&#39030;', back: '&#8693; &#32622;&#24213;' }
+  en: { edit: '&#9998; Edit', top: '&#8693; Top', back: '&#8693; Back', hide: '&#9673; Hide', show: '&#9673; Show', bar: 'Hover to expand · drag to move' },
+  zh: { edit: '&#9998; &#32534;&#36753;', top: '&#8693; &#32622;&#39030;', back: '&#8693; &#32622;&#24213;', hide: '&#9673; &#38544;&#34255;', show: '&#9673; &#26174;&#31034;', bar: '悬停展开 · 拖拽移动' }
 };
 function send(cmd, args) {
   window.ipc.postMessage(JSON.stringify({id: Math.floor(Math.random()*1e9), cmd: cmd, args: args||{}}));
@@ -70,33 +72,61 @@ function send(cmd, args) {
 function applyLang() {
   var t = T[LANG] || T.en;
   document.getElementById('editBtn').innerHTML = t.edit;
+  document.getElementById('bar').setAttribute('aria-label', t.bar);
   toggleLabel();
+  visibilityLabel();
 }
 function setLang(l) { LANG = (l === 'zh') ? 'zh' : 'en'; applyLang(); }
 function toggleLayer() {
   layer = (layer === 'overlay') ? 'background' : 'overlay';
   send('set_canvas_layer', {layer: layer});
   toggleLabel();
+  closePanel();
+}
+function enterEdit() {
+  canvasVisible = true;
+  visibilityLabel();
+  closePanel();
+  send('enter_edit_mode', {});
+}
+function toggleVisibility() {
+  canvasVisible = !canvasVisible;
+  send('set_canvas_visibility', {visible: canvasVisible});
+  visibilityLabel();
+  closePanel();
+}
+function visibilityLabel() {
+  var t = T[LANG] || T.en;
+  document.getElementById('visibilityBtn').innerHTML = canvasVisible ? t.hide : t.show;
 }
 function setLayerFromNative(l) { layer = l; }
 function toggleLabel() {
   var t = T[LANG] || T.en;
   document.getElementById('layerBtn').innerHTML =
-    (layer === 'overlay') ? t.top : t.back;
+    (layer === 'overlay') ? t.back : t.top;
 }
 applyLang(); // 首帧按默认语言渲染
 // 拖拽竖条：沿屏幕右缘移动，按 handleY 比例换算
-var dragging = false, startScreenY = 0, startHandleY = 0.5;
+var dragging = false, moved = false, startScreenY = 0, startHandleY = 0.5;
 var bar = document.getElementById('bar');
 var panel = document.getElementById('panel');
+var wrap = document.getElementById('wrap');
+var suppressHover = false;
+function openPanel() { if (!suppressHover) { panel.classList.add('show'); bar.setAttribute('aria-expanded', 'true'); } }
+function closePanel() { panel.classList.remove('show'); bar.setAttribute('aria-expanded', 'false'); suppressHover = true; bar.focus(); }
+wrap.addEventListener('pointerenter', openPanel);
+wrap.addEventListener('pointerleave', function() { suppressHover = false; panel.classList.remove('show'); bar.setAttribute('aria-expanded', 'false'); });
 bar.addEventListener('pointerdown', function(e) {
   dragging = true;
+  moved = false;
   startScreenY = e.screenY;
   startHandleY = currentY;
   bar.setPointerCapture(e.pointerId);
 });
 bar.addEventListener('pointermove', function(e) {
   if (!dragging) return;
+  if (Math.abs(e.screenY - startScreenY) > 6) moved = true;
+  if (!moved) return;
   var h = window.screen.height || 1000;
   var dy = (e.screenY - startScreenY) / h;
   var ny = Math.min(0.98, Math.max(0.02, startHandleY + dy));
@@ -106,9 +136,11 @@ bar.addEventListener('pointermove', function(e) {
 function endDrag() { dragging = false; }
 bar.addEventListener('pointerup', endDrag);
 bar.addEventListener('pointercancel', endDrag);
-// 点击竖条展开/收起
+// 键盘也可展开/收起
 bar.addEventListener('click', function() {
-  panel.classList.toggle('show');
+  if (moved) { moved = false; return; }
+  if (panel.classList.contains('show')) { closePanel(); }
+  else { suppressHover = false; openPanel(); }
 });
 </script>
 </body></html>"#;

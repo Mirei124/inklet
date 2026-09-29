@@ -24,13 +24,19 @@ const TRANSPARENT = "transparent";
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>("passive");
+  const [canvasVisible, setCanvasVisible] = useState(true);
 
   // 原生主动推送模式切换（macOS Control 窗口触发，不走 invoke/pending）。
   // 必须尽早注册，确保 Control 按钮点击时能更新 React state。
   useEffect(() => {
-    window.__dc_sync_mode = (m) => setMode(m);
+    window.__dc_sync_mode = (m) => {
+      setMode(m);
+      if (m === "editing") setCanvasVisible(true);
+    };
+    window.__dc_set_canvas_visibility = setCanvasVisible;
     return () => {
       delete window.__dc_sync_mode;
+      delete window.__dc_set_canvas_visibility;
     };
   }, []);
   const [initialScene, setInitialScene] = useState<SceneFile | null>(null);
@@ -105,6 +111,7 @@ export default function App() {
 
   const enterEditMode = useCallback(async () => {
     await invoke("enter_edit_mode");
+    setCanvasVisible(true);
     setMode("editing");
   }, []);
 
@@ -168,6 +175,7 @@ export default function App() {
         <Canvas
           initialScene={initialScene}
           editing={mode === "editing"}
+          visible={canvasVisible}
           onChange={handleSceneChange}
           lang={lang}
         />
@@ -176,9 +184,11 @@ export default function App() {
         <EditHandle
           lang={lang}
           layer={layer}
+          canvasVisible={canvasVisible}
           handleY={handleY}
           onEnterEdit={enterEditMode}
           onToggleLayer={toggleLayer}
+          onToggleCanvasVisible={() => setCanvasVisible((visible) => !visible)}
           onPositionChange={handlePositionChange}
           onPositionCommit={handlePositionCommit}
         />

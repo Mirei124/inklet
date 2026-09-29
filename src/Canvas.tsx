@@ -16,6 +16,7 @@ export type SceneChange = NonNullable<ExcalidrawProps["onChange"]>;
 interface CanvasProps {
   initialScene: SceneFile;
   editing: boolean;
+  visible: boolean;
   onChange: SceneChange;
   /** 界面语言（Excalidraw UI 跟随应用的 en/zh 设置） */
   lang: Lang;
@@ -28,9 +29,12 @@ function excalidrawLangCode(lang: Lang): string {
   return lang === "zh" ? "zh-CN" : "en";
 }
 
-export function Canvas({ initialScene, editing, onChange, lang }: CanvasProps) {
+export function Canvas({ initialScene, editing, visible, onChange, lang }: CanvasProps) {
   return (
-    <div className={`canvas-root mode-${editing ? "editing" : "passive"}`}>
+    <div
+      className={`canvas-root mode-${editing ? "editing" : "passive"}${visible ? "" : " is-hidden"}`}
+      inert={!visible}
+    >
       <Excalidraw
         langCode={excalidrawLangCode(lang)}
         initialData={{

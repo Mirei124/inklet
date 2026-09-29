@@ -35,6 +35,10 @@ body {
   background: transparent;
 }
 
+.canvas-root.is-hidden {
+  visibility: hidden;
+}
+
 /* Excalidraw 容器保持透明（真正的画布底色由 appState.viewBackgroundColor 控制） */
 .canvas-root .excalidraw {
   background: transparent;
@@ -56,9 +60,7 @@ body {
   display: none;
 }
 
-/* 右缘编辑入口：位置由 handleY 决定（top 由 JS 设置）。
-   折叠态只显示单个窄条；点击展开为两个药丸（Edit / 图层切换）；
-   拖拽窄条可沿右缘移动位置。 */
+/* 右缘编辑入口：悬停展开三个纵向居中的操作按钮，竖条可拖动。 */
 .edit-handle {
   position: absolute;
   right: 0;
@@ -78,7 +80,7 @@ body {
   cursor: grabbing;
 }
 
-/* 折叠态：单个窄条（可点击展开 / 拖拽移动） */
+/* 折叠态：单个窄条（可拖拽移动，也可用键盘展开） */
 .edit-handle-bar {
   width: 8px;
   height: 34px;
@@ -93,16 +95,25 @@ body {
   cursor: grabbing;
 }
 
-/* 两个药丸：默认收起，is-expanded 时展开（位于竖条左侧） */
+.edit-handle-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 92px;
+}
+
+.edit-handle-actions[hidden] {
+  display: none;
+}
+
 .edit-handle-item {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 34px;
-  max-width: 0;
-  padding: 0;
-  opacity: 0;
-  overflow: hidden;
+  padding: 0 12px;
   white-space: nowrap;
   border: none;
   background: rgba(37, 99, 235, 0.92);
@@ -111,19 +122,16 @@ body {
   font-weight: 500;
   border-radius: 17px;
   cursor: pointer;
-  outline: none;
-  transition:
-    max-width 0.15s ease,
-    padding 0.15s ease,
-    opacity 0.15s ease;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
 
-.edit-handle.is-expanded .edit-handle-item,
 .edit-handle-item:hover {
-  max-width: 130px;
-  padding: 0 14px;
-  opacity: 1;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  background: rgba(29, 78, 216, 0.95);
+}
+
+.edit-handle button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 /* 编辑模式 Done 按钮：右缘、y 跟随 handleY（top 由 JS 设置） */

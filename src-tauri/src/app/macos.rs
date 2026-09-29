@@ -39,7 +39,13 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                     return;
                 }
 
-                let result = ipc::dispatch(&cmd, &args, surface.as_ref());
+                let result = if cmd == "set_canvas_visibility" {
+                    let visible = args.get("visible").and_then(Value::as_bool).unwrap_or(true);
+                    surface.eval(&format!("window.__dc_set_canvas_visibility?.({visible});"));
+                    Ok(Value::Null)
+                } else {
+                    ipc::dispatch(&cmd, &args, surface.as_ref())
+                };
 
                 if cmd == "enter_edit_mode" {
                     // 确保 Canvas 获得键盘焦点
