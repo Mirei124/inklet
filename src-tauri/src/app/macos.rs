@@ -38,6 +38,14 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
                 if cmd.is_empty() {
                     return;
                 }
+                if cmd == "request_quit_app" {
+                    surface.eval("window.__dc_request_quit?.();");
+                    return;
+                }
+                if cmd == "quit_app" {
+                    tracing::info!("quitting from floating toolbar");
+                    std::process::exit(0);
+                }
 
                 let result = if cmd == "set_canvas_visibility" {
                     let visible = args.get("visible").and_then(Value::as_bool).unwrap_or(true);

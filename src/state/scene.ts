@@ -85,7 +85,7 @@ export function createDebouncedSaver(
 ): DebouncedSaver {
   let timer: ReturnType<typeof setTimeout> | undefined;
   let latest: SceneFile | null = null;
-  let saving = false;
+  let inFlight: Promise<void> | null = null;
 
   function schedule(scene: SceneFile): void {
     latest = scene;
@@ -95,29 +95,31 @@ export function createDebouncedSaver(
     }, delayMs);
   }
 
-  async function run(): Promise<void> {
+  function run(): Promise<void> {
     timer = undefined;
-    if (!latest || saving) return;
-    saving = true;
+    if (inFlight) return inFlight;
+    if (!latest) return Promise.resolve();
     const scene = latest;
     latest = null;
-    try {
-      await save(scene);
-    } finally {
-      saving = false;
+    inFlight = save(scene).finally(() => {
+      inFlight = null;
       // 保存期间又有修改 -> 再排一轮，避免丢最后状态
       if (latest) {
         void run();
       }
-    }
+    });
+    return inFlight;
   }
 
-  function flush(): Promise<void> {
+  async function flush(): Promise<void> {
     if (timer !== undefined) {
       clearTimeout(timer);
       timer = undefined;
     }
-    return run();
+    // 退出时等待当前保存以及保存期间新增的最后一版内容。
+    while (inFlight || latest) {
+      await (inFlight ?? run());
+    }
   }
 
   function cancel(): void {

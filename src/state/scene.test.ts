@@ -68,6 +68,38 @@ describe("createDebouncedSaver", () => {
     vi.useRealTimers();
   });
 
+  it("flush 等待正在保存的内容和随后排队的更新", async () => {
+    const releases: Array<() => void> = [];
+    let secondStarted!: () => void;
+    const secondSaveStarted = new Promise<void>((resolve) => {
+      secondStarted = resolve;
+    });
+    const save = vi.fn(() => {
+      if (releases.length === 1) secondStarted();
+      return new Promise<void>((resolve) => releases.push(resolve));
+    });
+    const saver = createDebouncedSaver(save);
+
+    saver.schedule(emptyScene());
+    const firstFlush = saver.flush();
+    saver.schedule(emptyScene());
+    let flushed = false;
+    const finalFlush = saver.flush().then(() => {
+      flushed = true;
+    });
+
+    expect(save).toHaveBeenCalledTimes(1);
+    releases[0]();
+    await secondSaveStarted;
+    expect(save).toHaveBeenCalledTimes(2);
+    expect(flushed).toBe(false);
+
+    releases[1]();
+    await firstFlush;
+    await finalFlush;
+    expect(flushed).toBe(true);
+  });
+
   it("cancel 清空待保存内容", async () => {
     vi.useFakeTimers();
     const save = vi.fn().mockResolvedValue(undefined);

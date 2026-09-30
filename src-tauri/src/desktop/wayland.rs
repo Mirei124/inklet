@@ -22,7 +22,7 @@ use std::rc::Rc;
 /// 热区要覆盖展开后的编辑按钮（约 130 CSS px 宽），同时尽量小以少占用桌面点击。
 /// 热区垂直居中于 handle_y 位置。
 pub const HOTZONE_WIDTH: i32 = 200;
-pub const HOTZONE_HEIGHT: i32 = 150;
+pub const HOTZONE_HEIGHT: i32 = 190;
 
 /// libwayland / gdk-wayland 原始 FFI。
 ///

@@ -37,6 +37,11 @@ pub fn reply_js(id: u64, result: &Result<Value, String>) -> String {
 #[cfg(target_os = "linux")]
 pub fn handle(ctx: &AppContext, message: &str) {
     let (id, cmd, args) = parse_message(message);
+    if cmd == "quit_app" {
+        tracing::info!("quitting from floating toolbar");
+        gtk::main_quit();
+        return;
+    }
     let result = dispatch(&cmd, &args, ctx.surface.as_ref());
 
     if cmd == "enter_edit_mode" {

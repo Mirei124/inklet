@@ -15,7 +15,7 @@ use tao::window::Window;
 
 /// 编辑热区尺寸（CSS 像素）。
 const HOTZONE_WIDTH: i32 = 200;
-const HOTZONE_HEIGHT: i32 = 150;
+const HOTZONE_HEIGHT: i32 = 190;
 
 /// NSWindow level 常量（macOS CGWindowLevel 对应值）。
 /// overlay：kCGStatusWindowLevel = 21（在普通/浮动窗口之上，用于覆盖层）。
@@ -25,7 +25,7 @@ const BACKGROUND_LEVEL: NSWindowLevel = -1;
 
 /// 控制面板尺寸。
 const CONTROL_WIDTH: f64 = 130.0;
-const CONTROL_HEIGHT: f64 = 150.0;
+const CONTROL_HEIGHT: f64 = 190.0;
 
 /// 控制窗口内联 HTML：右缘竖条（悬停展开操作按钮、拖拽定位），
 /// 走 wry IPC (`window.ipc.postMessage`)。
@@ -53,6 +53,7 @@ box-shadow:0 1px 6px rgba(0,0,0,0.35);white-space:nowrap}
     <button class="btn" id="editBtn" onclick="enterEdit()">&#9998; Edit</button>
     <button class="btn" id="layerBtn" onclick="toggleLayer()">&#8693; Top</button>
     <button class="btn" id="visibilityBtn" onclick="toggleVisibility()">&#9673; Hide</button>
+    <button class="btn" id="quitBtn" onclick="quitApp()">&#9211; Quit</button>
   </div>
   <button class="bar" id="bar" aria-label="Hover to expand · drag to move" aria-expanded="false" aria-controls="panel"></button>
 </div>
@@ -63,8 +64,8 @@ var canvasVisible = true;
 var LANG = 'en';             // native 启动时注入（settings.json 的 lang）
 // 与前端 src/i18n.ts 文案保持一致
 var T = {
-  en: { edit: '&#9998; Edit', top: '&#8693; Top', back: '&#8693; Back', hide: '&#9673; Hide', show: '&#9673; Show', bar: 'Hover to expand · drag to move' },
-  zh: { edit: '&#9998; &#32534;&#36753;', top: '&#8693; &#32622;&#39030;', back: '&#8693; &#32622;&#24213;', hide: '&#9673; &#38544;&#34255;', show: '&#9673; &#26174;&#31034;', bar: '悬停展开 · 拖拽移动' }
+  en: { edit: '&#9998; Edit', top: '&#8693; Top', back: '&#8693; Back', hide: '&#9673; Hide', show: '&#9673; Show', quit: '&#9211; Quit', bar: 'Hover to expand · drag to move' },
+  zh: { edit: '&#9998; &#32534;&#36753;', top: '&#8693; &#32622;&#39030;', back: '&#8693; &#32622;&#24213;', hide: '&#9673; &#38544;&#34255;', show: '&#9673; &#26174;&#31034;', quit: '&#9211; &#36864;&#20986;', bar: '悬停展开 · 拖拽移动' }
 };
 function send(cmd, args) {
   window.ipc.postMessage(JSON.stringify({id: Math.floor(Math.random()*1e9), cmd: cmd, args: args||{}}));
@@ -72,6 +73,7 @@ function send(cmd, args) {
 function applyLang() {
   var t = T[LANG] || T.en;
   document.getElementById('editBtn').innerHTML = t.edit;
+  document.getElementById('quitBtn').innerHTML = t.quit;
   document.getElementById('bar').setAttribute('aria-label', t.bar);
   toggleLabel();
   visibilityLabel();
@@ -94,6 +96,10 @@ function toggleVisibility() {
   send('set_canvas_visibility', {visible: canvasVisible});
   visibilityLabel();
   closePanel();
+}
+function quitApp() {
+  closePanel();
+  send('request_quit_app', {});
 }
 function visibilityLabel() {
   var t = T[LANG] || T.en;

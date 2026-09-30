@@ -2,7 +2,7 @@
  * EditHandle.tsx
  *
  * 屏幕右缘的编辑入口，支持：
- *  - 悬停竖条：展开编辑、图层和画布显示按钮；点击按钮后收起
+ *  - 悬停竖条：展开编辑、图层、画布显示和退出按钮；点击按钮后收起
  *  - 拖拽竖条：沿右缘上下移动 handle 位置（y 持久化，Done 按钮跟随）
  *
  * 位置由 `handleY`（0..1，占视口高比例）决定，与原生侧 passive 热区对齐。
@@ -20,6 +20,7 @@ interface EditHandleProps {
   onEnterEdit: () => void;
   onToggleLayer: () => void;
   onToggleCanvasVisible: () => void;
+  onQuit: () => void;
   /** 拖拽过程中实时更新（本地渲染） */
   onPositionChange: (y: number) => void;
   /** 拖拽结束（持久化 + 同步原生热区） */
@@ -45,6 +46,7 @@ export function EditHandle({
   onEnterEdit,
   onToggleLayer,
   onToggleCanvasVisible,
+  onQuit,
   onPositionChange,
   onPositionCommit,
 }: EditHandleProps) {
@@ -154,6 +156,14 @@ export function EditHandle({
           onClick={() => runAction(onToggleCanvasVisible)}
         >
           {t(lang, canvasVisible ? "hideCanvas" : "showCanvas")}
+        </button>
+        <button
+          type="button"
+          className="edit-handle-item"
+          onClick={() => runAction(onQuit)}
+          title={t(lang, "quitTitle")}
+        >
+          {t(lang, "quit")}
         </button>
       </div>
     </div>

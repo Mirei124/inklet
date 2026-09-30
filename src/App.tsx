@@ -64,6 +64,20 @@ export default function App() {
   // 保存器只创建一次，保证防抖计时不因重渲染而重置
   const saver = useMemo(() => createDebouncedSaver((scene: SceneFile) => persistScene(scene)), []);
 
+  const quitApp = useCallback(async () => {
+    await saver.flush();
+    await invoke("quit_app");
+  }, [saver]);
+
+  useEffect(() => {
+    window.__dc_request_quit = () => {
+      void quitApp();
+    };
+    return () => {
+      delete window.__dc_request_quit;
+    };
+  }, [quitApp]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -189,6 +203,7 @@ export default function App() {
           onEnterEdit={enterEditMode}
           onToggleLayer={toggleLayer}
           onToggleCanvasVisible={() => setCanvasVisible((visible) => !visible)}
+          onQuit={quitApp}
           onPositionChange={handlePositionChange}
           onPositionCommit={handlePositionCommit}
         />

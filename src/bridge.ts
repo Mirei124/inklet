@@ -41,6 +41,7 @@ export type CanvasLayer = "overlay" | "background";
 export type Command =
   | "enter_edit_mode"
   | "exit_edit_mode"
+  | "quit_app"
   | "load_scene"
   | "save_scene"
   | "screen_size"
@@ -80,6 +81,8 @@ declare global {
     __dc_sync_mode?: (mode: "passive" | "editing") => void;
     /** macOS Control 窗口切换画布可见性时同步 React 状态。 */
     __dc_set_canvas_visibility?: (visible: boolean) => void;
+    /** macOS Control 窗口请求画布先保存、再退出程序。 */
+    __dc_request_quit?: () => void;
   }
 }
 
@@ -178,6 +181,9 @@ function mockInvoke(cmd: Command, args?: Record<string, unknown>): Promise<unkno
     }
     case "enter_edit_mode":
     case "exit_edit_mode":
+      return delay(null);
+    case "quit_app":
+      window.close();
       return delay(null);
     case "screen_size":
       return delay({ width: window.innerWidth, height: window.innerHeight });
