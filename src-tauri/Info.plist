@@ -10,6 +10,8 @@
 	<string>io.inklet.app</string>
 	<key>CFBundleExecutable</key>
 	<string>inklet</string>
+	<key>CFBundleIconFile</key>
+	<string>icon.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

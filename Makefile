@@ -37,4 +37,5 @@ app-bundle: build-release
 	mkdir -p dist/Inklet.app/Contents/MacOS dist/Inklet.app/Contents/Resources
 	cp src-tauri/target/release/inklet dist/Inklet.app/Contents/MacOS/inklet
 	cp src-tauri/Info.plist dist/Inklet.app/Contents/Info.plist
+	cp src-tauri/icons/icon.icns dist/Inklet.app/Contents/Resources/icon.icns
 	@echo "产物: dist/Inklet.app"

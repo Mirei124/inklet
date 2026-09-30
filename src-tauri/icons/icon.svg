@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="tile" x1="180" y1="120" x2="850" y2="920" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#264563"/>
+      <stop offset="1" stop-color="#101e33"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="290" y1="650" x2="740" y2="350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#57dbce"/>
+      <stop offset="1" stop-color="#a4f4de"/>
+    </linearGradient>
+    <linearGradient id="pen" x1="540" y1="470" x2="770" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e2eaf2"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#07101c" flood-opacity=".24"/>
+    </filter>
+  </defs>
+  <!-- Transparent margins retain the native macOS icon silhouette. -->
+  <rect x="96" y="96" width="832" height="832" rx="190" fill="url(#tile)" filter="url(#shadow)"/>
+  <rect x="98" y="98" width="828" height="828" rx="188" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="4"/>
+  <!-- A translucent canvas floating above the desktop. -->
+  <rect x="232" y="262" width="514" height="498" rx="66" fill="#ffffff" fill-opacity=".06" stroke="#c8e5f2" stroke-opacity=".36" stroke-width="12"/>
+  <path d="M294 650 C338 570 387 574 403 618 C424 678 458 694 500 639 L550 572" fill="none" stroke="url(#ink)" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Broad pen silhouette stays readable at Finder thumbnail sizes. -->
+  <g filter="url(#shadow)">
+    <path d="M533 508 L700 277 Q719 251 744 269 L790 302 Q814 320 794 347 L627 578 Z" fill="url(#pen)"/>
+    <path d="M533 508 L627 578 L525 619 Q507 626 511 607 Z" fill="#99efdc"/>
+    <path d="M511 607 L522 568 L551 590 L525 619 Q507 626 511 607 Z" fill="#223b51"/>
+    <path d="M683 301 L778 371" fill="none" stroke="#243d54" stroke-width="17"/>
+    <path d="M558 497 L683 325" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-opacity=".7"/>
+  </g>
+</svg>
